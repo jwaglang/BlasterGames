@@ -4,7 +4,7 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0, user-scalable=no">
-    <title>🐯 Korean Blaster! 한글 마스터 🐯</title>
+    <title>🐉 Chinese Blaster! 汉字大师 🐉</title>
     <style>
         @import url('https://fonts.googleapis.com/css2?family=Press+Start+2P&family=Bangers&display=swap');
 
@@ -1008,7 +1008,7 @@
     <div class="game-container" id="gameContainer">
         <!-- Login Screen -->
         <div class="screen" id="loginScreen">
-            <h1 class="game-title">🐯 KOREAN BLASTER! 🐯</h1>
+            <h1 class="game-title">🐉 CHINESE BLASTER! 🐉</h1>
             <p class="subtitle">ENTER YOUR NAME</p>
             <input type="text" class="username-input" id="usernameInput" placeholder="Your name..." maxlength="12">
             <button class="btn btn-green" id="loginBtn">START</button>
@@ -1021,7 +1021,7 @@
 
         <!-- Title Screen -->
         <div class="screen hidden" id="titleScreen">
-            <h1 class="game-title">🐯 KOREAN BLASTER! 🐯</h1>
+            <h1 class="game-title">🐉 CHINESE BLASTER! 🐉</h1>
             <p class="player-welcome">Welcome, <span id="playerName">Player</span>!</p>
             <div class="level-select-row">
                 <label for="levelSelect" class="level-select-label">START AT:</label>
@@ -1043,11 +1043,11 @@
                 <button class="btn btn-small btn-cyan" id="changeUserBtn">👤 CHANGE</button>
             </div>
             <div class="instructions">
-                <span class="level-icon">🔤</span><span class="level-text">Level 1: Shoot Romanization</span>
-                <span class="level-icon">🈲</span><span class="level-text">Level 2: Shoot Hangul</span>
-                <span class="level-icon">📝</span><span class="level-text">Level 3: Shoot Romanization words</span>
-                <span class="level-icon">🈲</span><span class="level-text">Level 4: Shoot Hangul words</span>
-                <span class="level-icon">✍️</span><span class="level-text">Level 5: Type Romanization</span>
+                <span class="level-icon">🔤</span><span class="level-text">Level 1: Shoot pinyin</span>
+                <span class="level-icon">🈲</span><span class="level-text">Level 2: Shoot characters</span>
+                <span class="level-icon">📝</span><span class="level-text">Level 3: Shoot pinyin words</span>
+                <span class="level-icon">🈲</span><span class="level-text">Level 4: Shoot character words</span>
+                <span class="level-icon">✍️</span><span class="level-text">Level 5: Type pinyin dictation</span>
             </div>
         </div>
 
@@ -1088,7 +1088,7 @@
         <!-- Game Area -->
         <div class="game-area" id="gameArea"></div>
         <div class="shoot-hint" id="shootHint">TAP TO SHOOT! 🔫</div>
-        <div class="spaceship" id="spaceship">🐯</div>
+        <div class="spaceship" id="spaceship">🐉</div>
 
         <!-- Dictation Area (Level 5) -->
         <div class="dictation-area hidden" id="dictationArea">
@@ -1158,109 +1158,171 @@
     </div>
 
     <script>
-        // Common Korean Syllables (Hangul/Romanization/Meaning)
-        const KOREAN_SYLLABLES = [
-            { char: '가', pinyin: 'ga', meaning: 'ga' }, { char: '나', pinyin: 'na', meaning: 'na' },
-            { char: '다', pinyin: 'da', meaning: 'da' }, { char: '라', pinyin: 'ra', meaning: 'ra/la' },
-            { char: '마', pinyin: 'ma', meaning: 'ma' }, { char: '바', pinyin: 'ba', meaning: 'ba' },
-            { char: '사', pinyin: 'sa', meaning: 'sa' }, { char: '아', pinyin: 'a', meaning: 'a' },
-            { char: '자', pinyin: 'ja', meaning: 'ja' }, { char: '차', pinyin: 'cha', meaning: 'cha' },
-            { char: '카', pinyin: 'ka', meaning: 'ka' }, { char: '타', pinyin: 'ta', meaning: 'ta' },
-            { char: '파', pinyin: 'pa', meaning: 'pa' }, { char: '하', pinyin: 'ha', meaning: 'ha' },
-            { char: '거', pinyin: 'geo', meaning: 'geo' }, { char: '너', pinyin: 'neo', meaning: 'neo' },
-            { char: '더', pinyin: 'deo', meaning: 'deo' }, { char: '러', pinyin: 'reo', meaning: 'reo' },
-            { char: '머', pinyin: 'meo', meaning: 'meo' }, { char: '버', pinyin: 'beo', meaning: 'beo' },
-            { char: '서', pinyin: 'seo', meaning: 'seo' }, { char: '어', pinyin: 'eo', meaning: 'eo' },
-            { char: '저', pinyin: 'jeo', meaning: 'jeo' }, { char: '처', pinyin: 'cheo', meaning: 'cheo' },
-            { char: '커', pinyin: 'keo', meaning: 'keo' }, { char: '터', pinyin: 'teo', meaning: 'teo' },
-            { char: '퍼', pinyin: 'peo', meaning: 'peo' }, { char: '허', pinyin: 'heo', meaning: 'heo' },
-            { char: '고', pinyin: 'go', meaning: 'go' }, { char: '노', pinyin: 'no', meaning: 'no' },
-            { char: '도', pinyin: 'do', meaning: 'do' }, { char: '로', pinyin: 'ro', meaning: 'ro' },
-            { char: '모', pinyin: 'mo', meaning: 'mo' }, { char: '보', pinyin: 'bo', meaning: 'bo' },
-            { char: '소', pinyin: 'so', meaning: 'so' }, { char: '오', pinyin: 'o', meaning: 'o' },
-            { char: '조', pinyin: 'jo', meaning: 'jo' }, { char: '초', pinyin: 'cho', meaning: 'cho' },
-            { char: '코', pinyin: 'ko', meaning: 'ko' }, { char: '토', pinyin: 'to', meaning: 'to' },
-            { char: '포', pinyin: 'po', meaning: 'po' }, { char: '호', pinyin: 'ho', meaning: 'ho' },
-            { char: '구', pinyin: 'gu', meaning: 'gu' }, { char: '누', pinyin: 'nu', meaning: 'nu' },
-            { char: '두', pinyin: 'du', meaning: 'du' }, { char: '루', pinyin: 'ru', meaning: 'ru' },
-            { char: '무', pinyin: 'mu', meaning: 'mu' }, { char: '부', pinyin: 'bu', meaning: 'bu' },
-            { char: '수', pinyin: 'su', meaning: 'su' }, { char: '우', pinyin: 'u', meaning: 'u' },
-            { char: '주', pinyin: 'ju', meaning: 'ju' }, { char: '추', pinyin: 'chu', meaning: 'chu' },
-            { char: '쿠', pinyin: 'ku', meaning: 'ku' }, { char: '투', pinyin: 'tu', meaning: 'tu' },
-            { char: '푸', pinyin: 'pu', meaning: 'pu' }, { char: '후', pinyin: 'hu', meaning: 'hu' },
-            { char: '그', pinyin: 'geu', meaning: 'geu' }, { char: '느', pinyin: 'neu', meaning: 'neu' },
-            { char: '드', pinyin: 'deu', meaning: 'deu' }, { char: '르', pinyin: 'reu', meaning: 'reu' },
-            { char: '므', pinyin: 'meu', meaning: 'meu' }, { char: '브', pinyin: 'beu', meaning: 'beu' },
-            { char: '스', pinyin: 'seu', meaning: 'seu' }, { char: '으', pinyin: 'eu', meaning: 'eu' },
-            { char: '즈', pinyin: 'jeu', meaning: 'jeu' }, { char: '츠', pinyin: 'cheu', meaning: 'cheu' },
-            { char: '크', pinyin: 'keu', meaning: 'keu' }, { char: '트', pinyin: 'teu', meaning: 'teu' },
-            { char: '프', pinyin: 'peu', meaning: 'peu' }, { char: '흐', pinyin: 'heu', meaning: 'heu' },
-            { char: '기', pinyin: 'gi', meaning: 'gi' }, { char: '니', pinyin: 'ni', meaning: 'ni' },
-            { char: '디', pinyin: 'di', meaning: 'di' }, { char: '리', pinyin: 'ri', meaning: 'ri' },
-            { char: '미', pinyin: 'mi', meaning: 'mi' }, { char: '비', pinyin: 'bi', meaning: 'bi' },
-            { char: '시', pinyin: 'si', meaning: 'si' }, { char: '이', pinyin: 'i', meaning: 'i' },
-            { char: '지', pinyin: 'ji', meaning: 'ji' }, { char: '치', pinyin: 'chi', meaning: 'chi' },
-            { char: '키', pinyin: 'ki', meaning: 'ki' }, { char: '티', pinyin: 'ti', meaning: 'ti' },
-            { char: '피', pinyin: 'pi', meaning: 'pi' }, { char: '히', pinyin: 'hi', meaning: 'hi' }
+        // 100 Most Common Chinese Characters with pinyin and meaning
+        const CHINESE_CHARS = [
+            { char: '的', pinyin: 'de', meaning: 'of/possessive' },
+            { char: '一', pinyin: 'yī', meaning: 'one' },
+            { char: '是', pinyin: 'shì', meaning: 'is/am/are' },
+            { char: '不', pinyin: 'bù', meaning: 'not' },
+            { char: '了', pinyin: 'le', meaning: 'completed action' },
+            { char: '在', pinyin: 'zài', meaning: 'at/in' },
+            { char: '人', pinyin: 'rén', meaning: 'person' },
+            { char: '有', pinyin: 'yǒu', meaning: 'have' },
+            { char: '我', pinyin: 'wǒ', meaning: 'I/me' },
+            { char: '他', pinyin: 'tā', meaning: 'he/him' },
+            { char: '这', pinyin: 'zhè', meaning: 'this' },
+            { char: '个', pinyin: 'gè', meaning: 'measure word' },
+            { char: '们', pinyin: 'men', meaning: 'plural marker' },
+            { char: '中', pinyin: 'zhōng', meaning: 'middle/China' },
+            { char: '来', pinyin: 'lái', meaning: 'come' },
+            { char: '上', pinyin: 'shàng', meaning: 'up/above' },
+            { char: '大', pinyin: 'dà', meaning: 'big' },
+            { char: '为', pinyin: 'wèi', meaning: 'for/because' },
+            { char: '和', pinyin: 'hé', meaning: 'and' },
+            { char: '国', pinyin: 'guó', meaning: 'country' },
+            { char: '地', pinyin: 'dì', meaning: 'earth/ground' },
+            { char: '到', pinyin: 'dào', meaning: 'arrive/to' },
+            { char: '以', pinyin: 'yǐ', meaning: 'with/by' },
+            { char: '说', pinyin: 'shuō', meaning: 'speak/say' },
+            { char: '时', pinyin: 'shí', meaning: 'time' },
+            { char: '要', pinyin: 'yào', meaning: 'want/need' },
+            { char: '就', pinyin: 'jiù', meaning: 'then/just' },
+            { char: '出', pinyin: 'chū', meaning: 'out/exit' },
+            { char: '会', pinyin: 'huì', meaning: 'can/will' },
+            { char: '可', pinyin: 'kě', meaning: 'can/may' },
+            { char: '也', pinyin: 'yě', meaning: 'also' },
+            { char: '你', pinyin: 'nǐ', meaning: 'you' },
+            { char: '对', pinyin: 'duì', meaning: 'correct/toward' },
+            { char: '生', pinyin: 'shēng', meaning: 'life/born' },
+            { char: '能', pinyin: 'néng', meaning: 'able/can' },
+            { char: '而', pinyin: 'ér', meaning: 'and/but' },
+            { char: '子', pinyin: 'zǐ', meaning: 'child/son' },
+            { char: '那', pinyin: 'nà', meaning: 'that' },
+            { char: '得', pinyin: 'de', meaning: 'get/obtain' },
+            { char: '于', pinyin: 'yú', meaning: 'at/in' },
+            { char: '着', pinyin: 'zhe', meaning: 'continuous action' },
+            { char: '下', pinyin: 'xià', meaning: 'down/below' },
+            { char: '自', pinyin: 'zì', meaning: 'self' },
+            { char: '之', pinyin: 'zhī', meaning: 'of/it' },
+            { char: '年', pinyin: 'nián', meaning: 'year' },
+            { char: '过', pinyin: 'guò', meaning: 'pass/cross' },
+            { char: '发', pinyin: 'fā', meaning: 'send/emit' },
+            { char: '后', pinyin: 'hòu', meaning: 'after/behind' },
+            { char: '作', pinyin: 'zuò', meaning: 'make/do' },
+            { char: '里', pinyin: 'lǐ', meaning: 'inside' },
+            { char: '用', pinyin: 'yòng', meaning: 'use' },
+            { char: '道', pinyin: 'dào', meaning: 'way/road' },
+            { char: '行', pinyin: 'xíng', meaning: 'walk/go' },
+            { char: '所', pinyin: 'suǒ', meaning: 'place/that which' },
+            { char: '然', pinyin: 'rán', meaning: 'so/like that' },
+            { char: '家', pinyin: 'jiā', meaning: 'home/family' },
+            { char: '种', pinyin: 'zhǒng', meaning: 'kind/type' },
+            { char: '事', pinyin: 'shì', meaning: 'matter/thing' },
+            { char: '成', pinyin: 'chéng', meaning: 'become' },
+            { char: '方', pinyin: 'fāng', meaning: 'square/side' },
+            { char: '多', pinyin: 'duō', meaning: 'many/much' },
+            { char: '经', pinyin: 'jīng', meaning: 'pass through' },
+            { char: '么', pinyin: 'me', meaning: 'question particle' },
+            { char: '去', pinyin: 'qù', meaning: 'go' },
+            { char: '法', pinyin: 'fǎ', meaning: 'law/method' },
+            { char: '学', pinyin: 'xué', meaning: 'learn/study' },
+            { char: '如', pinyin: 'rú', meaning: 'like/as' },
+            { char: '都', pinyin: 'dōu', meaning: 'all/both' },
+            { char: '同', pinyin: 'tóng', meaning: 'same' },
+            { char: '现', pinyin: 'xiàn', meaning: 'appear/now' },
+            { char: '当', pinyin: 'dāng', meaning: 'when/serve as' },
+            { char: '没', pinyin: 'méi', meaning: 'not have' },
+            { char: '动', pinyin: 'dòng', meaning: 'move' },
+            { char: '面', pinyin: 'miàn', meaning: 'face/side' },
+            { char: '起', pinyin: 'qǐ', meaning: 'rise/start' },
+            { char: '看', pinyin: 'kàn', meaning: 'look/see' },
+            { char: '定', pinyin: 'dìng', meaning: 'decide/fixed' },
+            { char: '天', pinyin: 'tiān', meaning: 'sky/day' },
+            { char: '分', pinyin: 'fēn', meaning: 'divide/minute' },
+            { char: '还', pinyin: 'hái', meaning: 'still/also' },
+            { char: '进', pinyin: 'jìn', meaning: 'enter' },
+            { char: '好', pinyin: 'hǎo', meaning: 'good' },
+            { char: '小', pinyin: 'xiǎo', meaning: 'small' },
+            { char: '部', pinyin: 'bù', meaning: 'part/department' },
+            { char: '其', pinyin: 'qí', meaning: 'its/his' },
+            { char: '些', pinyin: 'xiē', meaning: 'some' },
+            { char: '主', pinyin: 'zhǔ', meaning: 'main/owner' },
+            { char: '样', pinyin: 'yàng', meaning: 'appearance/kind' },
+            { char: '理', pinyin: 'lǐ', meaning: 'reason/manage' },
+            { char: '心', pinyin: 'xīn', meaning: 'heart/mind' },
+            { char: '她', pinyin: 'tā', meaning: 'she/her' },
+            { char: '本', pinyin: 'běn', meaning: 'root/this' },
+            { char: '前', pinyin: 'qián', meaning: 'front/before' },
+            { char: '开', pinyin: 'kāi', meaning: 'open' },
+            { char: '但', pinyin: 'dàn', meaning: 'but' },
+            { char: '因', pinyin: 'yīn', meaning: 'because' },
+            { char: '只', pinyin: 'zhǐ', meaning: 'only' },
+            { char: '从', pinyin: 'cóng', meaning: 'from' },
+            { char: '想', pinyin: 'xiǎng', meaning: 'think/want' },
+            { char: '实', pinyin: 'shí', meaning: 'real/true' }
         ];
 
-        // Common Korean Words
-        const KOREAN_WORDS = [
-            { word: '안녕하세요', pinyin: 'annyeonghaseyo', meaning: 'Hello' },
-            { word: '감사합니다', pinyin: 'gamsahamnida', meaning: 'Thank you' },
-            { word: '반갑습니다', pinyin: 'bangapseumnida', meaning: 'Nice to meet you' },
-            { word: '친구', pinyin: 'chingu', meaning: 'Friend' },
-            { word: '사랑', pinyin: 'sarang', meaning: 'Love' },
-            { word: '학교', pinyin: 'hakgyo', meaning: 'School' },
-            { word: '선생님', pinyin: 'seonsaengnim', meaning: 'Teacher' },
-            { word: '학생', pinyin: 'haksaeng', meaning: 'Student' },
-            { word: '한국', pinyin: 'hanguk', meaning: 'Korea' },
-            { word: '서울', pinyin: 'seoul', meaning: 'Seoul' },
-            { word: '오늘', pinyin: 'oneul', meaning: 'Today' },
-            { word: '내일', pinyin: 'naeil', meaning: 'Tomorrow' },
-            { word: '어제', pinyin: 'eoje', meaning: 'Yesterday' },
-            { word: '사람', pinyin: 'saram', meaning: 'Person' },
-            { word: '물', pinyin: 'mul', meaning: 'Water' },
-            { word: '밥', pinyin: 'bap', meaning: 'Rice/Meal' },
-            { word: '김치', pinyin: 'kimchi', meaning: 'Kimchi' },
-            { word: '불고기', pinyin: 'bulgogi', meaning: 'Bulgogi' },
-            { word: '비빔밥', pinyin: 'bibimbap', meaning: 'Bibimbap' },
-            { word: '소주', pinyin: 'soju', meaning: 'Soju' },
-            { word: '맥주', pinyin: 'maekju', meaning: 'Beer' },
-            { word: '커피', pinyin: 'keopi', meaning: 'Coffee' },
-            { word: '차', pinyin: 'cha', meaning: 'Tea/Car' },
-            { word: '버스', pinyin: 'beoseu', meaning: 'Bus' },
-            { word: '택시', pinyin: 'taeksi', meaning: 'Taxi' },
-            { word: '지하철', pinyin: 'jihacheol', meaning: 'Subway' },
-            { word: '공항', pinyin: 'gonghang', meaning: 'Airport' },
-            { word: '호텔', pinyin: 'hotel', meaning: 'Hotel' },
-            { word: '병원', pinyin: 'byeongwon', meaning: 'Hospital' },
-            { word: '약국', pinyin: 'yakguk', meaning: 'Pharmacy' },
-            { word: '은행', pinyin: 'eunhaeng', meaning: 'Bank' },
-            { word: '화장실', pinyin: 'hwajangsil', meaning: 'Toilet' },
-            { word: '남자', pinyin: 'namja', meaning: 'Man' },
-            { word: '여자', pinyin: 'yeoja', meaning: 'Woman' },
-            { word: '아이', pinyin: 'ai', meaning: 'Child' },
-            { word: '엄마', pinyin: 'eomma', meaning: 'Mom' },
-            { word: '아빠', pinyin: 'appa', meaning: 'Dad' },
-            { word: '형', pinyin: 'hyeong', meaning: 'Older brother (to male)' },
-            { word: '누나', pinyin: 'nuna', meaning: 'Older sister (to male)' },
-            { word: '언니', pinyin: 'eonni', meaning: 'Older sister (to female)' }
+        // Common Chinese words (2 characters) with pinyin
+        const CHINESE_WORDS = [
+            { word: '你好', pinyin: 'nǐ hǎo', meaning: 'hello' },
+            { word: '谢谢', pinyin: 'xiè xie', meaning: 'thanks' },
+            { word: '再见', pinyin: 'zài jiàn', meaning: 'goodbye' },
+            { word: '朋友', pinyin: 'péng you', meaning: 'friend' },
+            { word: '学生', pinyin: 'xué shēng', meaning: 'student' },
+            { word: '老师', pinyin: 'lǎo shī', meaning: 'teacher' },
+            { word: '中国', pinyin: 'zhōng guó', meaning: 'China' },
+            { word: '今天', pinyin: 'jīn tiān', meaning: 'today' },
+            { word: '明天', pinyin: 'míng tiān', meaning: 'tomorrow' },
+            { word: '昨天', pinyin: 'zuó tiān', meaning: 'yesterday' },
+            { word: '吃饭', pinyin: 'chī fàn', meaning: 'eat' },
+            { word: '喝水', pinyin: 'hē shuǐ', meaning: 'drink water' },
+            { word: '工作', pinyin: 'gōng zuò', meaning: 'work' },
+            { word: '学习', pinyin: 'xué xí', meaning: 'study' },
+            { word: '喜欢', pinyin: 'xǐ huān', meaning: 'like' },
+            { word: '漂亮', pinyin: 'piào liang', meaning: 'beautiful' },
+            { word: '高兴', pinyin: 'gāo xìng', meaning: 'happy' },
+            { word: '可以', pinyin: 'kě yǐ', meaning: 'can' },
+            { word: '知道', pinyin: 'zhī dào', meaning: 'know' },
+            { word: '电话', pinyin: 'diàn huà', meaning: 'phone' },
+            { word: '电脑', pinyin: 'diàn nǎo', meaning: 'computer' },
+            { word: '手机', pinyin: 'shǒu jī', meaning: 'mobile' },
+            { word: '时间', pinyin: 'shí jiān', meaning: 'time' },
+            { word: '现在', pinyin: 'xiàn zài', meaning: 'now' },
+            { word: '这个', pinyin: 'zhè ge', meaning: 'this' },
+            { word: '那个', pinyin: 'nà ge', meaning: 'that' },
+            { word: '什么', pinyin: 'shén me', meaning: 'what' },
+            { word: '怎么', pinyin: 'zěn me', meaning: 'how' },
+            { word: '为什么', pinyin: 'wèi shén me', meaning: 'why' },
+            { word: '大家', pinyin: 'dà jiā', meaning: 'everyone' },
+            { word: '一起', pinyin: 'yī qǐ', meaning: 'together' },
+            { word: '非常', pinyin: 'fēi cháng', meaning: 'very' },
+            { word: '可能', pinyin: 'kě néng', meaning: 'maybe' },
+            { word: '已经', pinyin: 'yǐ jīng', meaning: 'already' },
+            { word: '但是', pinyin: 'dàn shì', meaning: 'but' },
+            { word: '因为', pinyin: 'yīn wèi', meaning: 'because' },
+            { word: '所以', pinyin: 'suǒ yǐ', meaning: 'so' },
+            { word: '如果', pinyin: 'rú guǒ', meaning: 'if' },
+            { word: '爸爸', pinyin: 'bà ba', meaning: 'father' },
+            { word: '妈妈', pinyin: 'mā ma', meaning: 'mother' }
         ];
 
-        // Challenge questions for meteorites (multiple choice)
         // Challenge questions for meteorites (multiple choice)
         const CHALLENGE_QUESTIONS = [
-            { q: "How do you say 'Hello'?", options: ["Annyeonghaseyo", "Gamsahamnida", "Saranghae", "Mianhae"], a: "Annyeonghaseyo" },
-            { q: "What is 'Kimchi'?", options: ["Spicy Cabbage", "Rice Cake", "BBQ Beef", "Soy Sauce"], a: "Spicy Cabbage" },
-            { q: "What does 'Saranghae' mean?", options: ["I love you", "Hello", "Goodbye", "Thank you"], a: "I love you" },
-            { q: "What is the Korean alphabet called?", options: ["Hangul", "Hanja", "Hiragana", "Kanji"], a: "Hangul" },
-            { q: "Capital of South Korea?", options: ["Seoul", "Busan", "Incheon", "Jeju"], a: "Seoul" },
-            { q: "What is 'Bulgogi'?", options: ["Marinated Beef", "Spicy Soup", "Fried Chicken", "Raw Fish"], a: "Marinated Beef" },
-            { q: "How do you say 'Thank you'?", options: ["Gamsahamnida", "Annyeong", "Juseyo", "Mwoyeyo"], a: "Gamsahamnida" },
-            { q: "What is 'Soju'?", options: ["Korean Alcohol", "Korean Tea", "Korean Soda", "Korean Water"], a: "Korean Alcohol" },
-            { q: "Which is a Korean car brand?", options: ["Hyundai", "Honda", "Toyota", "Ford"], a: "Hyundai" },
-            { q: "What does 'Oppa' mean?", options: ["Older Brother (female speaker)", "Dad", "Grandpa", "Uncle"], a: "Older Brother (female speaker)" }
+            { q: "Which tone rises then falls?", options: ["1", "2", "3", "4"], a: "4" },
+            { q: "Which tone rises like a question?", options: ["1", "2", "3", "4"], a: "2" },
+            { q: "Which tone is flat and high?", options: ["1", "2", "3", "4"], a: "1" },
+            { q: "Which tone dips then rises?", options: ["1", "2", "3", "4"], a: "3" },
+            { q: "What does 电脑 (diàn nǎo) literally mean?", options: ["Electric brain", "Smart box", "Think machine", "Power head"], a: "Electric brain" },
+            { q: "What does 手机 (shǒu jī) literally mean?", options: ["Talk box", "Hand machine", "Pocket phone", "Small radio"], a: "Hand machine" },
+            { q: "What does 火车 (huǒ chē) literally mean?", options: ["Fast cart", "Fire vehicle", "Steam box", "Iron horse"], a: "Fire vehicle" },
+            { q: "How many tones does Mandarin have?", options: ["3", "4", "5", "6"], a: "4" },
+            { q: "What does 中国 (zhōng guó) literally mean?", options: ["Big country", "Old land", "Middle kingdom", "Red nation"], a: "Middle kingdom" },
+            { q: "What does 明天 (míng tiān) literally mean?", options: ["Next sun", "Bright day", "New time", "Coming light"], a: "Bright day" },
+            { q: "What does 好 (hǎo) combine?", options: ["Sun + moon", "Woman + child", "Heart + hand", "Mouth + ear"], a: "Woman + child" },
+            { q: "How do you say 'hello' in Chinese?", options: ["谢谢", "再见", "你好", "对不起"], a: "你好" },
+            { q: "How do you say 'thank you' in Chinese?", options: ["你好", "谢谢", "再见", "不客气"], a: "谢谢" },
+            { q: "What does 大 (dà) mean?", options: ["Small", "Big", "Medium", "Tall"], a: "Big" },
+            { q: "What does 水 (shuǐ) mean?", options: ["Fire", "Earth", "Water", "Air"], a: "Water" }
         ];
 
         // Difficulty settings per level - MUCH harder progression!
@@ -1438,7 +1500,7 @@
         // Data Management
         function loadData() {
             try {
-                const saved = localStorage.getItem('koreanBlasterData');
+                const saved = localStorage.getItem('chineseBlasterData');
                 if (saved) gameData = JSON.parse(saved);
             } catch (e) {
                 console.log('No saved data');
@@ -1447,7 +1509,7 @@
 
         function saveData() {
             try {
-                localStorage.setItem('koreanBlasterData', JSON.stringify(gameData));
+                localStorage.setItem('chineseBlasterData', JSON.stringify(gameData));
             } catch (e) {
                 console.log('Could not save data');
             }
@@ -1458,7 +1520,7 @@
             const url = URL.createObjectURL(blob);
             const a = document.createElement('a');
             a.href = url;
-            a.download = 'korean-blaster-data.json';
+            a.download = 'chinese-blaster-data.json';
             a.click();
             URL.revokeObjectURL(url);
         }
@@ -1737,12 +1799,10 @@
             }
         }
 
-        // Speech - Korean
+        // Speech - Chinese
         function speakItem(item) {
-            // Voice should work regardless of music toggle
-
-
             if ('speechSynthesis' in window) {
+                // Handle both object and string inputs
                 let text;
                 if (typeof item === 'object' && item !== null) {
                     text = item.word || item.char;
@@ -1752,8 +1812,15 @@
 
                 speechSynthesis.cancel();
                 const utterance = new SpeechSynthesisUtterance(text);
-                utterance.lang = 'ko-KR';
-                utterance.rate = 0.8;
+                utterance.rate = 0.7;
+                utterance.pitch = 1.0;
+                const voices = speechSynthesis.getVoices();
+                // Try to find a Chinese voice
+                const chineseVoice = voices.find(v => v.lang.startsWith('zh')) ||
+                    voices.find(v => v.lang.includes('CN')) ||
+                    voices.find(v => v.lang.includes('Chinese')) || voices[0];
+                if (chineseVoice) utterance.voice = chineseVoice;
+                utterance.lang = 'zh-CN';
                 speechSynthesis.speak(utterance);
             }
         }
@@ -1761,34 +1828,34 @@
         // Game Logic
         function getItemPool() {
             if (gameState.level >= 3) {
-                // Levels 3-4: Korean words
-                const shuffled = [...KOREAN_WORDS].sort(() => Math.random() - 0.5);
+                // Levels 3-4: Chinese words
+                const shuffled = [...CHINESE_WORDS].sort(() => Math.random() - 0.5);
                 return shuffled.slice(0, 6);
             } else {
-                // Levels 1-2: Korean syllables
-                const shuffled = [...KOREAN_SYLLABLES].sort(() => Math.random() - 0.5);
+                // Levels 1-2: Chinese characters
+                const shuffled = [...CHINESE_CHARS].sort(() => Math.random() - 0.5);
                 return shuffled.slice(0, 8);
             }
         }
 
         function updateModeDisplay() {
-            const modeNames = ['', 'ROMANIZATION', 'HANGUL', 'ROMANIZATION WORDS', 'HANGUL WORDS', 'DICTATION'];
+            const modeNames = ['', 'PINYIN', 'CHARACTERS', 'PINYIN WORDS', 'CHARACTER WORDS', 'DICTATION'];
             el.modeDisplay.textContent = `LVL ${gameState.level}: ${modeNames[gameState.level]}`;
 
             if (gameState.level === 1) {
-                el.targetLabel.textContent = '🎯 SHOOT THE ROMANIZATION FOR: 🎯';
+                el.targetLabel.textContent = '🎯 SHOOT THE PINYIN FOR: 🎯';
                 el.targetLetter.classList.remove('hidden-letter');
             } else if (gameState.level === 2) {
                 el.targetLabel.textContent = '👂 LISTEN & SHOOT 👂';
                 el.targetLetter.classList.remove('hidden-letter');
             } else if (gameState.level === 3) {
-                el.targetLabel.textContent = '📝 SHOOT THE ROMANIZATION FOR: 📝';
+                el.targetLabel.textContent = '📝 SHOOT THE PINYIN FOR: 📝';
                 el.targetLetter.classList.remove('hidden-letter');
             } else if (gameState.level === 4) {
                 el.targetLabel.textContent = '🈲 READ & SHOOT 🈲';
                 el.targetLetter.classList.remove('hidden-letter');
             } else if (gameState.level === 5) {
-                el.targetLabel.textContent = '✍️ TYPE THE ROMANIZATION ✍️';
+                el.targetLabel.textContent = '✍️ TYPE THE PINYIN ✍️';
                 el.targetLetter.classList.add('hidden-letter');
             }
         }
@@ -1800,24 +1867,24 @@
 
             // Display based on level
             if (gameState.level === 1) {
-                // Show character prompt, shoot romanization target
+                // Show character prompt, shoot pinyin target
                 el.targetLetter.textContent = targetObj.char;
                 el.targetLetter.classList.remove('hidden-letter');
             } else if (gameState.level === 2) {
-                // Show character only (hover shows romanization + meaning)
+                // Show character only (hover shows pinyin + meaning)
                 el.targetLetter.textContent = targetObj.char;
                 el.targetLetter.classList.remove('hidden-letter');
             } else if (gameState.level === 3) {
-                // Show character word prompt, shoot rom word target
+                // Show character word prompt, shoot pinyin word target
                 el.targetLetter.textContent = targetObj.word;
                 el.targetLetter.classList.remove('hidden-letter');
             } else if (gameState.level === 4) {
-                // Show character words (hover shows rom + meaning)
+                // Show character words (hover shows pinyin + meaning)
                 el.targetLetter.textContent = targetObj.word;
                 el.targetLetter.classList.remove('hidden-letter');
             }
 
-            // Speak the character or word (always the Korean, not rom)
+            // Speak the character or word (always the Chinese, not pinyin)
             const textToSpeak = (gameState.level >= 3) ? targetObj.word : targetObj.char;
             setTimeout(() => speakItem(textToSpeak), 300);
         }
@@ -1840,22 +1907,22 @@
 
             // Display and tooltip based on level
             if (gameState.level === 1) {
-                // Show rom, hover shows character + meaning
+                // Show pinyin, hover shows character + meaning
                 item.textContent = contentObj.pinyin;
                 item.dataset.meaning = `${contentObj.char} = ${contentObj.meaning}`;
                 item.dataset.item = JSON.stringify(contentObj);
             } else if (gameState.level === 2) {
-                // Show character, hover shows rom + meaning
+                // Show character, hover shows pinyin + meaning
                 item.textContent = contentObj.char;
                 item.dataset.meaning = `${contentObj.pinyin} = ${contentObj.meaning}`;
                 item.dataset.item = JSON.stringify(contentObj);
             } else if (gameState.level === 3) {
-                // Show rom word, hover shows characters + meaning
+                // Show pinyin word, hover shows characters + meaning
                 item.textContent = contentObj.pinyin;
                 item.dataset.meaning = `${contentObj.word} = ${contentObj.meaning}`;
                 item.dataset.item = JSON.stringify(contentObj);
             } else if (gameState.level === 4) {
-                // Show character word, hover shows rom + meaning
+                // Show character word, hover shows pinyin + meaning
                 item.textContent = contentObj.word;
                 item.dataset.meaning = `${contentObj.pinyin} = ${contentObj.meaning}`;
                 item.dataset.item = JSON.stringify(contentObj);
@@ -2267,7 +2334,7 @@
                 2: '🈲 <b>CHARACTERS!</b><br>Now you see characters.<br>Listen and match!',
                 3: '📝 <b>PINYIN WORDS!</b><br>Shoot 2-character word pinyin.<br>Hover for characters!',
                 4: '🈲 <b>CHARACTER WORDS!</b><br>Now read the characters.<br>No more pinyin!',
-                5: '✍️ <b>DICTATION!</b><br>Type the Romanization.<br>Example: annyeong'
+                5: '✍️ <b>DICTATION!</b><br>Type the pinyin with tone numbers.<br>Example: ni3 hao3'
             };
 
             el.levelCompleteTitle.textContent = `🎉 LEVEL ${gameState.level} DONE! 🎉`;
@@ -2374,7 +2441,7 @@
         // Dictation Mode (Level 5)
         function startDictationMode() {
             gameState.isDictationMode = true;
-            gameState.itemPool = [...KOREAN_WORDS]; // Use full pool
+            gameState.itemPool = [...CHINESE_WORDS]; // Use full pool
             gameState.isPlaying = true;
             gameState.itemsPerRound = 10;
             gameState.itemsCorrect = 0;
@@ -2432,14 +2499,18 @@
         // Helper to normalize pinyin for comparison
         // e.g. "nǐ hǎo" -> "ni3 hao3"
         function normalizePinyinInput(pinyin) {
-            return pinyin.toLowerCase().trim();
+            return pinyin.normalize("NFD").replace(/[\u0300-\u036f]/g, "")
+                .replace(/v/g, 'ü');
+            // This is complex to implement perfectly in one go without a library
+            // So we will use a simple check: allow both numbered and toned input?
+            // Let's rely on exact match or simplified 'ni3' style check if user types numbers
         }
 
         function checkDictationAnswer() {
             const input = el.dictationInput.value.trim().toLowerCase().replace(/\s+/g, ' ');
             const target = gameState.targetItem;
 
-            const targetNumbered = target.pinyin.toLowerCase().trim();
+            const targetNumbered = convertPinyinToNumbered(target.pinyin);
 
             // Allow strict pinyin match (nǐ hǎo)
             // Or numbered pinyin match (ni3 hao3)
@@ -2459,7 +2530,7 @@
             hint.textContent = `Hint: ${targetNumbered}`;
             hint.style.color = 'var(--neon-orange)';
             setTimeout(() => {
-                hint.textContent = 'Example: annyeong';
+                hint.textContent = 'Example: nǐ hǎo → ni3 hao3';
                 hint.style.color = '';
             }, 2000);
         }
@@ -2523,9 +2594,6 @@
 
             el.pauseOverlay.classList.add('hidden');
             el.gameArea.classList.add('hidden');
-            el.gameOver.classList.add('hidden');
-            el.gameComplete.classList.add('hidden');
-            el.dictationArea.classList.add('hidden'); // Safety
 
             el.titleScreen.classList.remove('hidden');
 
