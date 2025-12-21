@@ -1,14 +1,19 @@
 <!DOCTYPE html>
 <html lang="en">
+
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0, user-scalable=no">
-    <title>🐉 Chinese Blaster! 汉字大师 🐉</title>
+    <title>🐯 Korean Blaster! 한글 마스터 🐯</title>
     <style>
         @import url('https://fonts.googleapis.com/css2?family=Press+Start+2P&family=Bangers&display=swap');
-        
-        * { margin: 0; padding: 0; box-sizing: border-box; }
-        
+
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+
         :root {
             --neon-pink: #ff00ff;
             --neon-cyan: #00ffff;
@@ -17,7 +22,7 @@
             --neon-orange: #ff6600;
             --deep-space: #0a0a1a;
         }
-        
+
         body {
             background: var(--deep-space);
             min-height: 100vh;
@@ -28,35 +33,46 @@
             overflow: hidden;
             touch-action: none;
         }
-        
+
         .crt-overlay {
             position: fixed;
-            top: 0; left: 0;
-            width: 100%; height: 100%;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
             pointer-events: none;
             z-index: 1000;
-            background: repeating-linear-gradient(0deg, rgba(0,0,0,0.1) 0px, rgba(0,0,0,0.1) 1px, transparent 1px, transparent 2px);
+            background: repeating-linear-gradient(0deg, rgba(0, 0, 0, 0.1) 0px, rgba(0, 0, 0, 0.1) 1px, transparent 1px, transparent 2px);
         }
-        
+
         .starfield {
             position: fixed;
-            top: 0; left: 0;
-            width: 100%; height: 100%;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
             z-index: -1;
         }
-        
+
         .bg-star {
             position: absolute;
             background: white;
             border-radius: 50%;
             animation: twinkle 2s infinite ease-in-out;
         }
-        
+
         @keyframes twinkle {
-            0%, 100% { opacity: 0.3; }
-            50% { opacity: 1; }
+
+            0%,
+            100% {
+                opacity: 0.3;
+            }
+
+            50% {
+                opacity: 1;
+            }
         }
-        
+
         /* Shooting stars */
         .shooting-star {
             position: absolute;
@@ -69,21 +85,23 @@
             pointer-events: none;
             z-index: 0;
         }
-        
+
         @keyframes shootingStar {
             0% {
                 transform: rotate(135deg) translateX(0);
                 opacity: 0.6;
             }
+
             70% {
                 opacity: 0.4;
             }
+
             100% {
                 transform: rotate(135deg) translateX(400px);
                 opacity: 0;
             }
         }
-        
+
         .game-container {
             width: 100%;
             max-width: 900px;
@@ -93,15 +111,17 @@
             border: 8px solid #fffacd;
             position: relative;
             overflow: hidden;
-            box-shadow: 0 0 30px var(--neon-pink), 0 0 60px var(--neon-cyan), inset 0 0 100px rgba(107,0,179,0.3);
+            box-shadow: 0 0 30px var(--neon-pink), 0 0 60px var(--neon-cyan), inset 0 0 100px rgba(107, 0, 179, 0.3);
             cursor: crosshair;
         }
-        
+
         /* Screens */
         .screen {
             position: absolute;
-            top: 0; left: 0;
-            width: 100%; height: 100%;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
             display: flex;
             flex-direction: column;
             justify-content: center;
@@ -110,9 +130,11 @@
             background: radial-gradient(ellipse at center, #2a1a4e 0%, #0a0a1a 70%);
             cursor: default;
         }
-        
-        .screen.hidden { display: none; }
-        
+
+        .screen.hidden {
+            display: none;
+        }
+
         .game-title {
             font-family: 'Press Start 2P', cursive;
             font-size: clamp(1.1rem, 3.5vw, 1.8rem);
@@ -125,12 +147,19 @@
             padding: 10px 25px;
             margin: 0;
         }
-        
+
         @keyframes titlePulse {
-            0%, 100% { transform: scale(1); }
-            50% { transform: scale(1.02); }
+
+            0%,
+            100% {
+                transform: scale(1);
+            }
+
+            50% {
+                transform: scale(1.02);
+            }
         }
-        
+
         .subtitle {
             font-size: clamp(0.5rem, 1.5vw, 0.8rem);
             color: var(--neon-cyan);
@@ -138,26 +167,34 @@
             text-shadow: 0 0 10px var(--neon-cyan);
             animation: blink 1s infinite;
         }
-        
+
         @keyframes blink {
-            0%, 49% { opacity: 1; }
-            50%, 100% { opacity: 0.3; }
+
+            0%,
+            49% {
+                opacity: 1;
+            }
+
+            50%,
+            100% {
+                opacity: 0.3;
+            }
         }
-        
+
         .level-select-row {
             display: flex;
             align-items: center;
             gap: 10px;
             margin: 15px 0;
         }
-        
+
         .level-select-label {
             font-size: clamp(0.4rem, 1.2vw, 0.6rem);
             color: var(--neon-cyan);
         }
-        
+
         .level-select {
-            background: rgba(0,0,0,0.7);
+            background: rgba(0, 0, 0, 0.7);
             border: 2px solid var(--neon-cyan);
             color: var(--neon-cyan);
             font-family: 'Press Start 2P', cursive;
@@ -165,18 +202,18 @@
             padding: 8px 12px;
             cursor: pointer;
         }
-        
+
         .level-select:focus {
             outline: none;
             border-color: var(--neon-yellow);
             box-shadow: 0 0 10px var(--neon-yellow);
         }
-        
+
         .level-select option {
             background: #1a0a2e;
             color: var(--neon-cyan);
         }
-        
+
         .btn {
             margin-top: 20px;
             padding: 15px 40px;
@@ -187,40 +224,45 @@
             cursor: pointer;
             transition: all 0.1s;
         }
-        
+
         .btn-green {
             background: linear-gradient(180deg, var(--neon-green) 0%, #00aa00 100%);
             box-shadow: 0 6px 0 #006600, 0 0 20px var(--neon-green);
         }
-        
+
         .btn-cyan {
             background: linear-gradient(180deg, var(--neon-cyan) 0%, #0088aa 100%);
             box-shadow: 0 6px 0 #005566, 0 0 20px var(--neon-cyan);
         }
-        
+
         .btn-pink {
             background: linear-gradient(180deg, var(--neon-pink) 0%, #aa00aa 100%);
             box-shadow: 0 6px 0 #660066, 0 0 20px var(--neon-pink);
             color: white;
         }
-        
+
         .btn-orange {
             background: linear-gradient(180deg, var(--neon-orange) 0%, #aa4400 100%);
             box-shadow: 0 6px 0 #663300, 0 0 20px var(--neon-orange);
         }
-        
+
         .btn-small {
             padding: 10px 20px;
             font-size: clamp(0.4rem, 1.2vw, 0.6rem);
             margin: 10px;
         }
-        
-        .btn:hover { transform: translateY(2px); }
-        .btn:active { transform: translateY(6px); }
-        
+
+        .btn:hover {
+            transform: translateY(2px);
+        }
+
+        .btn:active {
+            transform: translateY(6px);
+        }
+
         /* Username Input */
         .username-input {
-            background: rgba(0,0,0,0.5);
+            background: rgba(0, 0, 0, 0.5);
             border: 3px solid var(--neon-cyan);
             color: var(--neon-cyan);
             font-family: 'Press Start 2P', cursive;
@@ -231,17 +273,18 @@
             max-width: 300px;
             margin: 20px 0;
         }
-        
+
         .username-input:focus {
             outline: none;
             border-color: var(--neon-yellow);
             box-shadow: 0 0 20px var(--neon-yellow);
         }
-        
+
         /* HUD */
         .hud {
             position: absolute;
-            top: 0; left: 0;
+            top: 0;
+            left: 0;
             width: 100%;
             padding: 10px 15px;
             display: flex;
@@ -249,26 +292,33 @@
             align-items: center;
             flex-wrap: wrap;
             gap: 5px;
-            background: linear-gradient(180deg, rgba(0,0,0,0.8) 0%, transparent 100%);
+            background: linear-gradient(180deg, rgba(0, 0, 0, 0.8) 0%, transparent 100%);
             z-index: 50;
         }
-        
+
         .hud-item {
             font-size: clamp(0.35rem, 1.1vw, 0.55rem);
             color: var(--neon-yellow);
             text-shadow: 0 0 10px var(--neon-yellow);
         }
-        
-        .hud-item.cyan { color: var(--neon-cyan); text-shadow: 0 0 10px var(--neon-cyan); }
-        
-        .lives-display { display: flex; gap: 3px; }
+
+        .hud-item.cyan {
+            color: var(--neon-cyan);
+            text-shadow: 0 0 10px var(--neon-cyan);
+        }
+
+        .lives-display {
+            display: flex;
+            gap: 3px;
+        }
+
         .life-icon {
             font-size: clamp(0.8rem, 2vw, 1.2rem);
             filter: drop-shadow(0 0 5px var(--neon-pink));
         }
-        
+
         .pause-btn {
-            background: rgba(255,255,255,0.1);
+            background: rgba(255, 255, 255, 0.1);
             border: 2px solid var(--neon-cyan);
             color: var(--neon-cyan);
             font-family: 'Press Start 2P', cursive;
@@ -276,9 +326,11 @@
             padding: 5px 10px;
             cursor: pointer;
         }
-        
-        .pause-btn:hover { background: rgba(0,255,255,0.2); }
-        
+
+        .pause-btn:hover {
+            background: rgba(0, 255, 255, 0.2);
+        }
+
         /* Target Area */
         .target-area {
             position: absolute;
@@ -288,14 +340,14 @@
             text-align: center;
             z-index: 40;
         }
-        
+
         .target-label {
             font-size: clamp(0.35rem, 1vw, 0.5rem);
             color: var(--neon-cyan);
             text-shadow: 0 0 5px var(--neon-cyan);
             margin-bottom: 5px;
         }
-        
+
         .target-letter {
             font-family: 'Bangers', cursive;
             font-size: clamp(2.5rem, 8vw, 4rem);
@@ -305,23 +357,28 @@
             min-height: 1.2em;
             text-transform: none !important;
         }
-        
+
         .target-letter.hidden-letter {
             color: transparent;
             text-shadow: none;
         }
-        
+
         .target-letter.hidden-letter::after {
             content: '?';
             color: var(--neon-pink);
             text-shadow: 0 0 20px var(--neon-pink);
         }
-        
+
         @keyframes targetGlow {
-            0% { filter: brightness(1); }
-            100% { filter: brightness(1.3); }
+            0% {
+                filter: brightness(1);
+            }
+
+            100% {
+                filter: brightness(1.3);
+            }
         }
-        
+
         .speak-btn {
             margin-top: 8px;
             padding: 6px 15px;
@@ -333,7 +390,7 @@
             cursor: pointer;
             box-shadow: 0 0 10px var(--neon-pink);
         }
-        
+
         /* Game Area */
         .game-area {
             position: absolute;
@@ -343,8 +400,9 @@
             height: calc(100% - 220px);
             overflow: hidden;
         }
-        
-        .floating-letter, .floating-word {
+
+        .floating-letter,
+        .floating-word {
             position: absolute;
             font-family: 'Bangers', cursive;
             font-size: clamp(2.2rem, 6vw, 3.5rem);
@@ -353,13 +411,13 @@
             text-transform: none !important;
             cursor: help;
         }
-        
+
         .floating-word {
             font-size: clamp(1.6rem, 4.5vw, 2.8rem);
             letter-spacing: 2px;
             text-transform: none !important;
         }
-        
+
         /* Tooltip for translations */
         .floating-letter[data-meaning]::after,
         .floating-word[data-meaning]::after {
@@ -381,16 +439,17 @@
             border: 2px solid var(--neon-green);
             z-index: 100;
         }
-        
+
         .floating-letter:hover::after,
         .floating-word:hover::after {
             opacity: 1;
         }
-        
-        .floating-letter.hit, .floating-word.hit {
+
+        .floating-letter.hit,
+        .floating-word.hit {
             animation: letterHit 0.3s ease-out forwards;
         }
-        
+
         /* Meteorite */
         .meteorite {
             position: absolute;
@@ -401,17 +460,24 @@
             filter: drop-shadow(0 0 10px #888);
             animation: meteorSpin 2s linear infinite;
         }
-        
+
         @keyframes meteorSpin {
-            0% { transform: rotate(0deg); }
-            100% { transform: rotate(360deg); }
+            0% {
+                transform: rotate(0deg);
+            }
+
+            100% {
+                transform: rotate(360deg);
+            }
         }
-        
+
         /* Challenge Modal */
         .challenge-modal {
             position: absolute;
-            top: 0; left: 0;
-            width: 100%; height: 100%;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
             background: rgba(0, 0, 0, 0.9);
             display: flex;
             flex-direction: column;
@@ -420,9 +486,11 @@
             z-index: 85;
             padding: 20px;
         }
-        
-        .challenge-modal.hidden { display: none; }
-        
+
+        .challenge-modal.hidden {
+            display: none;
+        }
+
         .challenge-title {
             font-family: 'Bangers', cursive;
             font-size: clamp(1.5rem, 4vw, 2.5rem);
@@ -431,7 +499,7 @@
             margin-bottom: 20px;
             text-align: center;
         }
-        
+
         .challenge-question {
             font-size: clamp(0.5rem, 1.5vw, 0.8rem);
             color: white;
@@ -440,7 +508,7 @@
             max-width: 90%;
             line-height: 1.6;
         }
-        
+
         .challenge-options {
             display: grid;
             grid-template-columns: 1fr 1fr;
@@ -449,9 +517,9 @@
             width: 90%;
             max-width: 400px;
         }
-        
+
         .challenge-option {
-            background: rgba(0,0,0,0.5);
+            background: rgba(0, 0, 0, 0.5);
             border: 3px solid var(--neon-cyan);
             color: var(--neon-cyan);
             font-family: 'Press Start 2P', cursive;
@@ -461,66 +529,68 @@
             transition: all 0.2s;
             text-align: center;
         }
-        
+
         .challenge-option:hover {
-            background: rgba(0,255,255,0.2);
+            background: rgba(0, 255, 255, 0.2);
             border-color: var(--neon-yellow);
             color: var(--neon-yellow);
         }
-        
+
         .challenge-option.correct {
-            background: rgba(0,255,0,0.3);
+            background: rgba(0, 255, 0, 0.3);
             border-color: var(--neon-green);
             color: var(--neon-green);
         }
-        
+
         .challenge-option.wrong {
-            background: rgba(255,0,0,0.3);
+            background: rgba(255, 0, 0, 0.3);
             border-color: #ff4444;
             color: #ff4444;
         }
-        
+
         .challenge-option.disabled {
             pointer-events: none;
             opacity: 0.5;
         }
-        
+
         .challenge-result {
             font-size: clamp(0.5rem, 1.5vw, 0.7rem);
             margin-bottom: 15px;
             text-align: center;
         }
-        
+
         .challenge-result.correct {
             color: var(--neon-green);
         }
-        
+
         .challenge-result.wrong {
             color: #ff4444;
         }
-        
-        .challenge-result.hidden { display: none; }
-        
+
+        .challenge-result.hidden {
+            display: none;
+        }
+
         .challenge-buttons {
             display: flex;
             gap: 15px;
             flex-wrap: wrap;
             justify-content: center;
         }
-        
+
         .double-down-section {
             margin-top: 20px;
             padding-top: 20px;
             border-top: 2px solid var(--neon-pink);
             text-align: center;
         }
-        
+
         .double-down-text {
             font-size: clamp(0.4rem, 1.2vw, 0.6rem);
             color: var(--neon-orange);
             margin-bottom: 15px;
         }
-        
+
         /* Dictation Mode */
         .dictation-area {
             position: absolute;
@@ -532,9 +602,11 @@
             width: 90%;
             max-width: 500px;
         }
-        
-        .dictation-area.hidden { display: none; }
-        
+
+        .dictation-area.hidden {
+            display: none;
+        }
+
         .dictation-prompt {
             font-family: 'Bangers', cursive;
             font-size: clamp(3rem, 10vw, 5rem);
@@ -543,9 +615,9 @@
             margin-bottom: 30px;
             min-height: 1.2em;
         }
-        
+
         .dictation-input {
-            background: rgba(0,0,0,0.5);
+            background: rgba(0, 0, 0, 0.5);
             border: 3px solid var(--neon-cyan);
             color: var(--neon-cyan);
             font-family: 'Press Start 2P', cursive;
@@ -555,25 +627,35 @@
             width: 100%;
             margin-bottom: 20px;
         }
-        
+
         .dictation-input:focus {
             outline: none;
             border-color: var(--neon-yellow);
             box-shadow: 0 0 20px var(--neon-yellow);
         }
-        
+
         .dictation-hint {
             font-size: clamp(0.35rem, 1vw, 0.5rem);
             color: var(--neon-pink);
             margin-bottom: 15px;
         }
-        
+
         @keyframes letterHit {
-            0% { transform: scale(1); opacity: 1; }
-            50% { transform: scale(1.5); }
-            100% { transform: scale(0); opacity: 0; }
+            0% {
+                transform: scale(1);
+                opacity: 1;
+            }
+
+            50% {
+                transform: scale(1.5);
+            }
+
+            100% {
+                transform: scale(0);
+                opacity: 0;
+            }
         }
-        
+
         /* Spaceship */
         .spaceship {
             position: absolute;
@@ -585,15 +667,25 @@
             z-index: 30;
             pointer-events: none;
         }
-        
-        .spaceship.shooting { animation: shipRecoil 0.1s ease-out; }
-        
-        @keyframes shipRecoil {
-            0% { transform: translateX(-50%) translateY(0); }
-            50% { transform: translateX(-50%) translateY(5px); }
-            100% { transform: translateX(-50%) translateY(0); }
+
+        .spaceship.shooting {
+            animation: shipRecoil 0.1s ease-out;
         }
-        
+
+        @keyframes shipRecoil {
+            0% {
+                transform: translateX(-50%) translateY(0);
+            }
+
+            50% {
+                transform: translateX(-50%) translateY(5px);
+            }
+
+            100% {
+                transform: translateX(-50%) translateY(0);
+            }
+        }
+
         /* Laser */
         .laser {
             position: absolute;
@@ -605,7 +697,7 @@
             z-index: 25;
             pointer-events: none;
         }
-        
+
         /* Explosion */
         .explosion {
             position: absolute;
@@ -614,13 +706,24 @@
             z-index: 60;
             pointer-events: none;
         }
-        
+
         @keyframes explode {
-            0% { transform: scale(0.5); opacity: 1; }
-            50% { transform: scale(1.5); opacity: 1; }
-            100% { transform: scale(2); opacity: 0; }
+            0% {
+                transform: scale(0.5);
+                opacity: 1;
+            }
+
+            50% {
+                transform: scale(1.5);
+                opacity: 1;
+            }
+
+            100% {
+                transform: scale(2);
+                opacity: 0;
+            }
         }
-        
+
         /* Feedback */
         .feedback {
             position: absolute;
@@ -634,33 +737,69 @@
             animation: feedbackPop 1s ease-out forwards;
             pointer-events: none;
         }
-        
-        .feedback.great { color: var(--neon-green); text-shadow: 0 0 20px var(--neon-green), 4px 4px 0 #006600; }
-        .feedback.oops { color: var(--neon-orange); text-shadow: 0 0 20px var(--neon-orange), 4px 4px 0 #993300; }
-        
-        @keyframes feedbackPop {
-            0% { transform: translate(-50%, -50%) scale(0); opacity: 0; }
-            30% { transform: translate(-50%, -50%) scale(1.3); opacity: 1; }
-            60% { transform: translate(-50%, -50%) scale(1); opacity: 1; }
-            100% { transform: translate(-50%, -50%) scale(1); opacity: 0; }
+
+        .feedback.great {
+            color: var(--neon-green);
+            text-shadow: 0 0 20px var(--neon-green), 4px 4px 0 #006600;
         }
-        
+
+        .feedback.oops {
+            color: var(--neon-orange);
+            text-shadow: 0 0 20px var(--neon-orange), 4px 4px 0 #993300;
+        }
+
+        @keyframes feedbackPop {
+            0% {
+                transform: translate(-50%, -50%) scale(0);
+                opacity: 0;
+            }
+
+            30% {
+                transform: translate(-50%, -50%) scale(1.3);
+                opacity: 1;
+            }
+
+            60% {
+                transform: translate(-50%, -50%) scale(1);
+                opacity: 1;
+            }
+
+            100% {
+                transform: translate(-50%, -50%) scale(1);
+                opacity: 0;
+            }
+        }
+
         /* Stars */
-        .stars-earned { margin: 20px 0; font-size: clamp(1.5rem, 5vw, 3rem); }
-        
+        .stars-earned {
+            margin: 20px 0;
+            font-size: clamp(1.5rem, 5vw, 3rem);
+        }
+
         .stars-earned .star {
             display: inline-block;
             animation: starPop 0.5s ease-out forwards;
             opacity: 0;
             filter: drop-shadow(0 0 10px var(--neon-yellow));
         }
-        
+
         @keyframes starPop {
-            0% { transform: scale(0) rotate(0deg); opacity: 0; }
-            50% { transform: scale(1.3) rotate(180deg); opacity: 1; }
-            100% { transform: scale(1) rotate(360deg); opacity: 1; }
+            0% {
+                transform: scale(0) rotate(0deg);
+                opacity: 0;
+            }
+
+            50% {
+                transform: scale(1.3) rotate(180deg);
+                opacity: 1;
+            }
+
+            100% {
+                transform: scale(1) rotate(360deg);
+                opacity: 1;
+            }
         }
-        
+
         /* Screen specific */
         .level-intro {
             font-size: clamp(0.4rem, 1.2vw, 0.6rem);
@@ -670,18 +809,18 @@
             max-width: 85%;
             line-height: 1.8;
         }
-        
+
         .final-score {
             font-size: clamp(0.5rem, 1.5vw, 0.8rem);
             color: var(--neon-yellow);
             margin-top: 15px;
             text-shadow: 0 0 10px var(--neon-yellow);
         }
-        
+
         .instructions {
             margin-top: 20px;
             padding: 15px 20px;
-            background: rgba(0,0,0,0.5);
+            background: rgba(0, 0, 0, 0.5);
             border: 2px solid var(--neon-cyan);
             border-radius: 10px;
             max-width: 85%;
@@ -690,18 +829,18 @@
             gap: 5px 10px;
             align-items: center;
         }
-        
+
         .instructions .level-icon {
             font-size: clamp(0.5rem, 1.2vw, 0.7rem);
             text-align: center;
         }
-        
+
         .instructions .level-text {
             font-size: clamp(0.35rem, 1vw, 0.5rem);
             color: white;
             text-align: left;
         }
-        
+
         .shoot-hint {
             position: absolute;
             bottom: 75px;
@@ -714,7 +853,7 @@
             z-index: 35;
             pointer-events: none;
         }
-        
+
         /* Scoreboard */
         .scoreboard {
             max-height: 200px;
@@ -722,24 +861,33 @@
             width: 90%;
             max-width: 400px;
             margin: 15px 0;
-            background: rgba(0,0,0,0.5);
+            background: rgba(0, 0, 0, 0.5);
             border: 2px solid var(--neon-pink);
             border-radius: 8px;
         }
-        
+
         .score-row {
             display: flex;
             justify-content: space-between;
             padding: 8px 15px;
             font-size: clamp(0.35rem, 1vw, 0.5rem);
             color: white;
-            border-bottom: 1px solid rgba(255,0,255,0.3);
+            border-bottom: 1px solid rgba(255, 0, 255, 0.3);
         }
-        
-        .score-row:last-child { border-bottom: none; }
-        .score-row.header { color: var(--neon-yellow); font-weight: bold; }
-        .score-row.current-user { color: var(--neon-green); }
-        
+
+        .score-row:last-child {
+            border-bottom: none;
+        }
+
+        .score-row.header {
+            color: var(--neon-yellow);
+            font-weight: bold;
+        }
+
+        .score-row.current-user {
+            color: var(--neon-green);
+        }
+
         .btn-row {
             display: flex;
             flex-wrap: wrap;
@@ -747,15 +895,15 @@
             gap: 10px;
             margin-top: 15px;
         }
-        
+
         .player-welcome {
             font-size: clamp(0.4rem, 1.2vw, 0.6rem);
             color: var(--neon-green);
             margin: 10px 0;
         }
-        
+
         .stats-container {
-            background: rgba(0,0,0,0.5);
+            background: rgba(0, 0, 0, 0.5);
             border: 2px solid var(--neon-cyan);
             border-radius: 8px;
             padding: 15px;
@@ -763,7 +911,7 @@
             width: 90%;
             max-width: 350px;
         }
-        
+
         .stat-item {
             display: flex;
             justify-content: space-between;
@@ -771,24 +919,30 @@
             color: white;
             padding: 5px 0;
         }
-        
-        .stat-value { color: var(--neon-yellow); }
-        
+
+        .stat-value {
+            color: var(--neon-yellow);
+        }
+
         /* Pause overlay */
         .pause-overlay {
             position: absolute;
-            top: 0; left: 0;
-            width: 100%; height: 100%;
-            background: rgba(0,0,0,0.85);
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            background: rgba(0, 0, 0, 0.85);
             display: flex;
             flex-direction: column;
             justify-content: center;
             align-items: center;
             z-index: 80;
         }
-        
-        .pause-overlay.hidden { display: none; }
-        
+
+        .pause-overlay.hidden {
+            display: none;
+        }
+
         .pause-title {
             font-family: 'Bangers', cursive;
             font-size: clamp(2rem, 6vw, 4rem);
@@ -796,13 +950,13 @@
             text-shadow: 0 0 20px var(--neon-cyan);
             animation: titlePulse 1.5s infinite;
         }
-        
+
         /* Music toggle */
         .music-toggle {
             position: absolute;
             top: 50px;
             right: 10px;
-            background: rgba(0,0,0,0.5);
+            background: rgba(0, 0, 0, 0.5);
             border: 2px solid var(--neon-pink);
             color: var(--neon-pink);
             font-size: 1.2rem;
@@ -812,27 +966,49 @@
             cursor: pointer;
             z-index: 60;
         }
-        
-        .music-toggle:hover { background: rgba(255,0,255,0.2); }
-        
+
+        .music-toggle:hover {
+            background: rgba(255, 0, 255, 0.2);
+        }
+
         @media (max-width: 600px) {
-            .game-container { border-width: 4px; max-height: 100vh; }
-            .hud { padding: 8px 10px; }
-            .target-area { top: 48px; }
-            .game-area { top: 130px; height: calc(100% - 195px); }
-            .spaceship { bottom: 18px; }
-            .shoot-hint { bottom: 60px; }
+            .game-container {
+                border-width: 4px;
+                max-height: 100vh;
+            }
+
+            .hud {
+                padding: 8px 10px;
+            }
+
+            .target-area {
+                top: 48px;
+            }
+
+            .game-area {
+                top: 130px;
+                height: calc(100% - 195px);
+            }
+
+            .spaceship {
+                bottom: 18px;
+            }
+
+            .shoot-hint {
+                bottom: 60px;
+            }
         }
     </style>
 </head>
+
 <body>
     <div class="crt-overlay"></div>
     <div class="starfield" id="starfield"></div>
-    
+
     <div class="game-container" id="gameContainer">
         <!-- Login Screen -->
         <div class="screen" id="loginScreen">
-            <h1 class="game-title">🐉 CHINESE BLASTER! 🐉</h1>
+            <h1 class="game-title">🐯 KOREAN BLASTER! 🐯</h1>
             <p class="subtitle">ENTER YOUR NAME</p>
             <input type="text" class="username-input" id="usernameInput" placeholder="Your name..." maxlength="12">
             <button class="btn btn-green" id="loginBtn">START</button>
@@ -842,10 +1018,10 @@
             </div>
             <input type="file" id="importFile" accept=".json" style="display:none">
         </div>
-        
+
         <!-- Title Screen -->
         <div class="screen hidden" id="titleScreen">
-            <h1 class="game-title">🐉 CHINESE BLASTER! 🐉</h1>
+            <h1 class="game-title">🐯 KOREAN BLASTER! 🐯</h1>
             <p class="player-welcome">Welcome, <span id="playerName">Player</span>!</p>
             <div class="level-select-row">
                 <label for="levelSelect" class="level-select-label">START AT:</label>
@@ -867,14 +1043,14 @@
                 <button class="btn btn-small btn-cyan" id="changeUserBtn">👤 CHANGE</button>
             </div>
             <div class="instructions">
-                <span class="level-icon">🔤</span><span class="level-text">Level 1: Shoot pinyin</span>
-                <span class="level-icon">🈲</span><span class="level-text">Level 2: Shoot characters</span>
-                <span class="level-icon">📝</span><span class="level-text">Level 3: Shoot pinyin words</span>
-                <span class="level-icon">🈲</span><span class="level-text">Level 4: Shoot character words</span>
-                <span class="level-icon">✍️</span><span class="level-text">Level 5: Type pinyin dictation</span>
+                <span class="level-icon">🔤</span><span class="level-text">Level 1: Shoot Romanization</span>
+                <span class="level-icon">🈲</span><span class="level-text">Level 2: Shoot Hangul</span>
+                <span class="level-icon">📝</span><span class="level-text">Level 3: Shoot Romanization words</span>
+                <span class="level-icon">🈲</span><span class="level-text">Level 4: Shoot Hangul words</span>
+                <span class="level-icon">✍️</span><span class="level-text">Level 5: Type Romanization</span>
             </div>
         </div>
-        
+
         <!-- Stats Screen -->
         <div class="screen hidden" id="statsScreen">
             <h2 style="color: var(--neon-cyan); font-size: clamp(1rem, 3vw, 1.5rem);">📊 YOUR STATS</h2>
@@ -882,14 +1058,14 @@
             <div class="stats-container" id="statsContainer"></div>
             <button class="btn btn-cyan" id="statsBackBtn">BACK</button>
         </div>
-        
+
         <!-- Scoreboard Screen -->
         <div class="screen hidden" id="scoreboardScreen">
             <h2 style="color: var(--neon-yellow); font-size: clamp(1rem, 3vw, 1.5rem);">🏆 TOP SCORES</h2>
             <div class="scoreboard" id="scoreboardList"></div>
             <button class="btn btn-cyan" id="scoreboardBackBtn">BACK</button>
         </div>
-        
+
         <!-- HUD -->
         <div class="hud">
             <div class="hud-item">SCORE: <span id="score">0</span></div>
@@ -898,33 +1074,34 @@
             <div class="hud-item">RND: <span id="round">1</span></div>
             <button class="pause-btn" id="pauseBtn">❚❚</button>
         </div>
-        
+
         <!-- Music Toggle -->
         <button class="music-toggle" id="musicToggle">🔊</button>
-        
+
         <!-- Target Area -->
         <div class="target-area">
             <div class="target-label" id="targetLabel">🎯 SHOOT THIS LETTER 🎯</div>
             <div class="target-letter" id="targetLetter">A</div>
             <button class="speak-btn" id="speakBtn">🔊 HEAR IT</button>
         </div>
-        
+
         <!-- Game Area -->
         <div class="game-area" id="gameArea"></div>
         <div class="shoot-hint" id="shootHint">TAP TO SHOOT! 🔫</div>
-        <div class="spaceship" id="spaceship">🐉</div>
-        
+        <div class="spaceship" id="spaceship">🐯</div>
+
         <!-- Dictation Area (Level 5) -->
         <div class="dictation-area hidden" id="dictationArea">
             <div class="dictation-prompt" id="dictationPrompt">你好</div>
-            <input type="text" class="dictation-input" id="dictationInput" placeholder="Type pinyin with tone numbers...">
+            <input type="text" class="dictation-input" id="dictationInput"
+                placeholder="Type pinyin with tone numbers...">
             <p class="dictation-hint">Example: nǐ hǎo → ni3 hao3</p>
             <div class="btn-row">
                 <button class="btn btn-green btn-small" id="dictationSubmitBtn">SUBMIT</button>
                 <button class="btn btn-orange btn-small" id="beatsMeBtn">BEATS ME!</button>
             </div>
         </div>
-        
+
         <!-- Challenge Modal (Meteorite) -->
         <div class="challenge-modal hidden" id="challengeModal">
             <h2 class="challenge-title">☄️ METEORITE CHALLENGE! ☄️</h2>
@@ -942,23 +1119,24 @@
             </div>
             <button class="btn btn-cyan btn-small hidden" id="challengeContinueBtn">CONTINUE</button>
         </div>
-        
+
         <!-- Pause Overlay -->
         <div class="pause-overlay hidden" id="pauseOverlay">
             <h2 class="pause-title">⏸️ PAUSED</h2>
             <button class="btn btn-green" id="resumeBtn">▶ RESUME</button>
             <button class="btn btn-orange" id="quitBtn">✖ QUIT</button>
         </div>
-        
+
         <!-- Level Complete Screen -->
         <div class="screen hidden" id="levelComplete">
-            <h2 style="color: var(--neon-yellow); font-size: clamp(1.5rem, 4vw, 2.5rem);" id="levelCompleteTitle">🎉 AWESOME! 🎉</h2>
+            <h2 style="color: var(--neon-yellow); font-size: clamp(1.5rem, 4vw, 2.5rem);" id="levelCompleteTitle">🎉
+                AWESOME! 🎉</h2>
             <p style="color: var(--neon-cyan); font-size: 0.7rem;" id="levelCompleteText">Level Complete!</p>
             <div class="level-intro" id="nextLevelIntro"></div>
             <div class="stars-earned" id="starsEarned"></div>
             <button class="btn btn-cyan" id="continueBtn">CONTINUE</button>
         </div>
-        
+
         <!-- Game Complete Screen -->
         <div class="screen hidden" id="gameComplete">
             <h2 style="color: var(--neon-yellow); font-size: clamp(1.5rem, 4vw, 2.5rem);">🏆 YOU WIN! 🏆</h2>
@@ -968,7 +1146,7 @@
             <button class="btn btn-green" id="playAgainBtn">PLAY AGAIN</button>
             <button class="btn btn-small btn-cyan" id="winMenuBtn">MENU</button>
         </div>
-        
+
         <!-- Game Over Screen -->
         <div class="screen hidden" id="gameOver">
             <h2 style="color: var(--neon-pink); font-size: clamp(1.5rem, 4vw, 2.5rem);">GAME OVER</h2>
@@ -978,175 +1156,113 @@
             <button class="btn btn-small btn-cyan" id="gameOverMenuBtn">MENU</button>
         </div>
     </div>
-    
+
     <script>
-        // 100 Most Common Chinese Characters with pinyin and meaning
-        const CHINESE_CHARS = [
-            {char: '的', pinyin: 'de', meaning: 'of/possessive'},
-            {char: '一', pinyin: 'yī', meaning: 'one'},
-            {char: '是', pinyin: 'shì', meaning: 'is/am/are'},
-            {char: '不', pinyin: 'bù', meaning: 'not'},
-            {char: '了', pinyin: 'le', meaning: 'completed action'},
-            {char: '在', pinyin: 'zài', meaning: 'at/in'},
-            {char: '人', pinyin: 'rén', meaning: 'person'},
-            {char: '有', pinyin: 'yǒu', meaning: 'have'},
-            {char: '我', pinyin: 'wǒ', meaning: 'I/me'},
-            {char: '他', pinyin: 'tā', meaning: 'he/him'},
-            {char: '这', pinyin: 'zhè', meaning: 'this'},
-            {char: '个', pinyin: 'gè', meaning: 'measure word'},
-            {char: '们', pinyin: 'men', meaning: 'plural marker'},
-            {char: '中', pinyin: 'zhōng', meaning: 'middle/China'},
-            {char: '来', pinyin: 'lái', meaning: 'come'},
-            {char: '上', pinyin: 'shàng', meaning: 'up/above'},
-            {char: '大', pinyin: 'dà', meaning: 'big'},
-            {char: '为', pinyin: 'wèi', meaning: 'for/because'},
-            {char: '和', pinyin: 'hé', meaning: 'and'},
-            {char: '国', pinyin: 'guó', meaning: 'country'},
-            {char: '地', pinyin: 'dì', meaning: 'earth/ground'},
-            {char: '到', pinyin: 'dào', meaning: 'arrive/to'},
-            {char: '以', pinyin: 'yǐ', meaning: 'with/by'},
-            {char: '说', pinyin: 'shuō', meaning: 'speak/say'},
-            {char: '时', pinyin: 'shí', meaning: 'time'},
-            {char: '要', pinyin: 'yào', meaning: 'want/need'},
-            {char: '就', pinyin: 'jiù', meaning: 'then/just'},
-            {char: '出', pinyin: 'chū', meaning: 'out/exit'},
-            {char: '会', pinyin: 'huì', meaning: 'can/will'},
-            {char: '可', pinyin: 'kě', meaning: 'can/may'},
-            {char: '也', pinyin: 'yě', meaning: 'also'},
-            {char: '你', pinyin: 'nǐ', meaning: 'you'},
-            {char: '对', pinyin: 'duì', meaning: 'correct/toward'},
-            {char: '生', pinyin: 'shēng', meaning: 'life/born'},
-            {char: '能', pinyin: 'néng', meaning: 'able/can'},
-            {char: '而', pinyin: 'ér', meaning: 'and/but'},
-            {char: '子', pinyin: 'zǐ', meaning: 'child/son'},
-            {char: '那', pinyin: 'nà', meaning: 'that'},
-            {char: '得', pinyin: 'de', meaning: 'get/obtain'},
-            {char: '于', pinyin: 'yú', meaning: 'at/in'},
-            {char: '着', pinyin: 'zhe', meaning: 'continuous action'},
-            {char: '下', pinyin: 'xià', meaning: 'down/below'},
-            {char: '自', pinyin: 'zì', meaning: 'self'},
-            {char: '之', pinyin: 'zhī', meaning: 'of/it'},
-            {char: '年', pinyin: 'nián', meaning: 'year'},
-            {char: '过', pinyin: 'guò', meaning: 'pass/cross'},
-            {char: '发', pinyin: 'fā', meaning: 'send/emit'},
-            {char: '后', pinyin: 'hòu', meaning: 'after/behind'},
-            {char: '作', pinyin: 'zuò', meaning: 'make/do'},
-            {char: '里', pinyin: 'lǐ', meaning: 'inside'},
-            {char: '用', pinyin: 'yòng', meaning: 'use'},
-            {char: '道', pinyin: 'dào', meaning: 'way/road'},
-            {char: '行', pinyin: 'xíng', meaning: 'walk/go'},
-            {char: '所', pinyin: 'suǒ', meaning: 'place/that which'},
-            {char: '然', pinyin: 'rán', meaning: 'so/like that'},
-            {char: '家', pinyin: 'jiā', meaning: 'home/family'},
-            {char: '种', pinyin: 'zhǒng', meaning: 'kind/type'},
-            {char: '事', pinyin: 'shì', meaning: 'matter/thing'},
-            {char: '成', pinyin: 'chéng', meaning: 'become'},
-            {char: '方', pinyin: 'fāng', meaning: 'square/side'},
-            {char: '多', pinyin: 'duō', meaning: 'many/much'},
-            {char: '经', pinyin: 'jīng', meaning: 'pass through'},
-            {char: '么', pinyin: 'me', meaning: 'question particle'},
-            {char: '去', pinyin: 'qù', meaning: 'go'},
-            {char: '法', pinyin: 'fǎ', meaning: 'law/method'},
-            {char: '学', pinyin: 'xué', meaning: 'learn/study'},
-            {char: '如', pinyin: 'rú', meaning: 'like/as'},
-            {char: '都', pinyin: 'dōu', meaning: 'all/both'},
-            {char: '同', pinyin: 'tóng', meaning: 'same'},
-            {char: '现', pinyin: 'xiàn', meaning: 'appear/now'},
-            {char: '当', pinyin: 'dāng', meaning: 'when/serve as'},
-            {char: '没', pinyin: 'méi', meaning: 'not have'},
-            {char: '动', pinyin: 'dòng', meaning: 'move'},
-            {char: '面', pinyin: 'miàn', meaning: 'face/side'},
-            {char: '起', pinyin: 'qǐ', meaning: 'rise/start'},
-            {char: '看', pinyin: 'kàn', meaning: 'look/see'},
-            {char: '定', pinyin: 'dìng', meaning: 'decide/fixed'},
-            {char: '天', pinyin: 'tiān', meaning: 'sky/day'},
-            {char: '分', pinyin: 'fēn', meaning: 'divide/minute'},
-            {char: '还', pinyin: 'hái', meaning: 'still/also'},
-            {char: '进', pinyin: 'jìn', meaning: 'enter'},
-            {char: '好', pinyin: 'hǎo', meaning: 'good'},
-            {char: '小', pinyin: 'xiǎo', meaning: 'small'},
-            {char: '部', pinyin: 'bù', meaning: 'part/department'},
-            {char: '其', pinyin: 'qí', meaning: 'its/his'},
-            {char: '些', pinyin: 'xiē', meaning: 'some'},
-            {char: '主', pinyin: 'zhǔ', meaning: 'main/owner'},
-            {char: '样', pinyin: 'yàng', meaning: 'appearance/kind'},
-            {char: '理', pinyin: 'lǐ', meaning: 'reason/manage'},
-            {char: '心', pinyin: 'xīn', meaning: 'heart/mind'},
-            {char: '她', pinyin: 'tā', meaning: 'she/her'},
-            {char: '本', pinyin: 'běn', meaning: 'root/this'},
-            {char: '前', pinyin: 'qián', meaning: 'front/before'},
-            {char: '开', pinyin: 'kāi', meaning: 'open'},
-            {char: '但', pinyin: 'dàn', meaning: 'but'},
-            {char: '因', pinyin: 'yīn', meaning: 'because'},
-            {char: '只', pinyin: 'zhǐ', meaning: 'only'},
-            {char: '从', pinyin: 'cóng', meaning: 'from'},
-            {char: '想', pinyin: 'xiǎng', meaning: 'think/want'},
-            {char: '实', pinyin: 'shí', meaning: 'real/true'}
+        // Common Korean Syllables (Hangul/Romanization/Meaning)
+        const KOREAN_SYLLABLES = [
+            { char: '가', pinyin: 'ga', meaning: 'ga' }, { char: '나', pinyin: 'na', meaning: 'na' },
+            { char: '다', pinyin: 'da', meaning: 'da' }, { char: '라', pinyin: 'ra', meaning: 'ra/la' },
+            { char: '마', pinyin: 'ma', meaning: 'ma' }, { char: '바', pinyin: 'ba', meaning: 'ba' },
+            { char: '사', pinyin: 'sa', meaning: 'sa' }, { char: '아', pinyin: 'a', meaning: 'a' },
+            { char: '자', pinyin: 'ja', meaning: 'ja' }, { char: '차', pinyin: 'cha', meaning: 'cha' },
+            { char: '카', pinyin: 'ka', meaning: 'ka' }, { char: '타', pinyin: 'ta', meaning: 'ta' },
+            { char: '파', pinyin: 'pa', meaning: 'pa' }, { char: '하', pinyin: 'ha', meaning: 'ha' },
+            { char: '거', pinyin: 'geo', meaning: 'geo' }, { char: '너', pinyin: 'neo', meaning: 'neo' },
+            { char: '더', pinyin: 'deo', meaning: 'deo' }, { char: '러', pinyin: 'reo', meaning: 'reo' },
+            { char: '머', pinyin: 'meo', meaning: 'meo' }, { char: '버', pinyin: 'beo', meaning: 'beo' },
+            { char: '서', pinyin: 'seo', meaning: 'seo' }, { char: '어', pinyin: 'eo', meaning: 'eo' },
+            { char: '저', pinyin: 'jeo', meaning: 'jeo' }, { char: '처', pinyin: 'cheo', meaning: 'cheo' },
+            { char: '커', pinyin: 'keo', meaning: 'keo' }, { char: '터', pinyin: 'teo', meaning: 'teo' },
+            { char: '퍼', pinyin: 'peo', meaning: 'peo' }, { char: '허', pinyin: 'heo', meaning: 'heo' },
+            { char: '고', pinyin: 'go', meaning: 'go' }, { char: '노', pinyin: 'no', meaning: 'no' },
+            { char: '도', pinyin: 'do', meaning: 'do' }, { char: '로', pinyin: 'ro', meaning: 'ro' },
+            { char: '모', pinyin: 'mo', meaning: 'mo' }, { char: '보', pinyin: 'bo', meaning: 'bo' },
+            { char: '소', pinyin: 'so', meaning: 'so' }, { char: '오', pinyin: 'o', meaning: 'o' },
+            { char: '조', pinyin: 'jo', meaning: 'jo' }, { char: '초', pinyin: 'cho', meaning: 'cho' },
+            { char: '코', pinyin: 'ko', meaning: 'ko' }, { char: '토', pinyin: 'to', meaning: 'to' },
+            { char: '포', pinyin: 'po', meaning: 'po' }, { char: '호', pinyin: 'ho', meaning: 'ho' },
+            { char: '구', pinyin: 'gu', meaning: 'gu' }, { char: '누', pinyin: 'nu', meaning: 'nu' },
+            { char: '두', pinyin: 'du', meaning: 'du' }, { char: '루', pinyin: 'ru', meaning: 'ru' },
+            { char: '무', pinyin: 'mu', meaning: 'mu' }, { char: '부', pinyin: 'bu', meaning: 'bu' },
+            { char: '수', pinyin: 'su', meaning: 'su' }, { char: '우', pinyin: 'u', meaning: 'u' },
+            { char: '주', pinyin: 'ju', meaning: 'ju' }, { char: '추', pinyin: 'chu', meaning: 'chu' },
+            { char: '쿠', pinyin: 'ku', meaning: 'ku' }, { char: '투', pinyin: 'tu', meaning: 'tu' },
+            { char: '푸', pinyin: 'pu', meaning: 'pu' }, { char: '후', pinyin: 'hu', meaning: 'hu' },
+            { char: '그', pinyin: 'geu', meaning: 'geu' }, { char: '느', pinyin: 'neu', meaning: 'neu' },
+            { char: '드', pinyin: 'deu', meaning: 'deu' }, { char: '르', pinyin: 'reu', meaning: 'reu' },
+            { char: '므', pinyin: 'meu', meaning: 'meu' }, { char: '브', pinyin: 'beu', meaning: 'beu' },
+            { char: '스', pinyin: 'seu', meaning: 'seu' }, { char: '으', pinyin: 'eu', meaning: 'eu' },
+            { char: '즈', pinyin: 'jeu', meaning: 'jeu' }, { char: '츠', pinyin: 'cheu', meaning: 'cheu' },
+            { char: '크', pinyin: 'keu', meaning: 'keu' }, { char: '트', pinyin: 'teu', meaning: 'teu' },
+            { char: '프', pinyin: 'peu', meaning: 'peu' }, { char: '흐', pinyin: 'heu', meaning: 'heu' },
+            { char: '기', pinyin: 'gi', meaning: 'gi' }, { char: '니', pinyin: 'ni', meaning: 'ni' },
+            { char: '디', pinyin: 'di', meaning: 'di' }, { char: '리', pinyin: 'ri', meaning: 'ri' },
+            { char: '미', pinyin: 'mi', meaning: 'mi' }, { char: '비', pinyin: 'bi', meaning: 'bi' },
+            { char: '시', pinyin: 'si', meaning: 'si' }, { char: '이', pinyin: 'i', meaning: 'i' },
+            { char: '지', pinyin: 'ji', meaning: 'ji' }, { char: '치', pinyin: 'chi', meaning: 'chi' },
+            { char: '키', pinyin: 'ki', meaning: 'ki' }, { char: '티', pinyin: 'ti', meaning: 'ti' },
+            { char: '피', pinyin: 'pi', meaning: 'pi' }, { char: '히', pinyin: 'hi', meaning: 'hi' }
         ];
-        
-        // Common Chinese words (2 characters) with pinyin
-        const CHINESE_WORDS = [
-            {word: '你好', pinyin: 'nǐ hǎo', meaning: 'hello'},
-            {word: '谢谢', pinyin: 'xiè xie', meaning: 'thanks'},
-            {word: '再见', pinyin: 'zài jiàn', meaning: 'goodbye'},
-            {word: '朋友', pinyin: 'péng you', meaning: 'friend'},
-            {word: '学生', pinyin: 'xué shēng', meaning: 'student'},
-            {word: '老师', pinyin: 'lǎo shī', meaning: 'teacher'},
-            {word: '中国', pinyin: 'zhōng guó', meaning: 'China'},
-            {word: '今天', pinyin: 'jīn tiān', meaning: 'today'},
-            {word: '明天', pinyin: 'míng tiān', meaning: 'tomorrow'},
-            {word: '昨天', pinyin: 'zuó tiān', meaning: 'yesterday'},
-            {word: '吃饭', pinyin: 'chī fàn', meaning: 'eat'},
-            {word: '喝水', pinyin: 'hē shuǐ', meaning: 'drink water'},
-            {word: '工作', pinyin: 'gōng zuò', meaning: 'work'},
-            {word: '学习', pinyin: 'xué xí', meaning: 'study'},
-            {word: '喜欢', pinyin: 'xǐ huān', meaning: 'like'},
-            {word: '漂亮', pinyin: 'piào liang', meaning: 'beautiful'},
-            {word: '高兴', pinyin: 'gāo xìng', meaning: 'happy'},
-            {word: '可以', pinyin: 'kě yǐ', meaning: 'can'},
-            {word: '知道', pinyin: 'zhī dào', meaning: 'know'},
-            {word: '电话', pinyin: 'diàn huà', meaning: 'phone'},
-            {word: '电脑', pinyin: 'diàn nǎo', meaning: 'computer'},
-            {word: '手机', pinyin: 'shǒu jī', meaning: 'mobile'},
-            {word: '时间', pinyin: 'shí jiān', meaning: 'time'},
-            {word: '现在', pinyin: 'xiàn zài', meaning: 'now'},
-            {word: '这个', pinyin: 'zhè ge', meaning: 'this'},
-            {word: '那个', pinyin: 'nà ge', meaning: 'that'},
-            {word: '什么', pinyin: 'shén me', meaning: 'what'},
-            {word: '怎么', pinyin: 'zěn me', meaning: 'how'},
-            {word: '为什么', pinyin: 'wèi shén me', meaning: 'why'},
-            {word: '大家', pinyin: 'dà jiā', meaning: 'everyone'},
-            {word: '一起', pinyin: 'yī qǐ', meaning: 'together'},
-            {word: '非常', pinyin: 'fēi cháng', meaning: 'very'},
-            {word: '可能', pinyin: 'kě néng', meaning: 'maybe'},
-            {word: '已经', pinyin: 'yǐ jīng', meaning: 'already'},
-            {word: '但是', pinyin: 'dàn shì', meaning: 'but'},
-            {word: '因为', pinyin: 'yīn wèi', meaning: 'because'},
-            {word: '所以', pinyin: 'suǒ yǐ', meaning: 'so'},
-            {word: '如果', pinyin: 'rú guǒ', meaning: 'if'},
-            {word: '爸爸', pinyin: 'bà ba', meaning: 'father'},
-            {word: '妈妈', pinyin: 'mā ma', meaning: 'mother'}
+
+        // Common Korean Words
+        const KOREAN_WORDS = [
+            { word: '안녕하세요', pinyin: 'annyeonghaseyo', meaning: 'Hello' },
+            { word: '감사합니다', pinyin: 'gamsahamnida', meaning: 'Thank you' },
+            { word: '반갑습니다', pinyin: 'bangapseumnida', meaning: 'Nice to meet you' },
+            { word: '친구', pinyin: 'chingu', meaning: 'Friend' },
+            { word: '사랑', pinyin: 'sarang', meaning: 'Love' },
+            { word: '학교', pinyin: 'hakgyo', meaning: 'School' },
+            { word: '선생님', pinyin: 'seonsaengnim', meaning: 'Teacher' },
+            { word: '학생', pinyin: 'haksaeng', meaning: 'Student' },
+            { word: '한국', pinyin: 'hanguk', meaning: 'Korea' },
+            { word: '서울', pinyin: 'seoul', meaning: 'Seoul' },
+            { word: '오늘', pinyin: 'oneul', meaning: 'Today' },
+            { word: '내일', pinyin: 'naeil', meaning: 'Tomorrow' },
+            { word: '어제', pinyin: 'eoje', meaning: 'Yesterday' },
+            { word: '사람', pinyin: 'saram', meaning: 'Person' },
+            { word: '물', pinyin: 'mul', meaning: 'Water' },
+            { word: '밥', pinyin: 'bap', meaning: 'Rice/Meal' },
+            { word: '김치', pinyin: 'kimchi', meaning: 'Kimchi' },
+            { word: '불고기', pinyin: 'bulgogi', meaning: 'Bulgogi' },
+            { word: '비빔밥', pinyin: 'bibimbap', meaning: 'Bibimbap' },
+            { word: '소주', pinyin: 'soju', meaning: 'Soju' },
+            { word: '맥주', pinyin: 'maekju', meaning: 'Beer' },
+            { word: '커피', pinyin: 'keopi', meaning: 'Coffee' },
+            { word: '차', pinyin: 'cha', meaning: 'Tea/Car' },
+            { word: '버스', pinyin: 'beoseu', meaning: 'Bus' },
+            { word: '택시', pinyin: 'taeksi', meaning: 'Taxi' },
+            { word: '지하철', pinyin: 'jihacheol', meaning: 'Subway' },
+            { word: '공항', pinyin: 'gonghang', meaning: 'Airport' },
+            { word: '호텔', pinyin: 'hotel', meaning: 'Hotel' },
+            { word: '병원', pinyin: 'byeongwon', meaning: 'Hospital' },
+            { word: '약국', pinyin: 'yakguk', meaning: 'Pharmacy' },
+            { word: '은행', pinyin: 'eunhaeng', meaning: 'Bank' },
+            { word: '화장실', pinyin: 'hwajangsil', meaning: 'Toilet' },
+            { word: '남자', pinyin: 'namja', meaning: 'Man' },
+            { word: '여자', pinyin: 'yeoja', meaning: 'Woman' },
+            { word: '아이', pinyin: 'ai', meaning: 'Child' },
+            { word: '엄마', pinyin: 'eomma', meaning: 'Mom' },
+            { word: '아빠', pinyin: 'appa', meaning: 'Dad' },
+            { word: '형', pinyin: 'hyeong', meaning: 'Older brother (to male)' },
+            { word: '누나', pinyin: 'nuna', meaning: 'Older sister (to male)' },
+            { word: '언니', pinyin: 'eonni', meaning: 'Older sister (to female)' }
         ];
-        
+
+        // Challenge questions for meteorites (multiple choice)
         // Challenge questions for meteorites (multiple choice)
         const CHALLENGE_QUESTIONS = [
-            {q: "Which tone rises then falls?", options: ["1", "2", "3", "4"], a: "4"},
-            {q: "Which tone rises like a question?", options: ["1", "2", "3", "4"], a: "2"},
-            {q: "Which tone is flat and high?", options: ["1", "2", "3", "4"], a: "1"},
-            {q: "Which tone dips then rises?", options: ["1", "2", "3", "4"], a: "3"},
-            {q: "What does 电脑 (diàn nǎo) literally mean?", options: ["Electric brain", "Smart box", "Think machine", "Power head"], a: "Electric brain"},
-            {q: "What does 手机 (shǒu jī) literally mean?", options: ["Talk box", "Hand machine", "Pocket phone", "Small radio"], a: "Hand machine"},
-            {q: "What does 火车 (huǒ chē) literally mean?", options: ["Fast cart", "Fire vehicle", "Steam box", "Iron horse"], a: "Fire vehicle"},
-            {q: "How many tones does Mandarin have?", options: ["3", "4", "5", "6"], a: "4"},
-            {q: "What does 中国 (zhōng guó) literally mean?", options: ["Big country", "Old land", "Middle kingdom", "Red nation"], a: "Middle kingdom"},
-            {q: "What does 明天 (míng tiān) literally mean?", options: ["Next sun", "Bright day", "New time", "Coming light"], a: "Bright day"},
-            {q: "What does 好 (hǎo) combine?", options: ["Sun + moon", "Woman + child", "Heart + hand", "Mouth + ear"], a: "Woman + child"},
-            {q: "How do you say 'hello' in Chinese?", options: ["谢谢", "再见", "你好", "对不起"], a: "你好"},
-            {q: "How do you say 'thank you' in Chinese?", options: ["你好", "谢谢", "再见", "不客气"], a: "谢谢"},
-            {q: "What does 大 (dà) mean?", options: ["Small", "Big", "Medium", "Tall"], a: "Big"},
-            {q: "What does 水 (shuǐ) mean?", options: ["Fire", "Earth", "Water", "Air"], a: "Water"}
+            { q: "How do you say 'Hello'?", options: ["Annyeonghaseyo", "Gamsahamnida", "Saranghae", "Mianhae"], a: "Annyeonghaseyo" },
+            { q: "What is 'Kimchi'?", options: ["Spicy Cabbage", "Rice Cake", "BBQ Beef", "Soy Sauce"], a: "Spicy Cabbage" },
+            { q: "What does 'Saranghae' mean?", options: ["I love you", "Hello", "Goodbye", "Thank you"], a: "I love you" },
+            { q: "What is the Korean alphabet called?", options: ["Hangul", "Hanja", "Hiragana", "Kanji"], a: "Hangul" },
+            { q: "Capital of South Korea?", options: ["Seoul", "Busan", "Incheon", "Jeju"], a: "Seoul" },
+            { q: "What is 'Bulgogi'?", options: ["Marinated Beef", "Spicy Soup", "Fried Chicken", "Raw Fish"], a: "Marinated Beef" },
+            { q: "How do you say 'Thank you'?", options: ["Gamsahamnida", "Annyeong", "Juseyo", "Mwoyeyo"], a: "Gamsahamnida" },
+            { q: "What is 'Soju'?", options: ["Korean Alcohol", "Korean Tea", "Korean Soda", "Korean Water"], a: "Korean Alcohol" },
+            { q: "Which is a Korean car brand?", options: ["Hyundai", "Honda", "Toyota", "Ford"], a: "Hyundai" },
+            { q: "What does 'Oppa' mean?", options: ["Older Brother (female speaker)", "Dad", "Grandpa", "Uncle"], a: "Older Brother (female speaker)" }
         ];
-        
+
         // Difficulty settings per level - MUCH harder progression!
         const LEVEL_CONFIG = {
             1: { speed: 12000, spawnRate: 3000, targets: 4, tempo: 280 },
@@ -1155,16 +1271,16 @@
             4: { speed: 3000, spawnRate: 900, targets: 10, tempo: 120 },
             5: { targets: 10, mode: 'dictation' }
         };
-        
+
         // Anti-theft protection
-        (function() {
+        (function () {
             'use strict';
             // Disable right-click
             document.addEventListener('contextmenu', e => e.preventDefault());
             // Disable dev tool shortcuts
             document.addEventListener('keydown', e => {
-                if (e.key === 'F12' || 
-                    (e.ctrlKey && e.shiftKey && ['I','J','C','K'].includes(e.key)) ||
+                if (e.key === 'F12' ||
+                    (e.ctrlKey && e.shiftKey && ['I', 'J', 'C', 'K'].includes(e.key)) ||
                     (e.ctrlKey && e.key === 'U')) {
                     e.preventDefault();
                 }
@@ -1175,7 +1291,7 @@
             console.log('%c🐉 Chinese Blaster © 2024 - All Rights Reserved', 'font-size: 16px; color: #ff00ff;');
             console.log('%cUnauthorized copying or distribution is prohibited.', 'font-size: 14px;');
         })();
-        
+
         // Game State
         const gameState = {
             score: 0, lives: 3, level: 1,
@@ -1190,17 +1306,17 @@
             currentUser: null, musicEnabled: true,
             challengeFreezeTime: 0
         };
-        
+
         // Audio
         let audioContext;
         let musicInterval = null;
         let musicStep = 0;
-        
+
         // Data storage
         let gameData = {
             players: {}
         };
-        
+
         // DOM Elements
         const el = {
             loginScreen: document.getElementById('loginScreen'),
@@ -1271,7 +1387,7 @@
             dictationSubmitBtn: document.getElementById('dictationSubmitBtn'),
             beatsMeBtn: document.getElementById('beatsMeBtn')
         };
-        
+
         // Initialize
         function init() {
             createStarfield();
@@ -1282,7 +1398,7 @@
                 speechSynthesis.onvoiceschanged = () => speechSynthesis.getVoices();
             }
         }
-        
+
         function createStarfield() {
             const starfield = document.getElementById('starfield');
             for (let i = 0; i < 80; i++) {
@@ -1296,10 +1412,10 @@
                 starfield.appendChild(star);
             }
         }
-        
+
         function startShootingStars() {
             const starfield = document.getElementById('starfield');
-            
+
             function createShootingStar() {
                 const star = document.createElement('div');
                 star.className = 'shooting-star';
@@ -1307,46 +1423,46 @@
                 star.style.left = (Math.random() * 100) + '%';
                 star.style.top = (Math.random() * 60) + '%';
                 starfield.appendChild(star);
-                
+
                 // Remove after animation completes
                 setTimeout(() => star.remove(), 1200);
-                
+
                 // Schedule next shooting star (occasional: 2-5 seconds)
                 setTimeout(createShootingStar, 2000 + Math.random() * 3000);
             }
-            
+
             // Start first shooting star after a short delay
             setTimeout(createShootingStar, 1000);
         }
-        
+
         // Data Management
         function loadData() {
             try {
-                const saved = localStorage.getItem('chineseBlasterData');
+                const saved = localStorage.getItem('koreanBlasterData');
                 if (saved) gameData = JSON.parse(saved);
             } catch (e) {
                 console.log('No saved data');
             }
         }
-        
+
         function saveData() {
             try {
-                localStorage.setItem('chineseBlasterData', JSON.stringify(gameData));
+                localStorage.setItem('koreanBlasterData', JSON.stringify(gameData));
             } catch (e) {
                 console.log('Could not save data');
             }
         }
-        
+
         function exportData() {
             const blob = new Blob([JSON.stringify(gameData, null, 2)], { type: 'application/json' });
             const url = URL.createObjectURL(blob);
             const a = document.createElement('a');
             a.href = url;
-            a.download = 'chinese-blaster-data.json';
+            a.download = 'korean-blaster-data.json';
             a.click();
             URL.revokeObjectURL(url);
         }
-        
+
         function importData(file) {
             const reader = new FileReader();
             reader.onload = (e) => {
@@ -1375,7 +1491,7 @@
             };
             reader.readAsText(file);
         }
-        
+
         function saveGameResult(score, level) {
             if (!gameState.currentUser) return;
             const player = gameState.currentUser;
@@ -1394,7 +1510,7 @@
             if (p.history.length > 50) p.history = p.history.slice(-50);
             saveData();
         }
-        
+
         function getTopScores() {
             const scores = [];
             for (const player in gameData.players) {
@@ -1405,21 +1521,21 @@
             }
             return scores.sort((a, b) => b.score - a.score).slice(0, 10);
         }
-        
+
         // Audio System
         function initAudio() {
             if (!audioContext) {
                 audioContext = new (window.AudioContext || window.webkitAudioContext)();
             }
         }
-        
+
         function playSound(type) {
             initAudio();
-            
+
             if (type === 'blast') {
                 // Layered blast sound
                 const now = audioContext.currentTime;
-                
+
                 // Noise burst
                 const noiseBuffer = audioContext.createBuffer(1, audioContext.sampleRate * 0.1, audioContext.sampleRate);
                 const noise = noiseBuffer.getChannelData(0);
@@ -1432,7 +1548,7 @@
                 noiseSource.connect(noiseGain);
                 noiseGain.connect(audioContext.destination);
                 noiseSource.start(now);
-                
+
                 // Low thump
                 const osc = audioContext.createOscillator();
                 const gain = audioContext.createGain();
@@ -1445,7 +1561,7 @@
                 gain.connect(audioContext.destination);
                 osc.start(now);
                 osc.stop(now + 0.1);
-                
+
             } else if (type === 'correct') {
                 const osc = audioContext.createOscillator();
                 const gain = audioContext.createGain();
@@ -1458,7 +1574,7 @@
                 gain.gain.exponentialRampToValueAtTime(0.01, audioContext.currentTime + 0.3);
                 osc.start();
                 osc.stop(audioContext.currentTime + 0.3);
-                
+
             } else if (type === 'wrong') {
                 const osc = audioContext.createOscillator();
                 const gain = audioContext.createGain();
@@ -1471,7 +1587,7 @@
                 gain.gain.exponentialRampToValueAtTime(0.01, audioContext.currentTime + 0.2);
                 osc.start();
                 osc.stop(audioContext.currentTime + 0.2);
-                
+
             } else if (type === 'levelup') {
                 const osc = audioContext.createOscillator();
                 const gain = audioContext.createGain();
@@ -1486,7 +1602,7 @@
                 gain.gain.exponentialRampToValueAtTime(0.01, now + 0.5);
                 osc.start();
                 osc.stop(now + 0.5);
-                
+
             } else if (type === 'win') {
                 const now = audioContext.currentTime;
                 [523.25, 659.25, 783.99, 1046.50].forEach((freq, i) => {
@@ -1502,7 +1618,7 @@
                 });
             }
         }
-        
+
         // Retro Music System - Different music per level!
         const MUSIC_DATA = {
             1: { // Level 1: Friendly, simple, slow
@@ -1526,23 +1642,23 @@
                 wave: 'square'
             }
         };
-        
+
         function startMusic() {
             if (!gameState.musicEnabled || musicInterval) return;
             initAudio();
             musicStep = 0;
-            
+
             const level = gameState.level || 1;
             const music = MUSIC_DATA[level];
             const config = LEVEL_CONFIG[level];
             const tempo = config.tempo;
-            
+
             musicInterval = setInterval(() => {
                 if (gameState.isPaused || !gameState.isPlaying) return;
-                
+
                 const now = audioContext.currentTime;
                 const noteLength = tempo / 1000 * 0.8;
-                
+
                 // Bass - punchy low end
                 const bass = audioContext.createOscillator();
                 const bassGain = audioContext.createGain();
@@ -1554,7 +1670,7 @@
                 bassGain.connect(audioContext.destination);
                 bass.start(now);
                 bass.stop(now + noteLength);
-                
+
                 // Melody (every other beat for levels 1-2, every beat for 3-4)
                 const melodyFrequency = (level <= 2) ? 2 : 1;
                 if (musicStep % melodyFrequency === 0) {
@@ -1570,7 +1686,7 @@
                     mel.start(now);
                     mel.stop(now + noteLength * 0.9);
                 }
-                
+
                 // Hi-hat - faster on higher levels
                 const hatBuffer = audioContext.createBuffer(1, audioContext.sampleRate * 0.03, audioContext.sampleRate);
                 const hatData = hatBuffer.getChannelData(0);
@@ -1584,7 +1700,7 @@
                 hat.connect(hatGain);
                 hatGain.connect(audioContext.destination);
                 hat.start(now);
-                
+
                 // Kick drum on beats 1 and 5 (every 4 steps) for levels 3-4
                 if (level >= 3 && musicStep % 4 === 0) {
                     const kick = audioContext.createOscillator();
@@ -1599,18 +1715,18 @@
                     kick.start(now);
                     kick.stop(now + 0.1);
                 }
-                
+
                 musicStep++;
             }, tempo);
         }
-        
+
         function stopMusic() {
             if (musicInterval) {
                 clearInterval(musicInterval);
                 musicInterval = null;
             }
         }
-        
+
         function toggleMusic() {
             gameState.musicEnabled = !gameState.musicEnabled;
             el.musicToggle.textContent = gameState.musicEnabled ? '🔊' : '🔇';
@@ -1620,223 +1736,218 @@
                 startMusic();
             }
         }
-        
-        // Speech - Chinese
+
+        // Speech - Korean
         function speakItem(item) {
+            // Voice should work regardless of music toggle
+
+
             if ('speechSynthesis' in window) {
-                // Handle both object and string inputs
                 let text;
                 if (typeof item === 'object' && item !== null) {
                     text = item.word || item.char;
                 } else {
                     text = item;
                 }
-                
+
                 speechSynthesis.cancel();
                 const utterance = new SpeechSynthesisUtterance(text);
-                utterance.rate = 0.7;
-                utterance.pitch = 1.0;
-                const voices = speechSynthesis.getVoices();
-                // Try to find a Chinese voice
-                const chineseVoice = voices.find(v => v.lang.startsWith('zh')) || 
-                                     voices.find(v => v.lang.includes('CN')) ||
-                                     voices.find(v => v.lang.includes('Chinese')) || voices[0];
-                if (chineseVoice) utterance.voice = chineseVoice;
-                utterance.lang = 'zh-CN';
+                utterance.lang = 'ko-KR';
+                utterance.rate = 0.8;
                 speechSynthesis.speak(utterance);
             }
         }
-        
+
         // Game Logic
         function getItemPool() {
             if (gameState.level >= 3) {
-                // Levels 3-4: Chinese words
-                const shuffled = [...CHINESE_WORDS].sort(() => Math.random() - 0.5);
+                // Levels 3-4: Korean words
+                const shuffled = [...KOREAN_WORDS].sort(() => Math.random() - 0.5);
                 return shuffled.slice(0, 6);
             } else {
-                // Levels 1-2: Chinese characters
-                const shuffled = [...CHINESE_CHARS].sort(() => Math.random() - 0.5);
+                // Levels 1-2: Korean syllables
+                const shuffled = [...KOREAN_SYLLABLES].sort(() => Math.random() - 0.5);
                 return shuffled.slice(0, 8);
             }
         }
-        
+
         function updateModeDisplay() {
-            const modeNames = ['', 'PINYIN', 'CHARACTERS', 'PINYIN WORDS', 'CHARACTER WORDS', 'DICTATION'];
+            const modeNames = ['', 'ROMANIZATION', 'HANGUL', 'ROMANIZATION WORDS', 'HANGUL WORDS', 'DICTATION'];
             el.modeDisplay.textContent = `LVL ${gameState.level}: ${modeNames[gameState.level]}`;
-            
+
             if (gameState.level === 1) {
-                el.targetLabel.textContent = '🎯 SHOOT THIS PINYIN 🎯';
+                el.targetLabel.textContent = '🎯 SHOOT THE ROMANIZATION FOR: 🎯';
                 el.targetLetter.classList.remove('hidden-letter');
             } else if (gameState.level === 2) {
                 el.targetLabel.textContent = '👂 LISTEN & SHOOT 👂';
                 el.targetLetter.classList.remove('hidden-letter');
             } else if (gameState.level === 3) {
-                el.targetLabel.textContent = '📝 SHOOT THIS WORD 📝';
+                el.targetLabel.textContent = '📝 SHOOT THE ROMANIZATION FOR: 📝';
                 el.targetLetter.classList.remove('hidden-letter');
             } else if (gameState.level === 4) {
                 el.targetLabel.textContent = '🈲 READ & SHOOT 🈲';
                 el.targetLetter.classList.remove('hidden-letter');
             } else if (gameState.level === 5) {
-                el.targetLabel.textContent = '✍️ TYPE THE PINYIN ✍️';
+                el.targetLabel.textContent = '✍️ TYPE THE ROMANIZATION ✍️';
                 el.targetLetter.classList.add('hidden-letter');
             }
         }
-        
+
         function setNewTarget() {
             const pool = gameState.itemPool;
             const targetObj = pool[Math.floor(Math.random() * pool.length)];
             gameState.targetItem = targetObj;
-            
+
             // Display based on level
             if (gameState.level === 1) {
-                // Show pinyin only (hover shows character + meaning)
-                el.targetLetter.textContent = targetObj.pinyin;
+                // Show character prompt, shoot romanization target
+                el.targetLetter.textContent = targetObj.char;
                 el.targetLetter.classList.remove('hidden-letter');
             } else if (gameState.level === 2) {
-                // Show character only (hover shows pinyin + meaning)
+                // Show character only (hover shows romanization + meaning)
                 el.targetLetter.textContent = targetObj.char;
                 el.targetLetter.classList.remove('hidden-letter');
             } else if (gameState.level === 3) {
-                // Show pinyin words (hover shows characters + meaning)
-                el.targetLetter.textContent = targetObj.pinyin;
+                // Show character word prompt, shoot rom word target
+                el.targetLetter.textContent = targetObj.word;
                 el.targetLetter.classList.remove('hidden-letter');
             } else if (gameState.level === 4) {
-                // Show character words (hover shows pinyin + meaning)
+                // Show character words (hover shows rom + meaning)
                 el.targetLetter.textContent = targetObj.word;
                 el.targetLetter.classList.remove('hidden-letter');
             }
-            
-            // Speak the character or word (always the Chinese, not pinyin)
+
+            // Speak the character or word (always the Korean, not rom)
             const textToSpeak = (gameState.level >= 3) ? targetObj.word : targetObj.char;
             setTimeout(() => speakItem(textToSpeak), 300);
         }
-        
+
         function createFloatingItem() {
             if (!gameState.isPlaying || gameState.isPaused || gameState.isInChallenge) return;
-            
+
             // 10% chance to spawn a meteorite instead
             if (Math.random() < 0.10) {
                 createMeteorite();
                 return;
             }
-            
+
             const item = document.createElement('div');
             item.className = (gameState.level >= 3) ? 'floating-word' : 'floating-letter';
-            
+
             const isTarget = Math.random() < 0.35;
             const pool = gameState.itemPool;
             const contentObj = isTarget ? gameState.targetItem : pool[Math.floor(Math.random() * pool.length)];
-            
+
             // Display and tooltip based on level
             if (gameState.level === 1) {
-                // Show pinyin, hover shows character + meaning
+                // Show rom, hover shows character + meaning
                 item.textContent = contentObj.pinyin;
                 item.dataset.meaning = `${contentObj.char} = ${contentObj.meaning}`;
                 item.dataset.item = JSON.stringify(contentObj);
             } else if (gameState.level === 2) {
-                // Show character, hover shows pinyin + meaning
+                // Show character, hover shows rom + meaning
                 item.textContent = contentObj.char;
                 item.dataset.meaning = `${contentObj.pinyin} = ${contentObj.meaning}`;
                 item.dataset.item = JSON.stringify(contentObj);
             } else if (gameState.level === 3) {
-                // Show pinyin word, hover shows characters + meaning
+                // Show rom word, hover shows characters + meaning
                 item.textContent = contentObj.pinyin;
                 item.dataset.meaning = `${contentObj.word} = ${contentObj.meaning}`;
                 item.dataset.item = JSON.stringify(contentObj);
             } else if (gameState.level === 4) {
-                // Show character word, hover shows pinyin + meaning
+                // Show character word, hover shows rom + meaning
                 item.textContent = contentObj.word;
                 item.dataset.meaning = `${contentObj.pinyin} = ${contentObj.meaning}`;
                 item.dataset.item = JSON.stringify(contentObj);
             }
-            
+
             const colors = ['#ff00ff', '#00ffff', '#ffff00', '#00ff00', '#ff6600', '#ff66ff'];
             const color = colors[Math.floor(Math.random() * colors.length)];
             item.style.color = color;
             item.style.textShadow = `0 0 15px ${color}, 0 0 30px ${color}`;
-            
+
             const itemWidth = (gameState.level >= 3) ? 140 : 80;
             const maxX = el.gameArea.offsetWidth - itemWidth;
             item.style.left = Math.max(0, Math.random() * maxX) + 'px';
             item.style.top = '-100px';
-            
+
             item.dataset.startTime = Date.now();
             item.dataset.duration = gameState.letterSpeed;
-            
+
             el.gameArea.appendChild(item);
             gameState.activeItems.push(item);
         }
-        
+
         function createMeteorite() {
             const item = document.createElement('div');
             item.className = 'meteorite';
             item.textContent = '☄️';
             item.dataset.isMeteorite = 'true';
-            
+
             const maxX = el.gameArea.offsetWidth - 60;
             item.style.left = Math.max(0, Math.random() * maxX) + 'px';
             item.style.top = '-80px';
-            
+
             item.dataset.startTime = Date.now();
             item.dataset.duration = gameState.letterSpeed * 1.2; // Slightly slower
-            
+
             el.gameArea.appendChild(item);
             gameState.activeItems.push(item);
         }
-        
+
         function updateItems() {
             const h = el.gameArea.offsetHeight;
             const shipRect = el.spaceship.getBoundingClientRect();
-            
+
             gameState.activeItems = gameState.activeItems.filter(item => {
                 const elapsed = Date.now() - parseInt(item.dataset.startTime);
                 const progress = elapsed / parseInt(item.dataset.duration);
-                
-                if (progress >= 1) { 
-                    item.remove(); 
-                    return false; 
+
+                if (progress >= 1) {
+                    item.remove();
+                    return false;
                 }
-                
+
                 item.style.top = (-70 + (h + 140) * progress) + 'px';
-                
+
                 // Only check collision for non-meteorite items that are near the bottom
                 if (item.dataset.isMeteorite !== 'true' && progress > 0.85) {
                     const itemRect = item.getBoundingClientRect();
-                    const collision = !(itemRect.right < shipRect.left || 
-                                       itemRect.left > shipRect.right || 
-                                       itemRect.bottom < shipRect.top || 
-                                       itemRect.top > shipRect.bottom);
-                    
+                    const collision = !(itemRect.right < shipRect.left ||
+                        itemRect.left > shipRect.right ||
+                        itemRect.bottom < shipRect.top ||
+                        itemRect.top > shipRect.bottom);
+
                     if (collision && !item.classList.contains('hit')) {
                         // Target item touched dragon - lose a life
                         handleDragonCollision(item);
                         return false;
                     }
                 }
-                
+
                 return true;
             });
         }
-        
+
         function handleDragonCollision(item) {
             playSound('wrong');
             gameState.lives--;
             updateLives();
-            
+
             const r = item.getBoundingClientRect();
             const cr = el.gameContainer.getBoundingClientRect();
             const x = r.left - cr.left + r.width / 2;
             const y = r.top - cr.top + r.height / 2;
-            
+
             createExplosion(x, y, '💥');
             showFeedback('OUCH!', 'oops');
             item.remove();
-            
+
             if (gameState.lives <= 0) {
                 gameOverScreen();
             }
         }
-        
+
         function moveShip(clientX) {
             const rect = el.gameContainer.getBoundingClientRect();
             const relX = clientX - rect.left;
@@ -1844,17 +1955,17 @@
             gameState.shipX = Math.max(25, Math.min(w - 25, relX));
             el.spaceship.style.left = gameState.shipX + 'px';
         }
-        
+
         function shoot() {
             if (!gameState.isPlaying || gameState.isPaused || !gameState.canShoot) return;
             gameState.canShoot = false;
             setTimeout(() => gameState.canShoot = true, gameState.shootCooldown);
-            
+
             playSound('blast');
             el.spaceship.classList.add('shooting');
             setTimeout(() => el.spaceship.classList.remove('shooting'), 100);
             el.shootHint.style.display = 'none';
-            
+
             const laser = document.createElement('div');
             laser.className = 'laser';
             laser.style.left = (gameState.shipX - 4) + 'px';
@@ -1862,7 +1973,7 @@
             el.gameContainer.appendChild(laser);
             gameState.activeLasers.push(laser);
         }
-        
+
         function updateLasers() {
             const speed = 18;
             gameState.activeLasers = gameState.activeLasers.filter(laser => {
@@ -1870,11 +1981,11 @@
                 const newBot = bot + speed;
                 if (newBot > el.gameContainer.offsetHeight) { laser.remove(); return false; }
                 laser.style.bottom = newBot + 'px';
-                
+
                 const lr = laser.getBoundingClientRect();
                 const lcx = lr.left + lr.width / 2;
                 const lt = lr.top;
-                
+
                 for (let i = gameState.activeItems.length - 1; i >= 0; i--) {
                     const item = gameState.activeItems[i];
                     const ir = item.getBoundingClientRect();
@@ -1887,14 +1998,14 @@
                 return true;
             });
         }
-        
+
         function handleHit(item, hitItemJson) {
             const r = item.getBoundingClientRect();
             const cr = el.gameContainer.getBoundingClientRect();
             const x = r.left - cr.left + r.width / 2;
             const y = r.top - cr.top + r.height / 2;
             gameState.activeItems = gameState.activeItems.filter(i => i !== item);
-            
+
             // Check if it's a meteorite
             if (item.dataset.isMeteorite === 'true') {
                 createExplosion(x, y, '💫');
@@ -1902,16 +2013,16 @@
                 showChallenge();
                 return;
             }
-            
+
             // Parse the hit item and compare
             const hitItem = JSON.parse(hitItemJson);
             const target = gameState.targetItem;
-            
+
             // Compare based on level (characters use 'char', words use 'word')
-            const isCorrect = (gameState.level >= 3) 
+            const isCorrect = (gameState.level >= 3)
                 ? (hitItem.word === target.word)
                 : (hitItem.char === target.char);
-            
+
             if (isCorrect) {
                 playSound('correct');
                 gameState.score += 100 * gameState.level;
@@ -1921,7 +2032,7 @@
                 createExplosion(x, y, '💥');
                 showFeedback('GREAT!', 'great');
                 setTimeout(() => item.remove(), 300);
-                
+
                 if (gameState.itemsCorrect >= gameState.itemsPerRound) {
                     roundComplete();
                 } else {
@@ -1934,21 +2045,21 @@
                 item.style.color = '#ff0000';
                 item.classList.add('hit');
                 createExplosion(x, y, '💨');
-                
+
                 if (gameState.level === 2) {
                     el.targetLetter.classList.remove('hidden-letter');
                     setTimeout(() => el.targetLetter.classList.add('hidden-letter'), 1200);
                 }
-                
+
                 showFeedback('TRY AGAIN!', 'oops');
                 const textToSpeak = (gameState.level >= 3) ? target.word : target.char;
                 setTimeout(() => speakItem(textToSpeak), 400);
                 setTimeout(() => item.remove(), 300);
-                
+
                 if (gameState.lives <= 0) gameOverScreen();
             }
         }
-        
+
         function createExplosion(x, y, emoji) {
             const exp = document.createElement('div');
             exp.className = 'explosion';
@@ -1958,7 +2069,7 @@
             el.gameContainer.appendChild(exp);
             setTimeout(() => exp.remove(), 500);
         }
-        
+
         function showFeedback(msg, type) {
             const fb = document.createElement('div');
             fb.className = `feedback ${type}`;
@@ -1966,7 +2077,7 @@
             el.gameContainer.appendChild(fb);
             setTimeout(() => fb.remove(), 1000);
         }
-        
+
         function updateLives() {
             el.livesDisplay.innerHTML = '';
             for (let i = 0; i < gameState.lives; i++) {
@@ -1976,30 +2087,30 @@
                 el.livesDisplay.appendChild(life);
             }
         }
-        
+
         // Challenge System (Meteorite) - Multiple Choice
         function showChallenge() {
             gameState.isInChallenge = true;
             gameState.isDoubleDown = false;
             gameState.challengeFreezeTime = Date.now();
-            
+
             // Freeze all items by storing their current elapsed time
             gameState.activeItems.forEach(item => {
                 item.dataset.frozenElapsed = Date.now() - parseInt(item.dataset.startTime);
             });
-            
+
             clearInterval(gameState.spawnInterval);
             stopMusic();
-            
+
             // Pick a random question
             const question = CHALLENGE_QUESTIONS[Math.floor(Math.random() * CHALLENGE_QUESTIONS.length)];
             gameState.currentChallenge = question;
-            
+
             el.challengeQuestion.textContent = question.q;
             el.challengeResult.classList.add('hidden');
             el.doubleDownSection.classList.add('hidden');
             el.challengeContinueBtn.classList.add('hidden');
-            
+
             // Create shuffled options
             const shuffledOptions = [...question.options].sort(() => Math.random() - 0.5);
             el.challengeOptions.innerHTML = '';
@@ -2010,14 +2121,14 @@
                 btn.addEventListener('click', () => selectChallengeOption(btn, option));
                 el.challengeOptions.appendChild(btn);
             });
-            
+
             el.challengeModal.classList.remove('hidden');
         }
-        
+
         function selectChallengeOption(btn, selectedOption) {
             const correct = gameState.currentChallenge.a;
             const isCorrect = selectedOption === correct;
-            
+
             // Disable all options
             const allOptions = el.challengeOptions.querySelectorAll('.challenge-option');
             allOptions.forEach(opt => {
@@ -2026,7 +2137,7 @@
                     opt.classList.add('correct');
                 }
             });
-            
+
             if (isCorrect) {
                 btn.classList.add('correct');
                 playSound('correct');
@@ -2044,7 +2155,7 @@
                 el.challengeResult.textContent = `Correct answer: ${correct}`;
                 el.challengeResult.className = 'challenge-result wrong';
                 el.challengeResult.classList.remove('hidden');
-                
+
                 if (gameState.isDoubleDown) {
                     // Lost double down - lose a life
                     gameState.lives--;
@@ -2064,23 +2175,23 @@
                 }
             }
         }
-        
+
         function handleReturn() {
             // Safe return - no penalty, no reward
             closeChallenge();
         }
-        
+
         function handleDoubleDown() {
             // Pick a new question for double down
             gameState.isDoubleDown = true;
             const question = CHALLENGE_QUESTIONS[Math.floor(Math.random() * CHALLENGE_QUESTIONS.length)];
             gameState.currentChallenge = question;
-            
+
             el.challengeQuestion.textContent = question.q;
             el.challengeResult.classList.add('hidden');
             el.doubleDownSection.classList.add('hidden');
             el.challengeContinueBtn.classList.add('hidden');
-            
+
             // Create shuffled options
             const shuffledOptions = [...question.options].sort(() => Math.random() - 0.5);
             el.challengeOptions.innerHTML = '';
@@ -2092,36 +2203,36 @@
                 el.challengeOptions.appendChild(btn);
             });
         }
-        
+
         function closeChallenge() {
             gameState.isInChallenge = false;
             el.challengeModal.classList.add('hidden');
-            
+
             // Resume items with adjusted timestamps
             const freezeDuration = Date.now() - gameState.challengeFreezeTime;
             gameState.activeItems.forEach(item => {
                 const frozenElapsed = parseInt(item.dataset.frozenElapsed) || 0;
                 item.dataset.startTime = Date.now() - frozenElapsed;
             });
-            
+
             // Resume game
             startSpawning();
             startMusic();
             requestAnimationFrame(gameLoop);
         }
-        
+
         function roundComplete() {
             gameState.isPlaying = false;
             gameState.isDictationMode = false;
             stopMusic();
             clearInterval(gameState.spawnInterval);
             clearItems();
-            
+
             // Hide dictation area if visible
             el.dictationArea.classList.add('hidden');
             el.spaceship.style.display = '';
             el.shootHint.style.display = '';
-            
+
             if (gameState.level === 5) {
                 // Game complete!
                 playSound('win');
@@ -2138,9 +2249,9 @@
                 el.gameComplete.classList.remove('hidden');
                 return;
             }
-            
+
             playSound('levelup');
-            
+
             const stars = Math.min(3, Math.ceil(gameState.lives));
             el.starsEarned.innerHTML = '';
             for (let i = 0; i < 3; i++) {
@@ -2150,21 +2261,21 @@
                 star.style.animationDelay = (i * 0.2) + 's';
                 el.starsEarned.appendChild(star);
             }
-            
+
             const nextLevel = gameState.level + 1;
             const intros = {
                 2: '🈲 <b>CHARACTERS!</b><br>Now you see characters.<br>Listen and match!',
                 3: '📝 <b>PINYIN WORDS!</b><br>Shoot 2-character word pinyin.<br>Hover for characters!',
                 4: '🈲 <b>CHARACTER WORDS!</b><br>Now read the characters.<br>No more pinyin!',
-                5: '✍️ <b>DICTATION!</b><br>Type the pinyin with tone numbers.<br>Example: ni3 hao3'
+                5: '✍️ <b>DICTATION!</b><br>Type the Romanization.<br>Example: annyeong'
             };
-            
+
             el.levelCompleteTitle.textContent = `🎉 LEVEL ${gameState.level} DONE! 🎉`;
             el.levelCompleteText.textContent = `Get ready for Level ${nextLevel}!`;
             el.nextLevelIntro.innerHTML = intros[nextLevel];
             el.levelComplete.classList.remove('hidden');
         }
-        
+
         function gameOverScreen() {
             gameState.isPlaying = false;
             stopMusic();
@@ -2174,21 +2285,21 @@
             el.finalScore.textContent = gameState.score;
             el.gameOver.classList.remove('hidden');
         }
-        
+
         function clearItems() {
             gameState.activeItems.forEach(i => i.remove());
             gameState.activeItems = [];
             gameState.activeLasers.forEach(l => l.remove());
             gameState.activeLasers = [];
         }
-        
+
         function startGame() {
             initAudio();
-            
+
             // Get selected starting level
             const selectedLevel = parseInt(el.levelSelect.value) || 1;
             const config = LEVEL_CONFIG[selectedLevel];
-            
+
             gameState.score = 0;
             gameState.lives = 3;
             gameState.level = selectedLevel;
@@ -2199,48 +2310,48 @@
             gameState.isPaused = false;
             gameState.canShoot = true;
             gameState.isDictationMode = false;
-            
+
             el.scoreDisplay.textContent = '0';
             el.roundDisplay.textContent = selectedLevel;
             updateModeDisplay();
             updateLives();
-            
+
             hideAllScreens();
-            
+
             if (selectedLevel === 5) {
                 // Start in dictation mode
                 startDictationMode();
             } else {
                 gameState.letterSpeed = config.speed;
                 gameState.spawnRate = config.spawnRate;
-                
+
                 el.spaceship.style.display = '';
                 el.shootHint.style.display = 'block';
                 el.dictationArea.classList.add('hidden');
-                
+
                 gameState.shipX = el.gameContainer.offsetWidth / 2;
                 el.spaceship.style.left = gameState.shipX + 'px';
-                
+
                 setNewTarget();
                 startSpawning();
                 startMusic();
                 requestAnimationFrame(gameLoop);
             }
         }
-        
+
         function nextLevel() {
             gameState.level++;
             const config = LEVEL_CONFIG[gameState.level];
-            
+
             gameState.itemsPerRound = config.targets;
             gameState.itemsCorrect = 0;
             gameState.itemPool = getItemPool();
             gameState.isPlaying = true;
-            
+
             el.roundDisplay.textContent = gameState.level;
             updateModeDisplay();
             el.levelComplete.classList.add('hidden');
-            
+
             if (gameState.level === 5) {
                 // Dictation mode
                 startDictationMode();
@@ -2248,377 +2359,329 @@
                 gameState.letterSpeed = config.speed;
                 gameState.spawnRate = config.spawnRate;
                 gameState.isDictationMode = false;
-                
+
                 el.spaceship.style.display = '';
                 el.shootHint.style.display = 'block';
                 el.dictationArea.classList.add('hidden');
-                
+
                 setNewTarget();
                 startSpawning();
                 startMusic();
                 requestAnimationFrame(gameLoop);
             }
         }
-        
+
         // Dictation Mode (Level 5)
         function startDictationMode() {
             gameState.isDictationMode = true;
-            gameState.itemPool = [...CHINESE_WORDS].sort(() => Math.random() - 0.5).slice(0, 10);
-            
-            // Hide shooting elements
+            gameState.itemPool = [...KOREAN_WORDS]; // Use full pool
+            gameState.isPlaying = true;
+            gameState.itemsPerRound = 10;
+            gameState.itemsCorrect = 0;
+            gameState.lives = 3;
+
             el.spaceship.style.display = 'none';
             el.shootHint.style.display = 'none';
-            el.gameArea.innerHTML = '';
-            
-            // Show dictation area
             el.dictationArea.classList.remove('hidden');
-            
-            // Set first word
+            el.scoreDisplay.textContent = gameState.score;
+            updateLives();
+            updateModeDisplay();
+
             setDictationWord();
         }
-        
+
         function setDictationWord() {
             const pool = gameState.itemPool;
-            const wordObj = pool[Math.floor(Math.random() * pool.length)];
-            gameState.targetItem = wordObj;
-            
-            // Randomly choose: hear only (60%) or see character (40%)
-            const hearOnly = Math.random() < 0.6;
-            
-            if (hearOnly) {
-                el.dictationPrompt.textContent = '🔊';
-                el.dictationPrompt.style.fontSize = 'clamp(3rem, 10vw, 5rem)';
-            } else {
-                el.dictationPrompt.textContent = wordObj.word;
-                el.dictationPrompt.style.fontSize = '';
-            }
-            
+            const target = pool[Math.floor(Math.random() * pool.length)];
+            gameState.targetItem = target;
+
+            el.dictationPrompt.textContent = target.char;
             el.dictationInput.value = '';
             el.dictationInput.focus();
-            
-            // Speak the word
-            setTimeout(() => speakItem(wordObj.word), 300);
+
+            speakItem(target.word);
         }
-        
+
         function convertPinyinToNumbered(pinyin) {
-            // Convert toned pinyin to numbered format with tone at END of syllable
-            // e.g., "nǐ hǎo" → "ni3 hao3"
+            // Map toned vowels to [base_vowel, tone_number]
             const toneMap = {
-                'ā': ['a', '1'], 'á': ['a', '2'], 'ǎ': ['a', '3'], 'à': ['a', '4'],
-                'ē': ['e', '1'], 'é': ['e', '2'], 'ě': ['e', '3'], 'è': ['e', '4'],
-                'ī': ['i', '1'], 'í': ['i', '2'], 'ǐ': ['i', '3'], 'ì': ['i', '4'],
-                'ō': ['o', '1'], 'ó': ['o', '2'], 'ǒ': ['o', '3'], 'ò': ['o', '4'],
-                'ū': ['u', '1'], 'ú': ['u', '2'], 'ǔ': ['u', '3'], 'ù': ['u', '4'],
-                'ǖ': ['v', '1'], 'ǘ': ['v', '2'], 'ǚ': ['v', '3'], 'ǜ': ['v', '4'], 'ü': ['v', '']
+                'ā': ['a', 1], 'á': ['a', 2], 'ǎ': ['a', 3], 'à': ['a', 4],
+                'ē': ['e', 1], 'é': ['e', 2], 'ě': ['e', 3], 'è': ['e', 4],
+                'ī': ['i', 1], 'í': ['i', 2], 'ǐ': ['i', 3], 'ì': ['i', 4],
+                'ō': ['o', 1], 'ó': ['o', 2], 'ǒ': ['o', 3], 'ò': ['o', 4],
+                'ū': ['u', 1], 'ú': ['u', 2], 'ǔ': ['u', 3], 'ù': ['u', 4],
+                'ü': ['v', 0], 'ǖ': ['v', 1], 'ǘ': ['v', 2], 'ǚ': ['v', 3], 'ǜ': ['v', 4]
             };
-            
-            // Split into syllables (by space)
-            const syllables = pinyin.toLowerCase().split(/\s+/);
-            const result = syllables.map(syllable => {
+
+            return pinyin.toLowerCase().split(/\s+/).map(word => {
                 let tone = '';
-                let converted = syllable;
-                
-                // Find and extract the tone from the toned vowel
-                for (const [toned, [vowel, toneNum]] of Object.entries(toneMap)) {
-                    if (converted.includes(toned)) {
-                        converted = converted.replace(toned, vowel);
-                        tone = toneNum;
-                        break;
+                let baseWord = word;
+
+                // Find the tone
+                for (const char of word) {
+                    if (toneMap[char]) {
+                        tone = toneMap[char][1];
+                        baseWord = baseWord.replace(char, toneMap[char][0]);
                     }
                 }
-                
-                // Add tone number at the end of syllable
-                return converted + tone;
-            });
-            
-            return result.join(' ');
+
+                return baseWord + tone;
+            }).join(' ');
         }
-        
-        function normalizePinyinInput(input) {
-            // Normalize user input: lowercase, single spaces
-            return input.toLowerCase().replace(/\s+/g, ' ').trim();
+
+        // Helper to normalize pinyin for comparison
+        // e.g. "nǐ hǎo" -> "ni3 hao3"
+        function normalizePinyinInput(pinyin) {
+            return pinyin.toLowerCase().trim();
         }
-        
+
         function checkDictationAnswer() {
-            const userAnswer = normalizePinyinInput(el.dictationInput.value);
-            const correctPinyin = gameState.targetItem.pinyin;
-            const correctNumbered = convertPinyinToNumbered(correctPinyin);
-            
-            // Check if answer matches (allow some flexibility)
-            const isCorrect = userAnswer === correctNumbered || 
-                             userAnswer === correctPinyin.toLowerCase().replace(/\s+/g, ' ');
-            
-            if (isCorrect) {
-                playSound('correct');
-                gameState.score += 100 * gameState.level;
-                gameState.itemsCorrect++;
-                el.scoreDisplay.textContent = gameState.score;
-                showFeedback('GREAT!', 'great');
-                
-                if (gameState.itemsCorrect >= gameState.itemsPerRound) {
-                    roundComplete();
-                } else {
-                    setTimeout(setDictationWord, 800);
-                }
-            } else {
-                playSound('wrong');
-                // Show correct answer in the prompt area (stays visible)
-                el.dictationPrompt.innerHTML = `${gameState.targetItem.word}<br><span style="font-size:0.4em; color:var(--neon-cyan);">${correctNumbered}</span>`;
-                el.dictationInput.value = '';
-                el.dictationInput.focus();
-            }
-        }
-        
-        function handleBeatsMe() {
-            const correctPinyin = gameState.targetItem.pinyin;
-            const correctNumbered = convertPinyinToNumbered(correctPinyin);
-            
-            playSound('wrong');
-            gameState.lives--;
-            updateLives();
-            
-            // Show the answer
-            el.dictationPrompt.textContent = `${gameState.targetItem.word}`;
-            showFeedback(`${correctNumbered}`, 'oops');
-            
-            if (gameState.lives <= 0) {
-                setTimeout(gameOverScreen, 1500);
+            const input = el.dictationInput.value.trim().toLowerCase().replace(/\s+/g, ' ');
+            const target = gameState.targetItem;
+
+            const targetNumbered = target.pinyin.toLowerCase().trim();
+
+            // Allow strict pinyin match (nǐ hǎo)
+            // Or numbered pinyin match (ni3 hao3)
+
+            if (input === target.pinyin.toLowerCase() || input === targetNumbered) {
+                handleDictationSuccess();
                 return;
             }
-            
-            // Move to next word after showing answer
+
+            // Failed
+            playSound('wrong');
+            el.dictationInput.classList.add('shake');
+            setTimeout(() => el.dictationInput.classList.remove('shake'), 500);
+
+            // Show hint
+            const hint = document.querySelector('.dictation-hint');
+            hint.textContent = `Hint: ${targetNumbered}`;
+            hint.style.color = 'var(--neon-orange)';
             setTimeout(() => {
-                if (gameState.itemsCorrect >= gameState.itemsPerRound - 1) {
-                    gameState.itemsCorrect++;
-                    roundComplete();
-                } else {
-                    setDictationWord();
-                }
+                hint.textContent = 'Example: annyeong';
+                hint.style.color = '';
             }, 2000);
         }
-        
-        function startSpawning() {
-            setTimeout(createFloatingItem, 400);
-            setTimeout(createFloatingItem, 1000);
-            gameState.spawnInterval = setInterval(createFloatingItem, gameState.spawnRate);
-        }
-        
-        function gameLoop() {
-            if (gameState.isPlaying && !gameState.isPaused && !gameState.isInChallenge && !gameState.isDictationMode) {
-                updateItems();
-                updateLasers();
-                requestAnimationFrame(gameLoop);
+
+        function handleDictationSuccess() {
+            playSound('correct');
+            gameState.score += 500;
+            gameState.itemsCorrect++;
+            el.scoreDisplay.textContent = gameState.score;
+            createExplosion(window.innerWidth / 2, window.innerHeight / 2, '✨');
+
+            if (gameState.itemsCorrect >= 10) {
+                roundComplete();
+            } else {
+                setDictationWord();
             }
         }
-        
+
+        function handleBeatsMe() {
+            const target = gameState.targetItem;
+            const numbered = convertPinyinToNumbered(target.pinyin);
+            el.dictationInput.value = numbered;
+            el.dictationInput.focus();
+        }
+
+        function startSpawning() {
+            if (gameState.spawnInterval) clearInterval(gameState.spawnInterval);
+            gameState.spawnInterval = setInterval(createFloatingItem, gameState.spawnRate);
+        }
+
+        function gameLoop() {
+            if (!gameState.isPlaying || gameState.isPaused) {
+                if (gameState.isPlaying) requestAnimationFrame(gameLoop);
+                return;
+            }
+
+            updateItems();
+            updateLasers();
+
+            if (gameState.isPlaying) requestAnimationFrame(gameLoop);
+        }
+
         function pauseGame() {
-            if (!gameState.isPlaying) return;
+            if (!gameState.isPlaying || gameState.isPaused) return;
             gameState.isPaused = true;
             stopMusic();
-            clearInterval(gameState.spawnInterval);
             el.pauseOverlay.classList.remove('hidden');
         }
-        
+
         function resumeGame() {
             gameState.isPaused = false;
             el.pauseOverlay.classList.add('hidden');
-            startSpawning();
             startMusic();
-            requestAnimationFrame(gameLoop);
         }
-        
+
         function quitGame() {
             gameState.isPlaying = false;
-            gameState.isPaused = false;
             stopMusic();
             clearInterval(gameState.spawnInterval);
             clearItems();
+
             el.pauseOverlay.classList.add('hidden');
-            showTitleScreen();
+            el.gameArea.classList.add('hidden');
+            el.gameOver.classList.add('hidden');
+            el.gameComplete.classList.add('hidden');
+            el.dictationArea.classList.add('hidden'); // Safety
+
+            el.titleScreen.classList.remove('hidden');
+
+            // Save if we had a meaningful game
+            if (gameState.score > 0) saveGameResult(gameState.score, gameState.level);
         }
-        
-        // Screens
+
         function hideAllScreens() {
-            el.loginScreen.classList.add('hidden');
+            document.querySelectorAll('.screen').forEach(s => s.classList.add('hidden'));
             el.titleScreen.classList.add('hidden');
+            el.loginScreen.classList.add('hidden');
             el.statsScreen.classList.add('hidden');
             el.scoreboardScreen.classList.add('hidden');
-            el.levelComplete.classList.add('hidden');
-            el.gameComplete.classList.add('hidden');
-            el.gameOver.classList.add('hidden');
-            el.pauseOverlay.classList.add('hidden');
+
+            el.gameArea.classList.remove('hidden');
+
         }
-        
-        function showLoginScreen() {
-            hideAllScreens();
-            el.loginScreen.classList.remove('hidden');
-        }
-        
-        function showTitleScreen() {
-            hideAllScreens();
-            el.playerName.textContent = gameState.currentUser;
-            el.titleScreen.classList.remove('hidden');
-        }
-        
-        function showStatsScreen() {
-            hideAllScreens();
-            el.statsPlayerName.textContent = gameState.currentUser;
-            
-            const p = gameData.players[gameState.currentUser];
-            let html = '';
-            if (p && p.gamesPlayed > 0) {
-                const avg = Math.round(p.history.reduce((a, g) => a + g.score, 0) / p.history.length);
-                html = `
-                    <div class="stat-item"><span>Games Played:</span><span class="stat-value">${p.gamesPlayed}</span></div>
-                    <div class="stat-item"><span>Best Score:</span><span class="stat-value">${p.bestScore}</span></div>
-                    <div class="stat-item"><span>Average Score:</span><span class="stat-value">${avg}</span></div>
-                    <div class="stat-item"><span>Last Played:</span><span class="stat-value">${p.history[p.history.length-1]?.date || 'N/A'}</span></div>
-                `;
-            } else {
-                html = '<div class="stat-item"><span>No games played yet!</span></div>';
-            }
-            el.statsContainer.innerHTML = html;
-            el.statsScreen.classList.remove('hidden');
-        }
-        
-        function showScoreboardScreen() {
-            hideAllScreens();
-            const scores = getTopScores();
-            let html = '<div class="score-row header"><span>RANK</span><span>NAME</span><span>SCORE</span></div>';
-            if (scores.length === 0) {
-                html += '<div class="score-row"><span colspan="3">No scores yet!</span></div>';
-            } else {
-                scores.forEach((s, i) => {
-                    const isCurrent = s.name === gameState.currentUser;
-                    html += `<div class="score-row ${isCurrent ? 'current-user' : ''}">
-                        <span>#${i + 1}</span><span>${s.name}</span><span>${s.score}</span>
-                    </div>`;
-                });
-            }
-            el.scoreboardList.innerHTML = html;
-            el.scoreboardScreen.classList.remove('hidden');
-        }
-        
-        function login() {
-            const name = el.usernameInput.value.trim();
-            if (name.length < 1) {
-                el.usernameInput.style.borderColor = 'var(--neon-orange)';
-                return;
-            }
-            gameState.currentUser = name;
-            if (!gameData.players[name]) {
-                gameData.players[name] = { gamesPlayed: 0, bestScore: 0, history: [] };
-            }
-            saveData();
-            showTitleScreen();
-        }
-        
-        // Event Listeners
+
         function setupEventListeners() {
             // Login
-            el.loginBtn.addEventListener('click', login);
-            el.usernameInput.addEventListener('keypress', (e) => { if (e.key === 'Enter') login(); });
-            el.viewScoresBtn.addEventListener('click', () => {
-                gameState.currentUser = null;
-                showScoreboardScreen();
+            el.loginBtn.onclick = () => {
+                const name = el.usernameInput.value.trim();
+                if (!name) return alert('Name required!');
+                gameState.currentUser = name;
+                if (!gameData.players[name]) {
+                    gameData.players[name] = { gamesPlayed: 0, bestScore: 0, history: [] };
+                    saveData();
+                }
+                el.playerName.textContent = `Pilot: ${name}`;
+                el.loginScreen.classList.add('hidden');
+                el.titleScreen.classList.remove('hidden');
+            };
+
+            el.viewScoresBtn.onclick = () => {
+                const list = el.scoreboardList;
+                list.innerHTML = '';
+                const scores = getTopScores();
+                scores.forEach((s, i) => {
+                    const li = document.createElement('li');
+                    li.textContent = `#${i + 1} ${s.name}: ${s.score} pts (${s.games} games)`;
+                    list.appendChild(li);
+                });
+                el.loginScreen.classList.add('hidden');
+                el.scoreboardScreen.classList.remove('hidden');
+            };
+
+            el.importBtn.onclick = () => el.importFile.click();
+            el.importFile.onchange = (e) => importData(e.target.files[0]);
+
+            // Title Screen
+            el.startBtn.onclick = startGame;
+
+            el.statsBtn.onclick = () => {
+                if (!gameState.currentUser) return;
+                const p = gameData.players[gameState.currentUser];
+                el.statsPlayerName.textContent = `Stats for ${gameState.currentUser}`;
+                el.statsContainer.innerHTML = `
+                    <p>Games Played: ${p.gamesPlayed}</p>
+                    <p>Best Score: ${p.bestScore}</p>
+                    <p>Last 5 Games:</p>
+                    <ul>${p.history.slice(-5).map(h => `<li>Lvl ${h.level}: ${h.score} (${h.date})</li>`).join('')}</ul>
+                `;
+                el.titleScreen.classList.add('hidden');
+                el.statsScreen.classList.remove('hidden');
+            };
+
+            el.scoresBtn.onclick = () => {
+                const list = el.scoreboardList;
+                list.innerHTML = '';
+                const scores = getTopScores();
+                scores.forEach((s, i) => {
+                    const li = document.createElement('li');
+                    li.textContent = `#${i + 1} ${s.name}: ${s.score} pts (${s.games} games)`;
+                    list.appendChild(li);
+                });
+                el.titleScreen.classList.add('hidden');
+                el.scoreboardScreen.classList.remove('hidden');
+            };
+
+            el.exportBtn.onclick = exportData;
+
+            el.changeUserBtn.onclick = () => {
+                el.titleScreen.classList.add('hidden');
+                el.loginScreen.classList.remove('hidden');
+            };
+
+            // Back buttons
+            el.statsBackBtn.onclick = () => {
+                el.statsScreen.classList.add('hidden');
+                el.titleScreen.classList.remove('hidden');
+            };
+
+            el.scoreboardBackBtn.onclick = () => {
+                el.scoreboardScreen.classList.add('hidden');
+                if (gameState.currentUser) {
+                    el.titleScreen.classList.remove('hidden');
+                } else {
+                    el.loginScreen.classList.remove('hidden');
+                }
+            };
+
+            // In Game
+            el.pauseBtn.onclick = pauseGame;
+            el.musicToggle.onclick = toggleMusic;
+            el.speakBtn.onclick = () => {
+                const target = gameState.targetItem;
+                if (target) {
+                    const text = (gameState.level >= 3) ? target.word : target.char;
+                    speakItem(text);
+                }
+            };
+
+            el.gameContainer.addEventListener('mousemove', e => moveShip(e.clientX));
+            el.gameContainer.addEventListener('click', (e) => {
+                if (gameState.isDictationMode) return;
+                if (e.target.tagName !== 'BUTTON') shoot();
             });
-            el.importBtn.addEventListener('click', () => el.importFile.click());
-            el.importFile.addEventListener('change', (e) => {
-                if (e.target.files[0]) importData(e.target.files[0]);
+
+            document.addEventListener('keydown', e => {
+                if (e.code === 'Space') {
+                    if (!gameState.isDictationMode) shoot();
+                }
+                if (e.key === 'p') {
+                    if (gameState.isPaused) resumeGame(); else pauseGame();
+                }
             });
-            
-            // Title
-            el.startBtn.addEventListener('click', startGame);
-            el.statsBtn.addEventListener('click', showStatsScreen);
-            el.scoresBtn.addEventListener('click', showScoreboardScreen);
-            el.exportBtn.addEventListener('click', exportData);
-            el.changeUserBtn.addEventListener('click', showLoginScreen);
-            
-            // Stats/Scoreboard back
-            el.statsBackBtn.addEventListener('click', showTitleScreen);
-            el.scoreboardBackBtn.addEventListener('click', () => {
-                if (gameState.currentUser) showTitleScreen();
-                else showLoginScreen();
-            });
-            
-            // Game controls
-            el.pauseBtn.addEventListener('click', pauseGame);
-            el.resumeBtn.addEventListener('click', resumeGame);
-            el.quitBtn.addEventListener('click', quitGame);
-            el.musicToggle.addEventListener('click', toggleMusic);
-            el.speakBtn.addEventListener('click', (e) => { e.stopPropagation(); speakItem(gameState.targetItem); });
-            
-            // Challenge modal
-            el.returnBtn.addEventListener('click', handleReturn);
-            el.doubleDownBtn.addEventListener('click', handleDoubleDown);
-            el.challengeContinueBtn.addEventListener('click', closeChallenge);
-            
-            // Dictation mode
-            el.dictationSubmitBtn.addEventListener('click', checkDictationAnswer);
-            el.dictationInput.addEventListener('keypress', (e) => {
+
+            // Pause & Game Over screens
+            el.resumeBtn.onclick = resumeGame;
+            el.quitBtn.onclick = quitGame;
+
+            el.playAgainBtn.onclick = startGame;
+            el.retryBtn.onclick = startGame;
+
+            el.winMenuBtn.onclick = quitGame;
+            el.gameOverMenuBtn.onclick = quitGame;
+
+            el.continueBtn.onclick = nextLevel;
+
+            // Dictation
+            el.dictationSubmitBtn.onclick = checkDictationAnswer;
+            el.beatsMeBtn.onclick = handleBeatsMe;
+            el.dictationInput.addEventListener('keypress', e => {
                 if (e.key === 'Enter') checkDictationAnswer();
             });
-            el.beatsMeBtn.addEventListener('click', handleBeatsMe);
-            
-            // Level complete / Game over
-            el.continueBtn.addEventListener('click', nextLevel);
-            el.playAgainBtn.addEventListener('click', startGame);
-            el.winMenuBtn.addEventListener('click', showTitleScreen);
-            el.retryBtn.addEventListener('click', startGame);
-            el.gameOverMenuBtn.addEventListener('click', showTitleScreen);
-            
-            // Game input
-            el.gameContainer.addEventListener('mousemove', (e) => {
-                if (gameState.isPlaying && !gameState.isPaused) moveShip(e.clientX);
-            });
-            
-            el.gameContainer.addEventListener('touchmove', (e) => {
-                if (gameState.isPlaying && !gameState.isPaused) {
-                    e.preventDefault();
-                    moveShip(e.touches[0].clientX);
-                }
-            }, { passive: false });
-            
-            el.gameContainer.addEventListener('click', (e) => {
-                if (gameState.isPlaying && !gameState.isPaused && !gameState.isDictationMode &&
-                    !e.target.closest('button') && !e.target.closest('.screen')) {
-                    shoot();
-                }
-            });
-            
-            el.gameContainer.addEventListener('touchstart', (e) => {
-                if (gameState.isPlaying && !gameState.isPaused && !gameState.isDictationMode &&
-                    !e.target.closest('button') && !e.target.closest('.screen')) {
-                    e.preventDefault();
-                    moveShip(e.touches[0].clientX);
-                    shoot();
-                }
-            }, { passive: false });
-            
-            // Keyboard
-            document.addEventListener('keydown', (e) => {
-                // Don't intercept keys when typing in an input field
-                const isTyping = document.activeElement.tagName === 'INPUT';
-                
-                if (e.key === 'Escape' || e.key === 'p' || e.key === 'P') {
-                    if (gameState.isPlaying && !gameState.isPaused && !gameState.isDictationMode) pauseGame();
-                    else if (gameState.isPaused) resumeGame();
-                }
-                if ((e.key === ' ' || e.key === 'ArrowUp') && !isTyping && !gameState.isDictationMode) {
-                    e.preventDefault();
-                    shoot();
-                }
-                if (e.key === 'ArrowLeft' && !isTyping) {
-                    moveShip(gameState.shipX - 25 + el.gameContainer.getBoundingClientRect().left);
-                }
-                if (e.key === 'ArrowRight' && !isTyping) {
-                    moveShip(gameState.shipX + 25 + el.gameContainer.getBoundingClientRect().left);
-                }
-            });
+
+            // Challenge modal
+            el.challengeContinueBtn.onclick = closeChallenge;
+            el.returnBtn.onclick = handleReturn;
+            el.doubleDownBtn.onclick = handleDoubleDown;
         }
-        
+
         // Start
         init();
+
     </script>
 </body>
+
 </html>
