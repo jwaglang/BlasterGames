@@ -4,7 +4,7 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0, user-scalable=no">
-    <title>🐯 K-Popper! 한글 마스터 🐯</title>
+    <title>🎤 K-Popper! 한글 마스터 🎤</title>
     <style>
         @import url('https://fonts.googleapis.com/css2?family=Press+Start+2P&family=Bangers&display=swap');
 
@@ -101,6 +101,34 @@
                 opacity: 0;
             }
         }
+        
+        .kpop-shooting-star {
+            position: absolute;
+            font-size: 2rem;
+            opacity: 0.9;
+            transform: rotate(10deg);
+            animation: kpopShoot 3s linear forwards;
+            pointer-events: none;
+            z-index: 1;
+            filter: drop-shadow(0 0 10px #ff00ff) drop-shadow(0 0 20px #00ffff);
+        }
+        
+        @keyframes kpopShoot {
+            0% {
+                transform: rotate(10deg) translateX(0) scale(1);
+                opacity: 0;
+            }
+            10% {
+                opacity: 1;
+            }
+            80% {
+                opacity: 0.9;
+            }
+            100% {
+                transform: rotate(10deg) translateX(600px) scale(0.8);
+                opacity: 0;
+            }
+        }
 
         .game-container {
             width: 100%;
@@ -146,6 +174,14 @@
             line-height: 1.4;
             padding: 10px 25px;
             margin: 0;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            gap: 10px;
+        }
+        
+        .title-icon {
+            filter: drop-shadow(0 0 8px var(--neon-pink)) drop-shadow(0 0 15px var(--neon-cyan));
         }
 
         @keyframes titlePulse {
@@ -450,25 +486,37 @@
             animation: letterHit 0.3s ease-out forwards;
         }
 
-        /* Meteorite */
+        /* Gold Record (Challenge Item) */
         .meteorite {
             position: absolute;
-            font-size: clamp(2rem, 5vw, 3rem);
             user-select: none;
             pointer-events: auto;
             cursor: crosshair;
-            filter: drop-shadow(0 0 10px #888);
-            animation: meteorSpin 2s linear infinite;
+            animation: recordSpin 1.5s linear infinite;
+        }
+        
+        .meteorite.gold-record {
+            filter: drop-shadow(0 0 15px #FFD700) drop-shadow(0 0 25px #DAA520);
+        }
+        
+        .gold-record-icon {
+            vertical-align: middle;
+            filter: drop-shadow(0 0 10px #FFD700);
+            animation: recordGlow 1s ease-in-out infinite alternate;
         }
 
-        @keyframes meteorSpin {
+        @keyframes recordSpin {
             0% {
                 transform: rotate(0deg);
             }
-
             100% {
                 transform: rotate(360deg);
             }
+        }
+        
+        @keyframes recordGlow {
+            0% { filter: drop-shadow(0 0 10px #FFD700); }
+            100% { filter: drop-shadow(0 0 20px #FFD700) drop-shadow(0 0 30px #DAA520); }
         }
 
         /* Challenge Modal */
@@ -656,14 +704,15 @@
             }
         }
 
-        /* Spaceship */
+        /* Spaceship - K-pop Idol */
         .spaceship {
             position: absolute;
-            bottom: 25px;
+            bottom: 20px;
             left: 50%;
             transform: translateX(-50%);
-            font-size: clamp(2rem, 6vw, 3rem);
-            filter: drop-shadow(0 0 20px var(--neon-cyan));
+            width: clamp(45px, 8vw, 60px);
+            height: clamp(55px, 10vw, 75px);
+            filter: drop-shadow(0 0 15px var(--neon-pink)) drop-shadow(0 0 25px var(--neon-cyan));
             z-index: 30;
             pointer-events: none;
         }
@@ -1008,7 +1057,7 @@
     <div class="game-container" id="gameContainer">
         <!-- Login Screen -->
         <div class="screen" id="loginScreen">
-            <h1 class="game-title">🐯 K-POPPER! 🐯</h1>
+            <h1 class="game-title"><svg class="title-icon" viewBox="0 0 70 85" width="35" height="42" fill="none"><ellipse cx="35" cy="20" rx="18" ry="14" fill="#2d5a87"/><path d="M17 20 Q12 22 10 30 Q8 42 12 52 Q16 55 18 52 Q14 42 16 32 Q17 25 19 22 Z" fill="#2d5a87"/><path d="M18 22 Q14 25 13 32 Q11 42 14 50 Q16 48 15 40 Q15 30 18 25 Z" fill="#5ba3d9"/><path d="M53 20 Q58 22 60 30 Q62 42 58 52 Q54 55 52 52 Q56 42 54 32 Q53 25 51 22 Z" fill="#2d5a87"/><path d="M52 22 Q56 25 57 32 Q59 42 56 50 Q54 48 55 40 Q55 30 52 25 Z" fill="#5ba3d9"/><polygon points="14,22 15,24 17,24 15.5,26 16,28 14,27 12,28 12.5,26 11,24 13,24" fill="#FFD700"/><polygon points="56,22 57,24 59,24 57.5,26 58,28 56,27 54,28 54.5,26 53,24 55,24" fill="#FFD700"/><ellipse cx="35" cy="18" rx="15" ry="11" fill="#5ba3d9"/><path d="M22 20 L25 26 L28 20 L31 25 L35 20 L39 25 L42 20 L45 26 L48 20" fill="#5ba3d9"/><ellipse cx="19" cy="32" rx="2.5" ry="3.5" fill="#ffe4c4"/><ellipse cx="51" cy="32" rx="2.5" ry="3.5" fill="#ffe4c4"/><ellipse cx="35" cy="30" rx="13" ry="13" fill="#ffe4c4"/><g fill="#c0c0c0" stroke="#666" stroke-width="0.3"><rect x="18" y="38" width="1.2" height="5"/><rect x="16.5" y="39.5" width="4" height="1.2"/><rect x="50.5" y="38" width="1.2" height="5"/><rect x="49" y="39.5" width="4" height="1.2"/></g><ellipse cx="27" cy="34" rx="3.5" ry="1.8" fill="#ffb6c1" opacity="0.6"/><ellipse cx="43" cy="34" rx="3.5" ry="1.8" fill="#ffb6c1" opacity="0.6"/><path d="M27 28 Q30 25 33 28" stroke="#1a1a2e" stroke-width="2" fill="none" stroke-linecap="round"/><path d="M37 28 Q40 25 43 28" stroke="#1a1a2e" stroke-width="2" fill="none" stroke-linecap="round"/><path d="M31 38 Q35 42 39 38" stroke="#1a1a2e" stroke-width="1.5" fill="none" stroke-linecap="round"/><rect x="32" y="43" width="6" height="6" fill="#ffe4c4"/><path d="M22 49 Q19 51 19 56 Q18 65 22 75 Q26 82 35 84 Q44 82 48 75 Q52 65 51 56 Q51 51 48 49 Q42 47 35 47 Q28 47 22 49" fill="#ff69b4"/><ellipse cx="29" cy="58" rx="5" ry="4" fill="#ff5c9e"/><ellipse cx="41" cy="58" rx="5" ry="4" fill="#ff5c9e"/><path d="M35 66 C35 63 38 63 38 66 C38 69 35 72 35 72 C35 72 32 69 32 66 C32 63 35 63 35 66" fill="#1a1a2e"/><path d="M51 54 Q56 56 58 52 L60 48" stroke="#ffe4c4" stroke-width="4" fill="none" stroke-linecap="round"/><circle cx="61" cy="46" r="3" fill="#ffe4c4"/><rect x="59" y="32" width="4" height="12" rx="1.5" fill="#00ffff"/><ellipse cx="61" cy="30" rx="3.5" ry="4" fill="#00ffff" stroke="#00cccc" stroke-width="1"/></svg> K-POPPER! <svg class="title-icon" viewBox="0 0 70 85" width="35" height="42" fill="none"><ellipse cx="35" cy="20" rx="18" ry="14" fill="#2d5a87"/><path d="M17 20 Q12 22 10 30 Q8 42 12 52 Q16 55 18 52 Q14 42 16 32 Q17 25 19 22 Z" fill="#2d5a87"/><path d="M18 22 Q14 25 13 32 Q11 42 14 50 Q16 48 15 40 Q15 30 18 25 Z" fill="#5ba3d9"/><path d="M53 20 Q58 22 60 30 Q62 42 58 52 Q54 55 52 52 Q56 42 54 32 Q53 25 51 22 Z" fill="#2d5a87"/><path d="M52 22 Q56 25 57 32 Q59 42 56 50 Q54 48 55 40 Q55 30 52 25 Z" fill="#5ba3d9"/><polygon points="14,22 15,24 17,24 15.5,26 16,28 14,27 12,28 12.5,26 11,24 13,24" fill="#FFD700"/><polygon points="56,22 57,24 59,24 57.5,26 58,28 56,27 54,28 54.5,26 53,24 55,24" fill="#FFD700"/><ellipse cx="35" cy="18" rx="15" ry="11" fill="#5ba3d9"/><path d="M22 20 L25 26 L28 20 L31 25 L35 20 L39 25 L42 20 L45 26 L48 20" fill="#5ba3d9"/><ellipse cx="19" cy="32" rx="2.5" ry="3.5" fill="#ffe4c4"/><ellipse cx="51" cy="32" rx="2.5" ry="3.5" fill="#ffe4c4"/><ellipse cx="35" cy="30" rx="13" ry="13" fill="#ffe4c4"/><g fill="#c0c0c0" stroke="#666" stroke-width="0.3"><rect x="18" y="38" width="1.2" height="5"/><rect x="16.5" y="39.5" width="4" height="1.2"/><rect x="50.5" y="38" width="1.2" height="5"/><rect x="49" y="39.5" width="4" height="1.2"/></g><ellipse cx="27" cy="34" rx="3.5" ry="1.8" fill="#ffb6c1" opacity="0.6"/><ellipse cx="43" cy="34" rx="3.5" ry="1.8" fill="#ffb6c1" opacity="0.6"/><path d="M27 28 Q30 25 33 28" stroke="#1a1a2e" stroke-width="2" fill="none" stroke-linecap="round"/><path d="M37 28 Q40 25 43 28" stroke="#1a1a2e" stroke-width="2" fill="none" stroke-linecap="round"/><path d="M31 38 Q35 42 39 38" stroke="#1a1a2e" stroke-width="1.5" fill="none" stroke-linecap="round"/><rect x="32" y="43" width="6" height="6" fill="#ffe4c4"/><path d="M22 49 Q19 51 19 56 Q18 65 22 75 Q26 82 35 84 Q44 82 48 75 Q52 65 51 56 Q51 51 48 49 Q42 47 35 47 Q28 47 22 49" fill="#ff69b4"/><ellipse cx="29" cy="58" rx="5" ry="4" fill="#ff5c9e"/><ellipse cx="41" cy="58" rx="5" ry="4" fill="#ff5c9e"/><path d="M35 66 C35 63 38 63 38 66 C38 69 35 72 35 72 C35 72 32 69 32 66 C32 63 35 63 35 66" fill="#1a1a2e"/><path d="M51 54 Q56 56 58 52 L60 48" stroke="#ffe4c4" stroke-width="4" fill="none" stroke-linecap="round"/><circle cx="61" cy="46" r="3" fill="#ffe4c4"/><rect x="59" y="32" width="4" height="12" rx="1.5" fill="#00ffff"/><ellipse cx="61" cy="30" rx="3.5" ry="4" fill="#00ffff" stroke="#00cccc" stroke-width="1"/></svg></h1>
             <p class="subtitle">ENTER YOUR NAME</p>
             <input type="text" class="username-input" id="usernameInput" placeholder="Your name..." maxlength="12">
             <button class="btn btn-green" id="loginBtn">START</button>
@@ -1021,7 +1070,7 @@
 
         <!-- Title Screen -->
         <div class="screen hidden" id="titleScreen">
-            <h1 class="game-title">🐯 K-POPPER! 🐯</h1>
+            <h1 class="game-title"><svg class="title-icon" viewBox="0 0 70 85" width="35" height="42" fill="none"><ellipse cx="35" cy="20" rx="18" ry="14" fill="#2d5a87"/><path d="M17 20 Q12 22 10 30 Q8 42 12 52 Q16 55 18 52 Q14 42 16 32 Q17 25 19 22 Z" fill="#2d5a87"/><path d="M18 22 Q14 25 13 32 Q11 42 14 50 Q16 48 15 40 Q15 30 18 25 Z" fill="#5ba3d9"/><path d="M53 20 Q58 22 60 30 Q62 42 58 52 Q54 55 52 52 Q56 42 54 32 Q53 25 51 22 Z" fill="#2d5a87"/><path d="M52 22 Q56 25 57 32 Q59 42 56 50 Q54 48 55 40 Q55 30 52 25 Z" fill="#5ba3d9"/><polygon points="14,22 15,24 17,24 15.5,26 16,28 14,27 12,28 12.5,26 11,24 13,24" fill="#FFD700"/><polygon points="56,22 57,24 59,24 57.5,26 58,28 56,27 54,28 54.5,26 53,24 55,24" fill="#FFD700"/><ellipse cx="35" cy="18" rx="15" ry="11" fill="#5ba3d9"/><path d="M22 20 L25 26 L28 20 L31 25 L35 20 L39 25 L42 20 L45 26 L48 20" fill="#5ba3d9"/><ellipse cx="19" cy="32" rx="2.5" ry="3.5" fill="#ffe4c4"/><ellipse cx="51" cy="32" rx="2.5" ry="3.5" fill="#ffe4c4"/><ellipse cx="35" cy="30" rx="13" ry="13" fill="#ffe4c4"/><g fill="#c0c0c0" stroke="#666" stroke-width="0.3"><rect x="18" y="38" width="1.2" height="5"/><rect x="16.5" y="39.5" width="4" height="1.2"/><rect x="50.5" y="38" width="1.2" height="5"/><rect x="49" y="39.5" width="4" height="1.2"/></g><ellipse cx="27" cy="34" rx="3.5" ry="1.8" fill="#ffb6c1" opacity="0.6"/><ellipse cx="43" cy="34" rx="3.5" ry="1.8" fill="#ffb6c1" opacity="0.6"/><path d="M27 28 Q30 25 33 28" stroke="#1a1a2e" stroke-width="2" fill="none" stroke-linecap="round"/><path d="M37 28 Q40 25 43 28" stroke="#1a1a2e" stroke-width="2" fill="none" stroke-linecap="round"/><path d="M31 38 Q35 42 39 38" stroke="#1a1a2e" stroke-width="1.5" fill="none" stroke-linecap="round"/><rect x="32" y="43" width="6" height="6" fill="#ffe4c4"/><path d="M22 49 Q19 51 19 56 Q18 65 22 75 Q26 82 35 84 Q44 82 48 75 Q52 65 51 56 Q51 51 48 49 Q42 47 35 47 Q28 47 22 49" fill="#ff69b4"/><ellipse cx="29" cy="58" rx="5" ry="4" fill="#ff5c9e"/><ellipse cx="41" cy="58" rx="5" ry="4" fill="#ff5c9e"/><path d="M35 66 C35 63 38 63 38 66 C38 69 35 72 35 72 C35 72 32 69 32 66 C32 63 35 63 35 66" fill="#1a1a2e"/><path d="M51 54 Q56 56 58 52 L60 48" stroke="#ffe4c4" stroke-width="4" fill="none" stroke-linecap="round"/><circle cx="61" cy="46" r="3" fill="#ffe4c4"/><rect x="59" y="32" width="4" height="12" rx="1.5" fill="#00ffff"/><ellipse cx="61" cy="30" rx="3.5" ry="4" fill="#00ffff" stroke="#00cccc" stroke-width="1"/></svg> K-POPPER! <svg class="title-icon" viewBox="0 0 70 85" width="35" height="42" fill="none"><ellipse cx="35" cy="20" rx="18" ry="14" fill="#2d5a87"/><path d="M17 20 Q12 22 10 30 Q8 42 12 52 Q16 55 18 52 Q14 42 16 32 Q17 25 19 22 Z" fill="#2d5a87"/><path d="M18 22 Q14 25 13 32 Q11 42 14 50 Q16 48 15 40 Q15 30 18 25 Z" fill="#5ba3d9"/><path d="M53 20 Q58 22 60 30 Q62 42 58 52 Q54 55 52 52 Q56 42 54 32 Q53 25 51 22 Z" fill="#2d5a87"/><path d="M52 22 Q56 25 57 32 Q59 42 56 50 Q54 48 55 40 Q55 30 52 25 Z" fill="#5ba3d9"/><polygon points="14,22 15,24 17,24 15.5,26 16,28 14,27 12,28 12.5,26 11,24 13,24" fill="#FFD700"/><polygon points="56,22 57,24 59,24 57.5,26 58,28 56,27 54,28 54.5,26 53,24 55,24" fill="#FFD700"/><ellipse cx="35" cy="18" rx="15" ry="11" fill="#5ba3d9"/><path d="M22 20 L25 26 L28 20 L31 25 L35 20 L39 25 L42 20 L45 26 L48 20" fill="#5ba3d9"/><ellipse cx="19" cy="32" rx="2.5" ry="3.5" fill="#ffe4c4"/><ellipse cx="51" cy="32" rx="2.5" ry="3.5" fill="#ffe4c4"/><ellipse cx="35" cy="30" rx="13" ry="13" fill="#ffe4c4"/><g fill="#c0c0c0" stroke="#666" stroke-width="0.3"><rect x="18" y="38" width="1.2" height="5"/><rect x="16.5" y="39.5" width="4" height="1.2"/><rect x="50.5" y="38" width="1.2" height="5"/><rect x="49" y="39.5" width="4" height="1.2"/></g><ellipse cx="27" cy="34" rx="3.5" ry="1.8" fill="#ffb6c1" opacity="0.6"/><ellipse cx="43" cy="34" rx="3.5" ry="1.8" fill="#ffb6c1" opacity="0.6"/><path d="M27 28 Q30 25 33 28" stroke="#1a1a2e" stroke-width="2" fill="none" stroke-linecap="round"/><path d="M37 28 Q40 25 43 28" stroke="#1a1a2e" stroke-width="2" fill="none" stroke-linecap="round"/><path d="M31 38 Q35 42 39 38" stroke="#1a1a2e" stroke-width="1.5" fill="none" stroke-linecap="round"/><rect x="32" y="43" width="6" height="6" fill="#ffe4c4"/><path d="M22 49 Q19 51 19 56 Q18 65 22 75 Q26 82 35 84 Q44 82 48 75 Q52 65 51 56 Q51 51 48 49 Q42 47 35 47 Q28 47 22 49" fill="#ff69b4"/><ellipse cx="29" cy="58" rx="5" ry="4" fill="#ff5c9e"/><ellipse cx="41" cy="58" rx="5" ry="4" fill="#ff5c9e"/><path d="M35 66 C35 63 38 63 38 66 C38 69 35 72 35 72 C35 72 32 69 32 66 C32 63 35 63 35 66" fill="#1a1a2e"/><path d="M51 54 Q56 56 58 52 L60 48" stroke="#ffe4c4" stroke-width="4" fill="none" stroke-linecap="round"/><circle cx="61" cy="46" r="3" fill="#ffe4c4"/><rect x="59" y="32" width="4" height="12" rx="1.5" fill="#00ffff"/><ellipse cx="61" cy="30" rx="3.5" ry="4" fill="#00ffff" stroke="#00cccc" stroke-width="1"/></svg></h1>
             <p class="player-welcome">Welcome, <span id="playerName">Player</span>!</p>
             <div class="level-select-row">
                 <label for="levelSelect" class="level-select-label">START AT:</label>
@@ -1088,7 +1137,66 @@
         <!-- Game Area -->
         <div class="game-area" id="gameArea"></div>
         <div class="shoot-hint" id="shootHint">TAP TO SHOOT! 🔫</div>
-        <div class="spaceship" id="spaceship">🐯</div>
+        <div class="spaceship" id="spaceship">
+            <svg viewBox="0 0 70 85" fill="none" xmlns="http://www.w3.org/2000/svg">
+                <!-- Hair back -->
+                <ellipse cx="35" cy="20" rx="18" ry="14" fill="#2d5a87"/>
+                <!-- Left pigtail -->
+                <path d="M17 20 Q12 22 10 30 Q8 42 12 52 Q16 55 18 52 Q14 42 16 32 Q17 25 19 22 Z" fill="#2d5a87"/>
+                <path d="M18 22 Q14 25 13 32 Q11 42 14 50 Q16 48 15 40 Q15 30 18 25 Z" fill="#5ba3d9"/>
+                <!-- Right pigtail -->
+                <path d="M53 20 Q58 22 60 30 Q62 42 58 52 Q54 55 52 52 Q56 42 54 32 Q53 25 51 22 Z" fill="#2d5a87"/>
+                <path d="M52 22 Q56 25 57 32 Q59 42 56 50 Q54 48 55 40 Q55 30 52 25 Z" fill="#5ba3d9"/>
+                <!-- Stars on pigtails -->
+                <polygon points="14,22 15,24 17,24 15.5,26 16,28 14,27 12,28 12.5,26 11,24 13,24" fill="#FFD700"/>
+                <polygon points="56,22 57,24 59,24 57.5,26 58,28 56,27 54,28 54.5,26 53,24 55,24" fill="#FFD700"/>
+                <!-- Hair top -->
+                <ellipse cx="35" cy="18" rx="15" ry="11" fill="#5ba3d9"/>
+                <path d="M22 20 L25 26 L28 20 L31 25 L35 20 L39 25 L42 20 L45 26 L48 20" fill="#5ba3d9"/>
+                <!-- Ears -->
+                <ellipse cx="19" cy="32" rx="2.5" ry="3.5" fill="#ffe4c4"/>
+                <ellipse cx="51" cy="32" rx="2.5" ry="3.5" fill="#ffe4c4"/>
+                <!-- Face -->
+                <ellipse cx="35" cy="30" rx="13" ry="13" fill="#ffe4c4"/>
+                <!-- Cross Earrings -->
+                <g fill="#c0c0c0" stroke="#666" stroke-width="0.3">
+                    <rect x="18" y="38" width="1.2" height="5"/>
+                    <rect x="16.5" y="39.5" width="4" height="1.2"/>
+                    <rect x="50.5" y="38" width="1.2" height="5"/>
+                    <rect x="49" y="39.5" width="4" height="1.2"/>
+                </g>
+                <!-- Blush -->
+                <ellipse cx="27" cy="34" rx="3.5" ry="1.8" fill="#ffb6c1" opacity="0.6"/>
+                <ellipse cx="43" cy="34" rx="3.5" ry="1.8" fill="#ffb6c1" opacity="0.6"/>
+                <!-- Eyes -->
+                <path d="M27 28 Q30 25 33 28" stroke="#1a1a2e" stroke-width="2" fill="none" stroke-linecap="round"/>
+                <path d="M37 28 Q40 25 43 28" stroke="#1a1a2e" stroke-width="2" fill="none" stroke-linecap="round"/>
+                <!-- Smile -->
+                <path d="M31 38 Q35 42 39 38" stroke="#1a1a2e" stroke-width="1.5" fill="none" stroke-linecap="round"/>
+                <!-- Neck -->
+                <rect x="32" y="43" width="6" height="6" fill="#ffe4c4"/>
+                <!-- Body - SLENDER -->
+                <path d="M22 49 Q19 51 19 56 Q18 65 22 75 Q26 82 35 84 Q44 82 48 75 Q52 65 51 56 Q51 51 48 49 Q42 47 35 47 Q28 47 22 49" fill="#ff69b4"/>
+                <!-- Chest -->
+                <ellipse cx="29" cy="58" rx="5" ry="4" fill="#ff5c9e"/>
+                <ellipse cx="41" cy="58" rx="5" ry="4" fill="#ff5c9e"/>
+                <!-- Waist -->
+                <path d="M24 66 Q35 63 46 66" stroke="#ff69b4" stroke-width="2" fill="none"/>
+                <!-- Heart on shirt -->
+                <path d="M35 66 C35 63 38 63 38 66 C38 69 35 72 35 72 C35 72 32 69 32 66 C32 63 35 63 35 66" fill="#1a1a2e"/>
+                <!-- Arm with microphone -->
+                <path d="M51 54 Q56 56 58 52 L60 48" stroke="#ffe4c4" stroke-width="4" fill="none" stroke-linecap="round"/>
+                <circle cx="61" cy="46" r="3" fill="#ffe4c4"/>
+                <!-- CYAN Microphone -->
+                <rect x="59" y="32" width="4" height="12" rx="1.5" fill="#00ffff"/>
+                <ellipse cx="61" cy="30" rx="3.5" ry="4" fill="#00ffff" stroke="#00cccc" stroke-width="1"/>
+                <line x1="58.5" y1="28" x2="63.5" y2="28" stroke="#00cccc" stroke-width="0.8"/>
+                <line x1="58.5" y1="30" x2="63.5" y2="30" stroke="#00cccc" stroke-width="0.8"/>
+                <line x1="58.5" y1="32" x2="63.5" y2="32" stroke="#00cccc" stroke-width="0.8"/>
+                <!-- Floating heart -->
+                <path d="M5 50 C5 47 8 47 8 50 C8 53 5 56 5 56 C5 56 2 53 2 50 C2 47 5 47 5 50" fill="#ff69b4"/>
+            </svg>
+        </div>
 
         <!-- Dictation Area (Level 5) -->
         <div class="dictation-area hidden" id="dictationArea">
@@ -1102,9 +1210,23 @@
             </div>
         </div>
 
-        <!-- Challenge Modal (Meteorite) -->
+        <!-- Challenge Modal (Gold Record) -->
         <div class="challenge-modal hidden" id="challengeModal">
-            <h2 class="challenge-title">☄️ METEORITE CHALLENGE! ☄️</h2>
+            <h2 class="challenge-title">
+                <svg class="gold-record-icon" viewBox="0 0 40 40" width="40" height="40">
+                    <circle cx="20" cy="20" r="18" fill="#FFD700" stroke="#DAA520" stroke-width="2"/>
+                    <circle cx="20" cy="20" r="12" fill="#B8860B"/>
+                    <circle cx="20" cy="20" r="6" fill="#1a1a2e"/>
+                    <circle cx="20" cy="20" r="2" fill="#FFD700"/>
+                </svg>
+                GOLD RECORD CHALLENGE!
+                <svg class="gold-record-icon" viewBox="0 0 40 40" width="40" height="40">
+                    <circle cx="20" cy="20" r="18" fill="#FFD700" stroke="#DAA520" stroke-width="2"/>
+                    <circle cx="20" cy="20" r="12" fill="#B8860B"/>
+                    <circle cx="20" cy="20" r="6" fill="#1a1a2e"/>
+                    <circle cx="20" cy="20" r="2" fill="#FFD700"/>
+                </svg>
+            </h2>
             <p class="challenge-question" id="challengeQuestion">Question goes here</p>
             <div class="challenge-options" id="challengeOptions">
                 <!-- Options will be inserted here -->
@@ -1248,19 +1370,127 @@
             { word: '언니', pinyin: 'eonni', meaning: 'Older sister (to female)' }
         ];
 
-        // Challenge questions for meteorites (multiple choice)
-        // Challenge questions for meteorites (multiple choice)
+        // Challenge questions - K-pop trivia and Korean language (100+ questions)
         const CHALLENGE_QUESTIONS = [
-            { q: "How do you say 'Hello'?", options: ["Annyeonghaseyo", "Gamsahamnida", "Saranghae", "Mianhae"], a: "Annyeonghaseyo" },
-            { q: "What is 'Kimchi'?", options: ["Spicy Cabbage", "Rice Cake", "BBQ Beef", "Soy Sauce"], a: "Spicy Cabbage" },
-            { q: "What does 'Saranghae' mean?", options: ["I love you", "Hello", "Goodbye", "Thank you"], a: "I love you" },
+            // K-POP GROUPS & ARTISTS (30 questions)
+            { q: "What does BTS stand for?", options: ["Bangtan Sonyeondan", "Best Teen Stars", "Beyond The Scene", "Both A and C"], a: "Both A and C" },
+            { q: "What was BLACKPINK's debut single?", options: ["Boombayah", "DDU-DU DDU-DU", "Kill This Love", "How You Like That"], a: "Boombayah" },
+            { q: "How many members are in BTS?", options: ["5", "6", "7", "8"], a: "7" },
+            { q: "How many members are in BLACKPINK?", options: ["3", "4", "5", "6"], a: "4" },
+            { q: "Which company manages BTS?", options: ["SM Entertainment", "YG Entertainment", "JYP Entertainment", "HYBE"], a: "HYBE" },
+            { q: "Which company manages BLACKPINK?", options: ["SM Entertainment", "YG Entertainment", "JYP Entertainment", "HYBE"], a: "YG Entertainment" },
+            { q: "What year did BTS debut?", options: ["2011", "2012", "2013", "2014"], a: "2013" },
+            { q: "What is the BTS fandom called?", options: ["Blink", "Army", "Once", "Exo-L"], a: "Army" },
+            { q: "What is the BLACKPINK fandom called?", options: ["Blink", "Army", "Once", "Exo-L"], a: "Blink" },
+            { q: "Who is the leader of BTS?", options: ["Jungkook", "V", "RM", "Suga"], a: "RM" },
+            { q: "Which BTS song has 'I need you girl' hook?", options: ["I Need U", "Boy With Luv", "Dynamite", "Butter"], a: "I Need U" },
+            { q: "What was BTS's first Billboard Hot 100 #1 song?", options: ["Boy With Luv", "Dynamite", "Butter", "DNA"], a: "Dynamite" },
+            { q: "Which TWICE member is from Japan?", options: ["Nayeon", "Momo", "Tzuyu", "Dahyun"], a: "Momo" },
+            { q: "What does TWICE's fandom call themselves?", options: ["Blink", "Once", "Midzy", "Stay"], a: "Once" },
+            { q: "Who sang 'Gangnam Style'?", options: ["BTS", "PSY", "EXO", "BigBang"], a: "PSY" },
+            { q: "Which group has the song 'Monster'?", options: ["BTS", "EXO", "NCT", "Red Velvet"], a: "EXO" },
+            { q: "Which group sang 'Cheer Up'?", options: ["BLACKPINK", "Red Velvet", "TWICE", "ITZY"], a: "TWICE" },
+            { q: "What is Stray Kids' fandom called?", options: ["Stay", "Atiny", "Engene", "Moa"], a: "Stay" },
+            { q: "Which company manages Stray Kids?", options: ["SM", "YG", "JYP", "HYBE"], a: "JYP" },
+            { q: "What year did BLACKPINK debut?", options: ["2015", "2016", "2017", "2018"], a: "2016" },
+            { q: "Which member is the main rapper of BLACKPINK?", options: ["Jisoo", "Jennie", "Rosé", "Lisa"], a: "Lisa" },
+            { q: "Which BTS member is known as 'Golden Maknae'?", options: ["V", "Jimin", "Jungkook", "J-Hope"], a: "Jungkook" },
+            { q: "What is NewJeans' debut song?", options: ["Attention", "Hype Boy", "Ditto", "Super Shy"], a: "Attention" },
+            { q: "Which group sang 'Love Dive'?", options: ["IVE", "aespa", "NMIXX", "LE SSERAFIM"], a: "IVE" },
+            { q: "What is aespa's AI concept called?", options: ["Kwangya", "æ", "SYNK", "MY"], a: "Kwangya" },
+            { q: "Which group has members called 'æ'?", options: ["NewJeans", "aespa", "IVE", "ITZY"], a: "aespa" },
+            { q: "What's the title of BTS's UN speech song?", options: ["Permission to Dance", "Butter", "Yet To Come", "My Universe"], a: "Permission to Dance" },
+            { q: "Which K-pop group collabed with Megan Thee Stallion?", options: ["BTS", "BLACKPINK", "TWICE", "Stray Kids"], a: "BTS" },
+            { q: "BLACKPINK's 'Ice Cream' featured which artist?", options: ["Lady Gaga", "Selena Gomez", "Dua Lipa", "Ariana Grande"], a: "Selena Gomez" },
+            { q: "Which member left EXO in 2014?", options: ["Kris", "Chanyeol", "Baekhyun", "Kai"], a: "Kris" },
+            
+            // HANGUL BASICS (25 questions)
             { q: "What is the Korean alphabet called?", options: ["Hangul", "Hanja", "Hiragana", "Kanji"], a: "Hangul" },
-            { q: "Capital of South Korea?", options: ["Seoul", "Busan", "Incheon", "Jeju"], a: "Seoul" },
-            { q: "What is 'Bulgogi'?", options: ["Marinated Beef", "Spicy Soup", "Fried Chicken", "Raw Fish"], a: "Marinated Beef" },
+            { q: "Who invented Hangul?", options: ["King Sejong", "King Taejo", "King Gojong", "King Yeongjo"], a: "King Sejong" },
+            { q: "How many consonants in Hangul?", options: ["10", "14", "19", "21"], a: "14" },
+            { q: "How many vowels in Hangul?", options: ["5", "10", "14", "21"], a: "10" },
+            { q: "What sound does ㄱ make?", options: ["g/k", "n", "d/t", "r/l"], a: "g/k" },
+            { q: "What sound does ㄴ make?", options: ["g/k", "n", "d/t", "r/l"], a: "n" },
+            { q: "What sound does ㄷ make?", options: ["g/k", "n", "d/t", "r/l"], a: "d/t" },
+            { q: "What sound does ㄹ make?", options: ["g/k", "n", "d/t", "r/l"], a: "r/l" },
+            { q: "What sound does ㅁ make?", options: ["m", "b/p", "s", "ng"], a: "m" },
+            { q: "What sound does ㅂ make?", options: ["m", "b/p", "s", "ng"], a: "b/p" },
+            { q: "What sound does ㅅ make?", options: ["m", "b/p", "s", "ng"], a: "s" },
+            { q: "What sound does ㅇ make?", options: ["m", "b/p", "s", "ng (or silent)"], a: "ng (or silent)" },
+            { q: "What sound does ㅈ make?", options: ["j/ch", "h", "k", "t"], a: "j/ch" },
+            { q: "What sound does ㅎ make?", options: ["j/ch", "h", "k", "t"], a: "h" },
+            { q: "What sound does ㅏ make?", options: ["a", "eo", "o", "u"], a: "a" },
+            { q: "What sound does ㅓ make?", options: ["a", "eo", "o", "u"], a: "eo" },
+            { q: "What sound does ㅗ make?", options: ["a", "eo", "o", "u"], a: "o" },
+            { q: "What sound does ㅜ make?", options: ["a", "eo", "o", "u"], a: "u" },
+            { q: "What sound does ㅡ make?", options: ["eu", "i", "ae", "e"], a: "eu" },
+            { q: "What sound does ㅣ make?", options: ["eu", "i", "ae", "e"], a: "i" },
+            { q: "Korean syllables are written in?", options: ["Lines", "Blocks", "Circles", "Columns"], a: "Blocks" },
+            { q: "Double consonants (ㄲ,ㄸ,etc) are called?", options: ["Ssang", "Batchim", "Jamo", "Hanja"], a: "Ssang" },
+            { q: "Final consonants are called?", options: ["Ssang", "Batchim", "Jamo", "Hanja"], a: "Batchim" },
+            { q: "Individual letters in Hangul are called?", options: ["Ssang", "Batchim", "Jamo", "Hanja"], a: "Jamo" },
+            { q: "Chinese characters used in Korean?", options: ["Ssang", "Batchim", "Jamo", "Hanja"], a: "Hanja" },
+            
+            // KOREAN VOCABULARY (25 questions)
+            { q: "How do you say 'Hello'?", options: ["Annyeonghaseyo", "Gamsahamnida", "Saranghae", "Mianhae"], a: "Annyeonghaseyo" },
             { q: "How do you say 'Thank you'?", options: ["Gamsahamnida", "Annyeong", "Juseyo", "Mwoyeyo"], a: "Gamsahamnida" },
-            { q: "What is 'Soju'?", options: ["Korean Alcohol", "Korean Tea", "Korean Soda", "Korean Water"], a: "Korean Alcohol" },
+            { q: "What does 'Saranghae' mean?", options: ["I love you", "Hello", "Goodbye", "Thank you"], a: "I love you" },
+            { q: "What does 'Oppa' mean?", options: ["Older Brother (female)", "Dad", "Grandpa", "Friend"], a: "Older Brother (female)" },
+            { q: "What does 'Unnie' mean?", options: ["Older Sister (female)", "Mom", "Aunt", "Friend"], a: "Older Sister (female)" },
+            { q: "What does 'Hyung' mean?", options: ["Older Brother (male)", "Dad", "Uncle", "Friend"], a: "Older Brother (male)" },
+            { q: "What does 'Noona' mean?", options: ["Older Sister (male)", "Mom", "Aunt", "Friend"], a: "Older Sister (male)" },
+            { q: "How do you say 'I'm sorry'?", options: ["Mianhae", "Gamsahamnida", "Saranghae", "Annyeong"], a: "Mianhae" },
+            { q: "How do you say 'Goodbye' (to someone leaving)?", options: ["Annyeonghi gaseyo", "Annyeonghi gyeseyo", "Annyeong", "Jal ga"], a: "Annyeonghi gaseyo" },
+            { q: "What does 'Daebak' mean?", options: ["Awesome/Amazing", "Hello", "Cute", "Delicious"], a: "Awesome/Amazing" },
+            { q: "What does 'Aigoo' express?", options: ["Frustration/Surprise", "Happiness", "Anger", "Love"], a: "Frustration/Surprise" },
+            { q: "What is 'Maknae'?", options: ["Youngest member", "Oldest member", "Leader", "Visual"], a: "Youngest member" },
+            { q: "What does 'Fighting!' (화이팅) mean?", options: ["Let's fight", "Good luck/You can do it", "Be careful", "Run away"], a: "Good luck/You can do it" },
+            { q: "What does 'Aegyo' mean?", options: ["Acting cute", "Dancing", "Singing", "Rapping"], a: "Acting cute" },
+            { q: "What does 'Selca' mean?", options: ["Selfie", "Dance", "Song", "Fan"], a: "Selfie" },
+            { q: "What is a 'Bias' in K-pop?", options: ["Favorite member", "Least favorite", "The leader", "Oldest member"], a: "Favorite member" },
+            { q: "What is 'Comeback' in K-pop?", options: ["New song/album release", "Return from military", "Leaving group", "Concert"], a: "New song/album release" },
+            { q: "What does 'Sunbae' mean?", options: ["Senior/Elder", "Junior", "Friend", "Fan"], a: "Senior/Elder" },
+            { q: "What does 'Hoobae' mean?", options: ["Junior", "Senior", "Friend", "Fan"], a: "Junior" },
+            { q: "What is a 'Trainee'?", options: ["Pre-debut idol", "Fan", "Manager", "Producer"], a: "Pre-debut idol" },
+            { q: "What does 'Jjang' mean?", options: ["The best", "The worst", "So-so", "Maybe"], a: "The best" },
+            { q: "What is 'Mukbang'?", options: ["Eating broadcast", "Music show", "Talk show", "Drama"], a: "Eating broadcast" },
+            { q: "How do you say 'Yes'?", options: ["Ne/Ye", "Aniyo", "Mwo", "Wae"], a: "Ne/Ye" },
+            { q: "How do you say 'No'?", options: ["Aniyo", "Ne", "Mwo", "Wae"], a: "Aniyo" },
+            { q: "What does 'Wae' mean?", options: ["Why", "What", "Who", "Where"], a: "Why" },
+            
+            // KOREAN FOOD & CULTURE (20 questions)
+            { q: "What is 'Kimchi'?", options: ["Fermented vegetables", "Rice cake", "BBQ beef", "Noodle soup"], a: "Fermented vegetables" },
+            { q: "What is 'Bulgogi'?", options: ["Marinated beef", "Spicy soup", "Fried chicken", "Raw fish"], a: "Marinated beef" },
+            { q: "What is 'Bibimbap'?", options: ["Mixed rice bowl", "Noodle soup", "BBQ", "Pancake"], a: "Mixed rice bowl" },
+            { q: "What is 'Soju'?", options: ["Korean alcohol", "Korean tea", "Korean soda", "Korean water"], a: "Korean alcohol" },
+            { q: "What is 'Tteokbokki'?", options: ["Spicy rice cakes", "Fried chicken", "Noodles", "Dumplings"], a: "Spicy rice cakes" },
+            { q: "What is 'Samgyeopsal'?", options: ["Pork belly BBQ", "Chicken soup", "Fish stew", "Beef ribs"], a: "Pork belly BBQ" },
+            { q: "What is 'Ramyeon'?", options: ["Instant noodles", "Rice", "Soup", "Salad"], a: "Instant noodles" },
+            { q: "Capital of South Korea?", options: ["Seoul", "Busan", "Incheon", "Jeju"], a: "Seoul" },
             { q: "Which is a Korean car brand?", options: ["Hyundai", "Honda", "Toyota", "Ford"], a: "Hyundai" },
-            { q: "What does 'Oppa' mean?", options: ["Older Brother (female speaker)", "Dad", "Grandpa", "Uncle"], a: "Older Brother (female speaker)" }
+            { q: "Which is a Korean electronics brand?", options: ["Samsung", "Sony", "Panasonic", "Sharp"], a: "Samsung" },
+            { q: "What is 'Hanbok'?", options: ["Traditional clothing", "Traditional food", "Traditional dance", "Traditional music"], a: "Traditional clothing" },
+            { q: "What is 'Jeju Island' famous for?", options: ["Tourism/Nature", "K-pop", "Technology", "Fashion"], a: "Tourism/Nature" },
+            { q: "What is Korean New Year called?", options: ["Seollal", "Chuseok", "Dano", "Sambok"], a: "Seollal" },
+            { q: "What is Korean Thanksgiving called?", options: ["Chuseok", "Seollal", "Dano", "Sambok"], a: "Chuseok" },
+            { q: "Korean age is typically how many years more?", options: ["1-2 years", "Same", "Less", "5 years"], a: "1-2 years" },
+            { q: "What color is bad luck in Korea?", options: ["Red", "Blue", "Yellow", "Writing names in red"], a: "Writing names in red" },
+            { q: "What does 'PC Bang' mean?", options: ["Internet cafe", "Music store", "Restaurant", "Gym"], a: "Internet cafe" },
+            { q: "What is 'Noraebang'?", options: ["Karaoke room", "Dance club", "Restaurant", "Theater"], a: "Karaoke room" },
+            { q: "What is a 'K-Drama'?", options: ["Korean TV drama", "Korean movie", "Korean music", "Korean food"], a: "Korean TV drama" },
+            { q: "Which Korean show features celebrity games?", options: ["Running Man", "Inkigayo", "Music Bank", "Show Champion"], a: "Running Man" },
+            
+            // NUMBERS (10 questions)
+            { q: "How do you say '1' (native)?", options: ["Hana", "Il", "Ichi", "Yi"], a: "Hana" },
+            { q: "How do you say '2' (native)?", options: ["Dul", "I", "Ni", "Er"], a: "Dul" },
+            { q: "How do you say '3' (native)?", options: ["Set", "Sam", "San", "San"], a: "Set" },
+            { q: "Which number system is used for age?", options: ["Native Korean", "Sino-Korean", "Both", "Neither"], a: "Native Korean" },
+            { q: "Which number system is used for money?", options: ["Sino-Korean", "Native Korean", "Both", "Neither"], a: "Sino-Korean" },
+            { q: "What is '10' in Sino-Korean?", options: ["Sip", "Yeol", "Ju", "Shi"], a: "Sip" },
+            { q: "What is '100' in Sino-Korean?", options: ["Baek", "Cheon", "Man", "Eok"], a: "Baek" },
+            { q: "What is '1000' in Sino-Korean?", options: ["Cheon", "Baek", "Man", "Eok"], a: "Cheon" },
+            { q: "The number 4 sounds like which word?", options: ["Death", "Love", "Money", "Luck"], a: "Death" },
+            { q: "Korean Won symbol is?", options: ["₩", "¥", "$", "€"], a: "₩" }
         ];
 
         // Difficulty settings per level - MUCH harder progression!
@@ -1430,9 +1660,25 @@
                 // Schedule next shooting star (occasional: 2-5 seconds)
                 setTimeout(createShootingStar, 2000 + Math.random() * 3000);
             }
+            
+            // K-pop icon shooting across occasionally
+            function createKpopStar() {
+                const kpopIcons = ['💜', '🎤', '🎵', '💿', '⭐', '🌟', '💖', '🎶', '🤍', '✨'];
+                const icon = document.createElement('div');
+                icon.className = 'kpop-shooting-star';
+                icon.textContent = kpopIcons[Math.floor(Math.random() * kpopIcons.length)];
+                icon.style.left = '-5%';
+                icon.style.top = (Math.random() * 60) + '%';
+                starfield.appendChild(icon);
+                
+                setTimeout(() => icon.remove(), 3000);
+                setTimeout(createKpopStar, 3000 + Math.random() * 4000);
+            }
 
             // Start first shooting star after a short delay
             setTimeout(createShootingStar, 1000);
+            // Start K-pop icons slightly later
+            setTimeout(createKpopStar, 2000);
         }
 
         // Data Management
@@ -1823,6 +2069,7 @@
         }
 
         function createFloatingItem() {
+            console.log('createFloatingItem called', {isPlaying: gameState.isPlaying, isPaused: gameState.isPaused, isInChallenge: gameState.isInChallenge});
             if (!gameState.isPlaying || gameState.isPaused || gameState.isInChallenge) return;
 
             // 10% chance to spawn a meteorite instead
@@ -1880,8 +2127,21 @@
 
         function createMeteorite() {
             const item = document.createElement('div');
-            item.className = 'meteorite';
-            item.textContent = '☄️';
+            item.className = 'meteorite gold-record';
+            // SVG Gold Record - gold vinyl, black grooves, pink center
+            item.innerHTML = `<svg viewBox="0 0 50 50" width="50" height="50">
+                <circle cx="25" cy="25" r="24" fill="#FFD700"/>
+                <circle cx="25" cy="25" r="23" fill="#DAA520"/>
+                <circle cx="25" cy="25" r="21" fill="none" stroke="#1a1a1a" stroke-width="1"/>
+                <circle cx="25" cy="25" r="19" fill="none" stroke="#1a1a1a" stroke-width="0.8"/>
+                <circle cx="25" cy="25" r="17" fill="none" stroke="#1a1a1a" stroke-width="0.8"/>
+                <circle cx="25" cy="25" r="15" fill="none" stroke="#1a1a1a" stroke-width="0.8"/>
+                <circle cx="25" cy="25" r="13" fill="none" stroke="#1a1a1a" stroke-width="0.8"/>
+                <circle cx="25" cy="25" r="11" fill="none" stroke="#1a1a1a" stroke-width="0.8"/>
+                <circle cx="25" cy="25" r="9" fill="#ff69b4"/>
+                <circle cx="25" cy="25" r="8" fill="#ff1493"/>
+                <circle cx="25" cy="25" r="2.5" fill="#0a0a0a"/>
+            </svg>`;
             item.dataset.isMeteorite = 'true';
 
             const maxX = el.gameArea.offsetWidth - 60;
