@@ -1308,21 +1308,131 @@
 
         // Challenge questions for meteorites (multiple choice)
         const CHALLENGE_QUESTIONS = [
+            // TONES (15 questions)
             { q: "Which tone rises then falls?", options: ["1", "2", "3", "4"], a: "4" },
             { q: "Which tone rises like a question?", options: ["1", "2", "3", "4"], a: "2" },
             { q: "Which tone is flat and high?", options: ["1", "2", "3", "4"], a: "1" },
             { q: "Which tone dips then rises?", options: ["1", "2", "3", "4"], a: "3" },
+            { q: "How many tones does Mandarin have?", options: ["3", "4", "5", "6"], a: "4" },
+            { q: "Which tone mark looks like this: ā?", options: ["1st", "2nd", "3rd", "4th"], a: "1st" },
+            { q: "Which tone mark looks like this: á?", options: ["1st", "2nd", "3rd", "4th"], a: "2nd" },
+            { q: "Which tone mark looks like this: ǎ?", options: ["1st", "2nd", "3rd", "4th"], a: "3rd" },
+            { q: "Which tone mark looks like this: à?", options: ["1st", "2nd", "3rd", "4th"], a: "4th" },
+            { q: "What is the 'neutral tone' also called?", options: ["5th tone", "Zero tone", "Light tone", "All of these"], a: "All of these" },
+            { q: "mā, má, mǎ, mà mean different things because of?", options: ["Spelling", "Tones", "Context", "Speed"], a: "Tones" },
+            { q: "The 3rd tone is sometimes called?", options: ["Rising", "Falling", "Dipping", "Flat"], a: "Dipping" },
+            { q: "Which tone sounds like you're angry?", options: ["1st", "2nd", "3rd", "4th"], a: "4th" },
+            { q: "Which tone sounds like you're confused?", options: ["1st", "2nd", "3rd", "4th"], a: "2nd" },
+            { q: "Which tone is hardest for English speakers?", options: ["1st", "2nd", "3rd", "4th"], a: "3rd" },
+            
+            // LITERAL MEANINGS (25 questions)
             { q: "What does 电脑 (diàn nǎo) literally mean?", options: ["Electric brain", "Smart box", "Think machine", "Power head"], a: "Electric brain" },
             { q: "What does 手机 (shǒu jī) literally mean?", options: ["Talk box", "Hand machine", "Pocket phone", "Small radio"], a: "Hand machine" },
             { q: "What does 火车 (huǒ chē) literally mean?", options: ["Fast cart", "Fire vehicle", "Steam box", "Iron horse"], a: "Fire vehicle" },
-            { q: "How many tones does Mandarin have?", options: ["3", "4", "5", "6"], a: "4" },
             { q: "What does 中国 (zhōng guó) literally mean?", options: ["Big country", "Old land", "Middle kingdom", "Red nation"], a: "Middle kingdom" },
             { q: "What does 明天 (míng tiān) literally mean?", options: ["Next sun", "Bright day", "New time", "Coming light"], a: "Bright day" },
+            { q: "What does 飞机 (fēi jī) literally mean?", options: ["Flying machine", "Sky car", "Air boat", "Wing box"], a: "Flying machine" },
+            { q: "What does 电话 (diàn huà) literally mean?", options: ["Sound box", "Electric speech", "Talk wire", "Voice machine"], a: "Electric speech" },
+            { q: "What does 电视 (diàn shì) literally mean?", options: ["Picture box", "Electric vision", "Light screen", "Show machine"], a: "Electric vision" },
+            { q: "What does 汽车 (qì chē) literally mean?", options: ["Fast cart", "Steam vehicle", "Road machine", "Wheel box"], a: "Steam vehicle" },
+            { q: "What does 冰箱 (bīng xiāng) literally mean?", options: ["Cold box", "Ice box", "Cool cabinet", "Freeze chest"], a: "Ice box" },
+            { q: "What does 洗衣机 (xǐ yī jī) literally mean?", options: ["Water spinner", "Wash clothes machine", "Clean box", "Soap device"], a: "Wash clothes machine" },
+            { q: "What does 图书馆 (tú shū guǎn) literally mean?", options: ["Book house", "Picture book building", "Read place", "Story hall"], a: "Picture book building" },
+            { q: "What does 出租车 (chū zū chē) literally mean?", options: ["Yellow car", "Out rent vehicle", "City car", "Pay ride"], a: "Out rent vehicle" },
+            { q: "What does 地铁 (dì tiě) literally mean?", options: ["Underground train", "Ground iron", "City rail", "Tunnel car"], a: "Ground iron" },
+            { q: "What does 自行车 (zì xíng chē) literally mean?", options: ["Pedal cart", "Self-moving vehicle", "Two wheels", "Leg power"], a: "Self-moving vehicle" },
+            { q: "What does 太阳 (tài yáng) literally mean?", options: ["Big light", "Supreme yang", "Sky fire", "Day star"], a: "Supreme yang" },
+            { q: "What does 月亮 (yuè liàng) literally mean?", options: ["Night light", "Moon bright", "Sky lamp", "Dark sun"], a: "Moon bright" },
+            { q: "What does 星星 (xīng xing) literally mean?", options: ["Sky dots", "Star star", "Night lights", "Space fire"], a: "Star star" },
+            { q: "What does 早饭 (zǎo fàn) literally mean?", options: ["First food", "Early rice", "Morning meal", "Dawn eat"], a: "Early rice" },
+            { q: "What does 午饭 (wǔ fàn) literally mean?", options: ["Midday rice", "Big meal", "Work food", "Day eat"], a: "Midday rice" },
+            { q: "What does 晚饭 (wǎn fàn) literally mean?", options: ["Last food", "Evening rice", "Night meal", "End eat"], a: "Evening rice" },
+            { q: "What does 生日 (shēng rì) literally mean?", options: ["Party day", "Birth day", "Happy time", "Cake day"], a: "Birth day" },
+            { q: "What does 今天 (jīn tiān) literally mean?", options: ["Now day", "This time", "Present day", "Current sun"], a: "Now day" },
+            { q: "What does 昨天 (zuó tiān) literally mean?", options: ["Past day", "Yesterday day", "Before time", "Old sun"], a: "Yesterday day" },
+            
+            // CHARACTER COMPONENTS (20 questions)
             { q: "What does 好 (hǎo) combine?", options: ["Sun + moon", "Woman + child", "Heart + hand", "Mouth + ear"], a: "Woman + child" },
+            { q: "The radical 氵means?", options: ["Fire", "Water", "Wood", "Metal"], a: "Water" },
+            { q: "The radical 火 means?", options: ["Water", "Fire", "Light", "Heat"], a: "Fire" },
+            { q: "The radical 木 means?", options: ["Tree/wood", "Grass", "Flower", "Leaf"], a: "Tree/wood" },
+            { q: "The radical 口 means?", options: ["Face", "Mouth", "Nose", "Eye"], a: "Mouth" },
+            { q: "The radical 心 means?", options: ["Body", "Mind", "Heart", "Soul"], a: "Heart" },
+            { q: "The radical 日 means?", options: ["Moon", "Sun/day", "Star", "Light"], a: "Sun/day" },
+            { q: "The radical 月 means?", options: ["Sun", "Moon/month", "Night", "Sky"], a: "Moon/month" },
+            { q: "The radical 人 means?", options: ["Body", "Person", "Man", "Woman"], a: "Person" },
+            { q: "The radical 女 means?", options: ["Girl", "Woman", "Mother", "Sister"], a: "Woman" },
+            { q: "The radical 手 means?", options: ["Arm", "Hand", "Finger", "Fist"], a: "Hand" },
+            { q: "The radical 足 means?", options: ["Leg", "Foot", "Walk", "Run"], a: "Foot" },
+            { q: "The radical 目 means?", options: ["Face", "Eye", "See", "Look"], a: "Eye" },
+            { q: "The radical 耳 means?", options: ["Hear", "Sound", "Ear", "Listen"], a: "Ear" },
+            { q: "The radical 言 means?", options: ["Speech/words", "Sound", "Voice", "Talk"], a: "Speech/words" },
+            { q: "The radical 金 means?", options: ["Gold/metal", "Money", "Yellow", "Shine"], a: "Gold/metal" },
+            { q: "The radical 土 means?", options: ["Ground", "Dirt", "Earth/soil", "Land"], a: "Earth/soil" },
+            { q: "The radical 山 means?", options: ["Hill", "Mountain", "Peak", "Rock"], a: "Mountain" },
+            { q: "The radical 雨 means?", options: ["Water", "Cloud", "Rain", "Storm"], a: "Rain" },
+            { q: "森 (sēn - forest) is made of how many 木?", options: ["1", "2", "3", "4"], a: "3" },
+            
+            // BASIC VOCABULARY (25 questions)
             { q: "How do you say 'hello' in Chinese?", options: ["谢谢", "再见", "你好", "对不起"], a: "你好" },
             { q: "How do you say 'thank you' in Chinese?", options: ["你好", "谢谢", "再见", "不客气"], a: "谢谢" },
+            { q: "How do you say 'goodbye' in Chinese?", options: ["你好", "谢谢", "再见", "请"], a: "再见" },
+            { q: "How do you say 'sorry' in Chinese?", options: ["谢谢", "对不起", "没关系", "不好"], a: "对不起" },
             { q: "What does 大 (dà) mean?", options: ["Small", "Big", "Medium", "Tall"], a: "Big" },
-            { q: "What does 水 (shuǐ) mean?", options: ["Fire", "Earth", "Water", "Air"], a: "Water" }
+            { q: "What does 小 (xiǎo) mean?", options: ["Big", "Small", "Medium", "Short"], a: "Small" },
+            { q: "What does 水 (shuǐ) mean?", options: ["Fire", "Earth", "Water", "Air"], a: "Water" },
+            { q: "What does 火 (huǒ) mean?", options: ["Water", "Fire", "Light", "Heat"], a: "Fire" },
+            { q: "What does 山 (shān) mean?", options: ["River", "Lake", "Mountain", "Valley"], a: "Mountain" },
+            { q: "What does 人 (rén) mean?", options: ["Animal", "Person", "Thing", "Place"], a: "Person" },
+            { q: "What does 天 (tiān) mean?", options: ["Earth", "Sky/day", "Star", "Cloud"], a: "Sky/day" },
+            { q: "What does 地 (dì) mean?", options: ["Sky", "Earth/ground", "Sea", "Air"], a: "Earth/ground" },
+            { q: "What does 吃 (chī) mean?", options: ["Drink", "Eat", "Sleep", "Walk"], a: "Eat" },
+            { q: "What does 喝 (hē) mean?", options: ["Eat", "Drink", "Talk", "Sing"], a: "Drink" },
+            { q: "What does 看 (kàn) mean?", options: ["Hear", "Smell", "Look/watch", "Touch"], a: "Look/watch" },
+            { q: "What does 听 (tīng) mean?", options: ["See", "Listen", "Speak", "Read"], a: "Listen" },
+            { q: "What does 说 (shuō) mean?", options: ["Write", "Read", "Speak/say", "Think"], a: "Speak/say" },
+            { q: "What does 写 (xiě) mean?", options: ["Read", "Write", "Draw", "Type"], a: "Write" },
+            { q: "What does 读 (dú) mean?", options: ["Write", "Read", "Speak", "Listen"], a: "Read" },
+            { q: "What does 走 (zǒu) mean?", options: ["Run", "Walk/go", "Jump", "Sit"], a: "Walk/go" },
+            { q: "What does 跑 (pǎo) mean?", options: ["Walk", "Run", "Jump", "Dance"], a: "Run" },
+            { q: "What does 来 (lái) mean?", options: ["Go", "Come", "Stay", "Leave"], a: "Come" },
+            { q: "What does 去 (qù) mean?", options: ["Come", "Go", "Return", "Stay"], a: "Go" },
+            { q: "What does 是 (shì) mean?", options: ["Have", "Is/am/are", "Do", "Can"], a: "Is/am/are" },
+            { q: "What does 有 (yǒu) mean?", options: ["Is", "Have", "Want", "Need"], a: "Have" },
+            
+            // NUMBERS (15 questions)
+            { q: "What is 一 (yī)?", options: ["0", "1", "2", "10"], a: "1" },
+            { q: "What is 二 (èr)?", options: ["1", "2", "3", "4"], a: "2" },
+            { q: "What is 三 (sān)?", options: ["2", "3", "4", "5"], a: "3" },
+            { q: "What is 四 (sì)?", options: ["3", "4", "5", "6"], a: "4" },
+            { q: "What is 五 (wǔ)?", options: ["4", "5", "6", "7"], a: "5" },
+            { q: "What is 六 (liù)?", options: ["5", "6", "7", "8"], a: "6" },
+            { q: "What is 七 (qī)?", options: ["6", "7", "8", "9"], a: "7" },
+            { q: "What is 八 (bā)?", options: ["7", "8", "9", "10"], a: "8" },
+            { q: "What is 九 (jiǔ)?", options: ["8", "9", "10", "11"], a: "9" },
+            { q: "What is 十 (shí)?", options: ["9", "10", "11", "100"], a: "10" },
+            { q: "What is 百 (bǎi)?", options: ["10", "50", "100", "1000"], a: "100" },
+            { q: "What is 千 (qiān)?", options: ["100", "500", "1000", "10000"], a: "1000" },
+            { q: "What is 万 (wàn)?", options: ["1000", "5000", "10000", "100000"], a: "10000" },
+            { q: "How do you say 11 in Chinese?", options: ["一一", "十一", "一十", "十十"], a: "十一" },
+            { q: "How do you say 20 in Chinese?", options: ["二零", "二十", "两十", "十二"], a: "二十" },
+            
+            // CULTURE & FACTS (15 questions)
+            { q: "How many strokes in 一 (one)?", options: ["1", "2", "3", "4"], a: "1" },
+            { q: "Mandarin is the most spoken language by?", options: ["Countries", "Native speakers", "Area", "Letters"], a: "Native speakers" },
+            { q: "Chinese characters are also called?", options: ["Kanji", "Hanzi", "Hiragana", "Pinyin"], a: "Hanzi" },
+            { q: "Pinyin uses what alphabet?", options: ["Chinese", "Latin/Roman", "Cyrillic", "Greek"], a: "Latin/Roman" },
+            { q: "How many commonly used Chinese characters?", options: ["500", "1000", "3000-4000", "50000"], a: "3000-4000" },
+            { q: "What color means good luck in China?", options: ["White", "Black", "Red", "Blue"], a: "Red" },
+            { q: "The number 8 is lucky because it sounds like?", options: ["Money", "Prosperity", "Love", "Health"], a: "Prosperity" },
+            { q: "The number 4 is unlucky because it sounds like?", options: ["Sick", "Poor", "Death", "Bad"], a: "Death" },
+            { q: "Which is NOT a Chinese dialect?", options: ["Cantonese", "Mandarin", "Korean", "Hokkien"], a: "Korean" },
+            { q: "Traditional characters are mainly used in?", options: ["Mainland China", "Taiwan & Hong Kong", "Japan", "Korea"], a: "Taiwan & Hong Kong" },
+            { q: "Simplified characters are mainly used in?", options: ["Taiwan", "Mainland China", "Hong Kong", "Macau"], a: "Mainland China" },
+            { q: "Chinese is written in which direction?", options: ["Right to left only", "Left to right only", "Both ways", "Bottom to top"], a: "Both ways" },
+            { q: "What animal is 2024 in Chinese zodiac?", options: ["Rabbit", "Dragon", "Snake", "Horse"], a: "Dragon" },
+            { q: "春节 (Chūn Jié) is?", options: ["Mid-Autumn Festival", "Chinese New Year", "Dragon Boat Festival", "Lantern Festival"], a: "Chinese New Year" },
+            { q: "What's the capital of China?", options: ["Shanghai", "Beijing", "Guangzhou", "Hong Kong"], a: "Beijing" }
         ];
 
         // Difficulty settings per level - MUCH harder progression!
@@ -2588,12 +2698,16 @@
 
         function quitGame() {
             gameState.isPlaying = false;
+            gameState.isDictationMode = false;
             stopMusic();
             clearInterval(gameState.spawnInterval);
             clearItems();
 
             el.pauseOverlay.classList.add('hidden');
-            el.gameArea.classList.add('hidden');
+            el.gameOver.classList.add('hidden');
+            el.gameComplete.classList.add('hidden');
+            el.levelComplete.classList.add('hidden');
+            el.dictationArea.classList.add('hidden');
 
             el.titleScreen.classList.remove('hidden');
 
