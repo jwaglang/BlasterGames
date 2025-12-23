@@ -1116,7 +1116,7 @@
         };
 
         // Game State
-        let state = { user: '', score: 0, lives: 3, level: 1, round: 1, isPaused: false, isPlaying: false, target: null, items: [], challengeActive: false, usedChallenges: [], musicOn: true, audio: null, letterSpeed: 8000 };
+        let state = { user: '', score: 0, lives: 3, level: 1, round: 1, isPaused: false, isPlaying: false, target: null, items: [], challengeActive: false, usedChallenges: [], musicOn: true, audio: null, letterSpeed: 8000, shipX: 0 };
 
         const $ = id => document.getElementById(id);
         const shuffle = arr => { const a = [...arr]; for (let i = a.length - 1; i > 0; i--) { const j = Math.floor(Math.random() * (i + 1));[a[i], a[j]] = [a[j], a[i]]; } return a; };
@@ -1175,6 +1175,16 @@
             for (let i = 0; i < state.lives; i++) {
                 const l = document.createElement('span'); l.className = 'life-icon'; l.textContent = '⚔️'; ld.appendChild(l);
             }
+        }
+
+        function moveShip(clientX) {
+            const container = $('gameContainer');
+            const rect = container.getBoundingClientRect();
+            const relX = clientX - rect.left;
+            const w = rect.width;
+            state.shipX = Math.max(25, Math.min(w - 25, relX));
+            $('spaceship').style.left = state.shipX + 'px';
+            $('spaceship').style.transform = 'none'; // Remove the centering transform
         }
 
         function clearItems() {
@@ -1441,13 +1451,10 @@
             const rect = e.target.getBoundingClientRect();
             const gameRect = $('gameContainer').getBoundingClientRect();
 
-            // Move ship
-            ship.style.left = (rect.left - gameRect.left + rect.width / 2) + 'px';
-
-            // Laser
+            // Fire laser from ship's current position
             const laser = document.createElement('div');
             laser.className = 'laser';
-            laser.style.left = (rect.left - gameRect.left + rect.width / 2 - 2) + 'px';
+            laser.style.left = (state.shipX - 2) + 'px';
             laser.style.bottom = '70px';
             $('gameContainer').appendChild(laser);
             setTimeout(() => laser.remove(), 300);
@@ -1582,6 +1589,13 @@
             if (state.musicOn) state.audio.play().catch(() => { });
 
             setInterval(shootingStar, 2000);
+
+            // Initialize ship position at center
+            const container = $('gameContainer');
+            state.shipX = container.offsetWidth / 2;
+            $('spaceship').style.left = state.shipX + 'px';
+            $('spaceship').style.transform = 'none';
+
             generateRound();
             requestAnimationFrame(gameLoop);
         }
@@ -1656,6 +1670,11 @@
             else { setTimeout(generateRound, 1000); }
         });
         $('repeatBtn').addEventListener('click', () => speak(state.target.word));
+
+        // Ship follows mouse
+        $('gameContainer').addEventListener('mousemove', e => {
+            if (state.isPlaying && !state.isPaused) moveShip(e.clientX);
+        });
 
         // Init
         createStars();
