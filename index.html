@@ -415,40 +415,44 @@
         /* Music Control Hint */
         .music-hint {
             position: fixed;
-            bottom: 100px;
-            right: 10px;
+            bottom: 140px;
+            right: 15px;
             display: flex;
             flex-direction: column;
             align-items: center;
             z-index: 99;
-            animation: hintFlash 0.5s ease-in-out 6 alternate;
+            animation: hintFlash 0.4s ease-in-out 8 alternate;
             transition: opacity 0.5s ease;
         }
 
         .music-hint-text {
             font-family: 'Press Start 2P', monospace;
-            font-size: 8px;
+            font-size: 14px;
             color: var(--neon-yellow);
-            text-shadow: 0 0 10px var(--neon-yellow), 0 0 20px var(--neon-orange);
+            text-shadow: 0 0 15px var(--neon-yellow), 0 0 30px var(--neon-orange), 0 0 45px var(--neon-orange);
             white-space: nowrap;
-            margin-bottom: 5px;
+            margin-bottom: 8px;
+            background: rgba(0,0,0,0.7);
+            padding: 10px 15px;
+            border: 3px solid var(--neon-yellow);
+            border-radius: 8px;
         }
 
         .music-hint-arrow {
-            font-size: 24px;
+            font-size: 48px;
             color: var(--neon-pink);
-            text-shadow: 0 0 10px var(--neon-pink), 0 0 20px var(--neon-pink);
-            animation: arrowBounce 0.5s ease-in-out infinite alternate;
+            text-shadow: 0 0 15px var(--neon-pink), 0 0 30px var(--neon-pink), 0 0 45px var(--neon-cyan);
+            animation: arrowBounce 0.3s ease-in-out infinite alternate;
         }
 
         @keyframes hintFlash {
-            from { opacity: 1; }
-            to { opacity: 0.3; }
+            from { opacity: 1; transform: scale(1); }
+            to { opacity: 0.5; transform: scale(1.05); }
         }
 
         @keyframes arrowBounce {
             from { transform: translateY(0); }
-            to { transform: translateY(5px); }
+            to { transform: translateY(10px); }
         }
     </style>
 </head>
