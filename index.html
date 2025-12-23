@@ -411,6 +411,45 @@
         .light-switch:active .switch-lever {
             transform: translateX(-50%) scale(0.95);
         }
+
+        /* Music Control Hint */
+        .music-hint {
+            position: fixed;
+            bottom: 100px;
+            right: 10px;
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            z-index: 99;
+            animation: hintFlash 0.5s ease-in-out 6 alternate;
+            transition: opacity 0.5s ease;
+        }
+
+        .music-hint-text {
+            font-family: 'Press Start 2P', monospace;
+            font-size: 8px;
+            color: var(--neon-yellow);
+            text-shadow: 0 0 10px var(--neon-yellow), 0 0 20px var(--neon-orange);
+            white-space: nowrap;
+            margin-bottom: 5px;
+        }
+
+        .music-hint-arrow {
+            font-size: 24px;
+            color: var(--neon-pink);
+            text-shadow: 0 0 10px var(--neon-pink), 0 0 20px var(--neon-pink);
+            animation: arrowBounce 0.5s ease-in-out infinite alternate;
+        }
+
+        @keyframes hintFlash {
+            from { opacity: 1; }
+            to { opacity: 0.3; }
+        }
+
+        @keyframes arrowBounce {
+            from { transform: translateY(0); }
+            to { transform: translateY(5px); }
+        }
     </style>
 </head>
 <body>
@@ -473,6 +512,12 @@
             <div>1 PLAYER GAME</div>
             <div class="copyright">© 2025 LANGUAGE BLASTER</div>
         </div>
+    </div>
+
+    <!-- Music Control Hint -->
+    <div class="music-hint" id="musicHint">
+        <span class="music-hint-text">MUSIC</span>
+        <span class="music-hint-arrow">↓</span>
     </div>
 
     <!-- Pixelated Light Switch for Music -->
@@ -547,21 +592,35 @@
         // Music toggle with light switch
         const musicSwitch = document.getElementById('musicSwitch');
         const bgMusic = document.getElementById('bgMusic');
-        let isPlaying = true;
+        let musicStarted = false;
+        let isPlaying = true; // Intended state
 
-        // Autoplay on first user interaction (required by browsers)
-        function startMusicOnInteraction() {
-            bgMusic.play();
-            document.removeEventListener('click', startMusicOnInteraction);
-            document.removeEventListener('keydown', startMusicOnInteraction);
-            document.removeEventListener('touchstart', startMusicOnInteraction);
+        // Start music on ANY first interaction
+        function initMusic() {
+            if (musicStarted) return;
+            musicStarted = true;
+            if (isPlaying) {
+                bgMusic.play();
+            }
+            // Hide the music hint after music starts
+            const hint = document.getElementById('musicHint');
+            if (hint) hint.style.opacity = '0';
         }
-        document.addEventListener('click', startMusicOnInteraction);
-        document.addEventListener('keydown', startMusicOnInteraction);
-        document.addEventListener('touchstart', startMusicOnInteraction);
+        document.addEventListener('click', initMusic);
+        document.addEventListener('keydown', initMusic);
+        document.addEventListener('touchstart', initMusic);
 
-        musicSwitch.addEventListener('click', (e) => {
-            e.stopPropagation();
+        musicSwitch.addEventListener('click', () => {
+            // If music never started yet, start it now
+            if (!musicStarted) {
+                musicStarted = true;
+                bgMusic.play();
+                isPlaying = true;
+                musicSwitch.classList.remove('off');
+                musicSwitch.classList.add('on');
+                return;
+            }
+            // Normal toggle
             if (isPlaying) {
                 bgMusic.pause();
                 musicSwitch.classList.remove('on');
@@ -574,6 +633,12 @@
                 isPlaying = true;
             }
         });
+
+        // Hide music hint after 4 seconds
+        setTimeout(() => {
+            const hint = document.getElementById('musicHint');
+            if (hint) hint.style.opacity = '0';
+        }, 4000);
     </script>
 </body>
 </html>
