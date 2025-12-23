@@ -416,22 +416,12 @@
         .laser {
             position: absolute;
             width: 4px;
-            background: linear-gradient(180deg, var(--neon-gold), var(--neon-orange));
+            height: 50px;
+            background: linear-gradient(180deg, var(--neon-gold), var(--neon-orange), transparent);
+            border-radius: 2px;
             box-shadow: 0 0 10px var(--neon-gold), 0 0 20px var(--neon-orange);
             z-index: 15;
-            animation: laserShoot 0.3s ease-out forwards;
-        }
-
-        @keyframes laserShoot {
-            0% {
-                height: 0;
-                opacity: 1;
-            }
-
-            100% {
-                height: 100px;
-                opacity: 0;
-            }
+            pointer-events: none;
         }
 
         .explosion {
@@ -1116,7 +1106,7 @@
         };
 
         // Game State
-        let state = { user: '', score: 0, lives: 3, level: 1, round: 1, isPaused: false, isPlaying: false, target: null, items: [], challengeActive: false, usedChallenges: [], musicOn: true, audio: null, letterSpeed: 8000, shipX: 0 };
+        let state = { user: '', score: 0, lives: 3, level: 1, round: 1, isPaused: false, isPlaying: false, target: null, items: [], activeLasers: [], canShoot: true, shootCooldown: 300, challengeActive: false, usedChallenges: [], musicOn: true, audio: null, letterSpeed: 8000, shipX: 0 };
 
         const $ = id => document.getElementById(id);
         const shuffle = arr => { const a = [...arr]; for (let i = a.length - 1; i > 0; i--) { const j = Math.floor(Math.random() * (i + 1));[a[i], a[j]] = [a[j], a[i]]; } return a; };
@@ -1140,7 +1130,7 @@
 
         function initAudio() {
             if (!state.audio) {
-                state.audio = new Audio('https://soundimage.org/wp-content/uploads/2017/03/Arcade-Heroes.mp3');
+                state.audio = new Audio('https://soundimage.org/wp-content/uploads/2016/04/Automation.mp3');
                 state.audio.loop = true; state.audio.volume = 0.3;
             }
         }
@@ -1300,7 +1290,6 @@
                 item.dataset.startTime = Date.now() + (i * 300); // Stagger spawn
                 item.dataset.duration = state.letterSpeed;
 
-                item.addEventListener('click', (e) => handleShot(e, opt));
                 area.appendChild(item);
                 state.items.push({ el: item, value: opt });
             });
@@ -1312,7 +1301,8 @@
         function updateItems() {
             const area = $('gameArea');
             const h = area.offsetHeight;
-            const shipRect = $('spaceship').getBoundingClientRect();
+            const ship = $('spaceship');
+            const shipRect = ship.getBoundingClientRect();
 
             state.items = state.items.filter(item => {
                 const el = item.el;
@@ -1321,19 +1311,35 @@
                 const startTime = parseInt(el.dataset.startTime);
                 const duration = parseInt(el.dataset.duration);
                 const elapsed = Date.now() - startTime;
-                const progress = Math.max(0, elapsed / duration);
+                const progress = Math.min(1.1, elapsed / duration); // Allow slightly beyond 1
 
-                if (progress >= 1) {
-                    // Item reached bottom without being clicked - lose a life
-                    if (!el.classList.contains('hit')) {
+                if (progress >= 1.05) {
+                    el.remove();
+                    return false;
+                }
+
+                // Move item down
+                el.style.top = (-70 + (h + 140) * progress) + 'px';
+
+                // Only check collision with ship when item is near the bottom
+                if (progress > 0.8) {
+                    const itemRect = el.getBoundingClientRect();
+                    const collision = !(itemRect.right < shipRect.left ||
+                        itemRect.left > shipRect.right ||
+                        itemRect.bottom < shipRect.top ||
+                        itemRect.top > shipRect.bottom);
+
+                    if (collision && !el.classList.contains('hit')) {
+                        // Collided with ship
+                        el.classList.add('hit');
                         state.lives--;
                         updateHUD();
                         playSound('wrong');
 
-                        // Show feedback
+                        // Show ouch feedback
                         const fb = document.createElement('div');
                         fb.className = 'feedback oops';
-                        fb.textContent = 'MISSED!';
+                        fb.textContent = 'OUCH!';
                         $('gameContainer').appendChild(fb);
                         setTimeout(() => fb.remove(), 1000);
 
@@ -1341,13 +1347,61 @@
                             endGame();
                             return false;
                         }
+                        el.remove();
+                        return false;
                     }
-                    el.remove();
-                    return false;
                 }
 
-                // Move item down
-                el.style.top = (-70 + (h + 140) * progress) + 'px';
+                return true;
+            });
+        }
+
+        function shoot() {
+            if (!state.isPlaying || state.isPaused || !state.canShoot || state.challengeActive) return;
+            state.canShoot = false;
+            setTimeout(() => state.canShoot = true, state.shootCooldown);
+
+            playSound('correct'); // Or custom blast sound if available
+
+            const laser = document.createElement('div');
+            laser.className = 'laser';
+            laser.style.left = (state.shipX - 2) + 'px';
+            laser.style.bottom = '70px';
+            $('gameContainer').appendChild(laser);
+            state.activeLasers.push(laser);
+        }
+
+        function updateLasers() {
+            const speed = 15;
+            const containerHeight = $('gameContainer').offsetHeight;
+
+            state.activeLasers = state.activeLasers.filter(laser => {
+                const bot = parseFloat(laser.style.bottom) || 0;
+                const newBot = bot + speed;
+
+                if (newBot > containerHeight) {
+                    laser.remove();
+                    return false;
+                }
+                laser.style.bottom = newBot + 'px';
+
+                // Collision Detection
+                const lr = laser.getBoundingClientRect();
+                const lcx = lr.left + lr.width / 2;
+                const lt = lr.top;
+
+                for (let i = state.items.length - 1; i >= 0; i--) {
+                    const item = state.items[i];
+                    const el = item.el;
+                    if (!el || el.classList.contains('hit')) continue;
+
+                    const ir = el.getBoundingClientRect();
+                    if (lcx >= ir.left && lcx <= ir.right && lt <= ir.bottom && lt >= ir.top - 15) {
+                        laser.remove();
+                        handleShot(item, item.value);
+                        return false;
+                    }
+                }
                 return true;
             });
         }
@@ -1359,6 +1413,7 @@
             }
 
             updateItems();
+            updateLasers();
 
             if (state.isPlaying) requestAnimationFrame(gameLoop);
         }
@@ -1443,21 +1498,15 @@
             state.challengeActive = false;
         }
 
-        function handleShot(e, value) {
+        function handleShot(itemObj, value) {
             if (state.isPaused || state.challengeActive) return;
-            e.stopPropagation();
-            e.target.classList.add('hit'); // Mark as hit to prevent double-counting
-            const ship = $('spaceship');
-            const rect = e.target.getBoundingClientRect();
+
+            const el = itemObj.el;
+            el.classList.add('hit'); // Mark as hit to prevent double-counting
+            const rect = el.getBoundingClientRect();
             const gameRect = $('gameContainer').getBoundingClientRect();
 
-            // Fire laser from ship's current position
-            const laser = document.createElement('div');
-            laser.className = 'laser';
-            laser.style.left = (state.shipX - 2) + 'px';
-            laser.style.bottom = '70px';
-            $('gameContainer').appendChild(laser);
-            setTimeout(() => laser.remove(), 300);
+            // Laser effect is now handled in updateLasers() calling handleShot
 
             // Check answer
             const isCorrect = value === state.target.answer;
@@ -1493,11 +1542,17 @@
                 return;
             }
 
-            state.round++;
-            if (state.round > 10) {
-                completeLevel();
-            } else {
-                setTimeout(generateRound, 800);
+            // Remove the hit item
+            el.remove();
+            state.items = state.items.filter(i => i !== itemObj);
+
+            if (isCorrect) {
+                state.round++;
+                if (state.round > 10) {
+                    completeLevel();
+                } else {
+                    setTimeout(generateRound, 800);
+                }
             }
         }
 
@@ -1674,6 +1729,19 @@
         // Ship follows mouse
         $('gameContainer').addEventListener('mousemove', e => {
             if (state.isPlaying && !state.isPaused) moveShip(e.clientX);
+        });
+
+        // Global Shooting
+        $('gameContainer').addEventListener('click', (e) => {
+            if (state.isPlaying && !state.isPaused && e.target.tagName !== 'BUTTON') {
+                shoot();
+            }
+        });
+
+        document.addEventListener('keydown', (e) => {
+            if (e.code === 'Space') {
+                if (state.isPlaying && !state.isPaused) shoot();
+            }
         });
 
         // Init
