@@ -264,6 +264,153 @@
             color: #666;
             margin-top: 20px;
         }
+
+        /* Shooting stars */
+        .shooting-star {
+            position: fixed;
+            width: 80px;
+            height: 2px;
+            background: linear-gradient(90deg, transparent, #fffacd);
+            opacity: 0.6;
+            transform: rotate(135deg);
+            animation: shootingStar 1.5s linear forwards;
+            pointer-events: none;
+            z-index: 0;
+        }
+
+        @keyframes shootingStar {
+            0% { transform: rotate(135deg) translateX(0); opacity: 0.6; }
+            70% { opacity: 0.4; }
+            100% { transform: rotate(135deg) translateX(500px); opacity: 0; }
+        }
+
+        /* Floating game icons - falling diagonally like shooting stars */
+        .floating-icon {
+            position: fixed;
+            font-size: 2rem;
+            opacity: 0;
+            pointer-events: none;
+            z-index: 0;
+            animation: floatDown 3s linear forwards;
+            filter: drop-shadow(0 0 8px var(--neon-pink)) drop-shadow(0 0 15px var(--neon-cyan));
+        }
+
+        @keyframes floatDown {
+            0% { transform: rotate(135deg) translateX(0); opacity: 0.9; }
+            70% { opacity: 0.7; }
+            100% { transform: rotate(135deg) translateX(400px); opacity: 0; }
+        }
+
+        /* Pixelated Light Switch */
+        .light-switch {
+            position: fixed;
+            bottom: 20px;
+            right: 20px;
+            width: 70px;
+            height: 110px;
+            cursor: pointer;
+            z-index: 100;
+            /* Pixel art rendering */
+            image-rendering: pixelated;
+            image-rendering: crisp-edges;
+        }
+
+        .switch-plate {
+            width: 100%;
+            height: 100%;
+            background: linear-gradient(180deg, #3a3a4a 0%, #2a2a3a 50%, #1a1a2a 100%);
+            border: 4px solid #4a4a5a;
+            border-radius: 8px;
+            box-shadow: 
+                inset 0 2px 0 #5a5a6a,
+                inset 0 -2px 0 #0a0a1a,
+                0 4px 8px rgba(0,0,0,0.5);
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            justify-content: space-between;
+            padding: 8px 0;
+            position: relative;
+        }
+
+        .switch-label {
+            font-family: 'Press Start 2P', monospace;
+            font-size: 8px;
+            color: #666;
+            text-shadow: 0 1px 0 #000;
+        }
+
+        .switch-label.on { color: #444; }
+        .switch-label.off { color: #444; }
+
+        .switch-slot {
+            width: 36px;
+            height: 50px;
+            background: #0a0a0a;
+            border: 3px solid #2a2a2a;
+            border-radius: 4px;
+            position: relative;
+            box-shadow: inset 0 2px 4px rgba(0,0,0,0.8);
+        }
+
+        .switch-lever {
+            position: absolute;
+            width: 30px;
+            height: 24px;
+            background: linear-gradient(180deg, #e0e0e0 0%, #b0b0b0 50%, #909090 100%);
+            border: 2px solid #c0c0c0;
+            border-radius: 3px;
+            left: 50%;
+            transform: translateX(-50%);
+            transition: top 0.15s ease, box-shadow 0.3s ease;
+            box-shadow: 
+                inset 0 2px 0 #fff,
+                inset 0 -2px 0 #707070,
+                0 2px 4px rgba(0,0,0,0.5);
+        }
+
+        /* OFF state - lever down */
+        .light-switch.off .switch-lever {
+            top: 22px;
+        }
+
+        .light-switch.off .switch-label.off {
+            color: var(--neon-cyan);
+            text-shadow: 0 0 8px var(--neon-cyan);
+        }
+
+        /* ON state - lever up */
+        .light-switch.on .switch-lever {
+            top: 2px;
+            background: linear-gradient(180deg, #ffe0f0 0%, #ffb0d0 50%, #ff80b0 100%);
+            border-color: #ffc0e0;
+            box-shadow: 
+                inset 0 2px 0 #fff,
+                inset 0 -2px 0 #ff6090,
+                0 0 15px rgba(255, 0, 255, 0.6),
+                0 2px 4px rgba(0,0,0,0.5);
+        }
+
+        .light-switch.on .switch-label.on {
+            color: var(--neon-pink);
+            text-shadow: 0 0 8px var(--neon-pink);
+        }
+
+        .light-switch.on .switch-plate {
+            box-shadow: 
+                inset 0 2px 0 #5a5a6a,
+                inset 0 -2px 0 #0a0a1a,
+                0 4px 8px rgba(0,0,0,0.5),
+                0 0 20px rgba(255, 0, 255, 0.3);
+        }
+
+        .light-switch:hover .switch-plate {
+            border-color: #6a6a7a;
+        }
+
+        .light-switch:active .switch-lever {
+            transform: translateX(-50%) scale(0.95);
+        }
     </style>
 </head>
 <body>
@@ -328,6 +475,22 @@
         </div>
     </div>
 
+    <!-- Pixelated Light Switch for Music -->
+    <div class="light-switch on" id="musicSwitch" title="Toggle Music">
+        <div class="switch-plate">
+            <span class="switch-label on">ON</span>
+            <div class="switch-slot">
+                <div class="switch-lever"></div>
+            </div>
+            <span class="switch-label off">OFF</span>
+        </div>
+    </div>
+
+    <!-- Audio element for Arcade Heroes -->
+    <audio id="bgMusic" loop>
+        <source src="https://soundimage.org/wp-content/uploads/2017/03/Arcade-Heroes.mp3" type="audio/mpeg">
+    </audio>
+
     <script>
         // Create twinkling stars
         const starsContainer = document.getElementById('stars');
@@ -340,6 +503,77 @@
             star.style.animationDelay = Math.random() * 2 + 's';
             starsContainer.appendChild(star);
         }
+
+        // Shooting stars
+        function createShootingStar() {
+            const star = document.createElement('div');
+            star.className = 'shooting-star';
+            star.style.left = Math.random() * 70 + '%';
+            star.style.top = Math.random() * 50 + '%';
+            document.body.appendChild(star);
+            setTimeout(() => star.remove(), 1500);
+        }
+        setInterval(createShootingStar, 2000);
+        createShootingStar();
+
+        // Floating game icons from ALL games (no PT flag)
+        const gameIcons = [
+            '🐉', '🔥', '⭐', '🀄',           // Dragon Blaster
+            '🔤', '🚀', '📚', '✏️',           // Alphabet Blaster
+            '💜', '🎤', '🎵', '💿', '🌟', '💖', // K-Popper
+            '⚓', '🌊', '🏖️',                 // Luso Blaster
+            '⚔️', '📖', '🏆'                  // Word Warrior
+        ];
+
+        function createFloatingIcon() {
+            const icon = document.createElement('div');
+            icon.className = 'floating-icon';
+            icon.textContent = gameIcons[Math.floor(Math.random() * gameIcons.length)];
+            icon.style.left = Math.random() * 70 + '%';
+            icon.style.top = Math.random() * 40 + '%';
+            document.body.appendChild(icon);
+            setTimeout(() => icon.remove(), 3000);
+        }
+        // Occasionally - every 4-8 seconds
+        function scheduleNextIcon() {
+            const delay = 4000 + Math.random() * 4000;
+            setTimeout(() => {
+                createFloatingIcon();
+                scheduleNextIcon();
+            }, delay);
+        }
+        scheduleNextIcon();
+
+        // Music toggle with light switch
+        const musicSwitch = document.getElementById('musicSwitch');
+        const bgMusic = document.getElementById('bgMusic');
+        let isPlaying = true;
+
+        // Autoplay on first user interaction (required by browsers)
+        function startMusicOnInteraction() {
+            bgMusic.play();
+            document.removeEventListener('click', startMusicOnInteraction);
+            document.removeEventListener('keydown', startMusicOnInteraction);
+            document.removeEventListener('touchstart', startMusicOnInteraction);
+        }
+        document.addEventListener('click', startMusicOnInteraction);
+        document.addEventListener('keydown', startMusicOnInteraction);
+        document.addEventListener('touchstart', startMusicOnInteraction);
+
+        musicSwitch.addEventListener('click', (e) => {
+            e.stopPropagation();
+            if (isPlaying) {
+                bgMusic.pause();
+                musicSwitch.classList.remove('on');
+                musicSwitch.classList.add('off');
+                isPlaying = false;
+            } else {
+                bgMusic.play();
+                musicSwitch.classList.remove('off');
+                musicSwitch.classList.add('on');
+                isPlaying = true;
+            }
+        });
     </script>
 </body>
 </html>
