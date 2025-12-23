@@ -1,120 +1,892 @@
 <!DOCTYPE html>
 <html lang="en">
+
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0, user-scalable=no">
     <title>⚔️ Word Warrior! 📖</title>
     <style>
         @import url('https://fonts.googleapis.com/css2?family=Press+Start+2P&family=Bangers&display=swap');
-        * { margin: 0; padding: 0; box-sizing: border-box; }
-        :root {
-            --neon-pink: #ff00ff; --neon-cyan: #00ffff; --neon-yellow: #ffff00;
-            --neon-green: #00ff00; --neon-orange: #ff6600; --neon-gold: #ffd700;
-            --neon-silver: #c0c0c0; --deep-space: #0a0a1a; --royal-purple: #4a0080;
+
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
         }
-        body { background: var(--deep-space); min-height: 100vh; display: flex; justify-content: center; align-items: center; font-family: 'Press Start 2P', cursive; overflow: hidden; touch-action: none; }
-        .crt-overlay { position: fixed; top: 0; left: 0; width: 100%; height: 100%; pointer-events: none; z-index: 1000; background: repeating-linear-gradient(0deg, rgba(0,0,0,0.1) 0px, rgba(0,0,0,0.1) 1px, transparent 1px, transparent 2px); }
-        .starfield { position: fixed; top: 0; left: 0; width: 100%; height: 100%; z-index: -1; }
-        .bg-star { position: absolute; background: white; border-radius: 50%; animation: twinkle 2s infinite ease-in-out; }
-        @keyframes twinkle { 0%, 100% { opacity: 0.3; } 50% { opacity: 1; } }
-        .shooting-star { position: absolute; width: 80px; height: 2px; background: linear-gradient(90deg, transparent, #fffacd); opacity: 0.5; transform: rotate(135deg); animation: shootingStar 1.2s linear forwards; pointer-events: none; z-index: 0; }
-        @keyframes shootingStar { 0% { transform: rotate(135deg) translateX(0); opacity: 0.6; } 70% { opacity: 0.4; } 100% { transform: rotate(135deg) translateX(400px); opacity: 0; } }
-        .game-container { width: 100%; max-width: 900px; height: 100vh; max-height: 700px; background: linear-gradient(180deg, #1a0a2e 0%, #0a0a1a 50%, #2a1a3e 100%); border: 8px solid var(--neon-gold); position: relative; overflow: hidden; box-shadow: 0 0 30px var(--neon-gold), 0 0 60px var(--royal-purple), inset 0 0 100px rgba(74,0,128,0.3); cursor: crosshair; }
-        .screen { position: absolute; top: 0; left: 0; width: 100%; height: 100%; display: flex; flex-direction: column; justify-content: center; align-items: center; z-index: 100; background: radial-gradient(ellipse at center, #2a1a4e 0%, #0a0a1a 70%); cursor: default; }
-        .screen.hidden { display: none; }
-        .game-title { font-family: 'Press Start 2P', cursive; font-size: clamp(1.1rem, 3.5vw, 1.8rem); color: var(--neon-gold); text-shadow: 0 0 10px var(--neon-gold), 0 0 20px var(--neon-orange), 0 0 40px var(--neon-orange), 3px 3px 0 #8B4513; animation: titlePulse 1.5s infinite ease-in-out; text-align: center; letter-spacing: 1px; line-height: 1.4; padding: 10px 25px; margin: 0; }
-        @keyframes titlePulse { 0%, 100% { transform: scale(1); } 50% { transform: scale(1.02); } }
-        .subtitle { font-size: clamp(0.5rem, 1.5vw, 0.8rem); color: var(--neon-silver); margin-top: 15px; text-shadow: 0 0 10px var(--neon-silver); animation: blink 1s infinite; }
-        @keyframes blink { 0%, 49% { opacity: 1; } 50%, 100% { opacity: 0.3; } }
-        .btn { margin-top: 20px; padding: 15px 40px; font-family: 'Press Start 2P', cursive; font-size: clamp(0.6rem, 2vw, 0.9rem); border: 4px solid var(--neon-gold); color: #000; cursor: pointer; transition: all 0.1s; }
-        .btn-gold { background: linear-gradient(180deg, var(--neon-gold) 0%, #b8860b 100%); box-shadow: 0 6px 0 #8B4513, 0 0 20px var(--neon-gold); }
-        .btn-green { background: linear-gradient(180deg, var(--neon-green) 0%, #00aa00 100%); box-shadow: 0 6px 0 #006600, 0 0 20px var(--neon-green); }
-        .btn-cyan { background: linear-gradient(180deg, var(--neon-cyan) 0%, #0088aa 100%); box-shadow: 0 6px 0 #005566, 0 0 20px var(--neon-cyan); }
-        .btn-pink { background: linear-gradient(180deg, var(--neon-pink) 0%, #aa00aa 100%); box-shadow: 0 6px 0 #660066, 0 0 20px var(--neon-pink); color: white; }
-        .btn-orange { background: linear-gradient(180deg, var(--neon-orange) 0%, #aa4400 100%); box-shadow: 0 6px 0 #663300, 0 0 20px var(--neon-orange); }
-        .btn-small { padding: 10px 20px; font-size: clamp(0.4rem, 1.2vw, 0.6rem); margin: 10px; }
-        .btn:hover { transform: translateY(2px); }
-        .btn:active { transform: translateY(6px); }
-        .username-input { background: rgba(0,0,0,0.5); border: 3px solid var(--neon-gold); color: var(--neon-gold); font-family: 'Press Start 2P', cursive; font-size: clamp(0.6rem, 2vw, 1rem); padding: 15px 20px; text-align: center; width: 80%; max-width: 300px; margin: 20px 0; }
-        .username-input:focus { outline: none; border-color: var(--neon-yellow); box-shadow: 0 0 20px var(--neon-yellow); }
-        .hud { position: absolute; top: 0; left: 0; width: 100%; padding: 10px 15px; display: flex; justify-content: space-between; align-items: center; flex-wrap: wrap; gap: 5px; background: linear-gradient(180deg, rgba(0,0,0,0.8) 0%, transparent 100%); z-index: 50; }
-        .hud-item { font-size: clamp(0.35rem, 1.1vw, 0.55rem); color: var(--neon-gold); text-shadow: 0 0 10px var(--neon-gold); }
-        .hud-item.silver { color: var(--neon-silver); text-shadow: 0 0 10px var(--neon-silver); }
-        .lives-display { display: flex; gap: 3px; }
-        .life-icon { font-size: clamp(0.8rem, 2vw, 1.2rem); filter: drop-shadow(0 0 5px var(--neon-gold)); }
-        .pause-btn { background: rgba(255,255,255,0.1); border: 2px solid var(--neon-gold); color: var(--neon-gold); font-family: 'Press Start 2P', cursive; font-size: clamp(0.4rem, 1vw, 0.5rem); padding: 5px 10px; cursor: pointer; }
-        .pause-btn:hover { background: rgba(255,215,0,0.2); }
-        .target-area { position: absolute; top: 55px; left: 50%; transform: translateX(-50%); text-align: center; z-index: 40; }
-        .target-label { font-size: clamp(0.35rem, 1vw, 0.5rem); color: var(--neon-silver); text-shadow: 0 0 5px var(--neon-silver); margin-bottom: 5px; }
-        .target-word { font-size: clamp(0.9rem, 2.5vw, 1.3rem); color: var(--neon-gold); text-shadow: 0 0 15px var(--neon-gold), 0 0 30px var(--neon-orange); padding: 10px 20px; background: rgba(0,0,0,0.5); border: 3px solid var(--neon-gold); border-radius: 10px; min-width: 120px; }
-        .speak-btn { margin-top: 8px; padding: 5px 15px; font-family: 'Press Start 2P', cursive; font-size: clamp(0.3rem, 0.8vw, 0.4rem); background: rgba(0,0,0,0.5); border: 2px solid var(--neon-silver); color: var(--neon-silver); cursor: pointer; }
-        .speak-btn:hover { background: rgba(192,192,192,0.2); border-color: var(--neon-gold); color: var(--neon-gold); }
-        .game-area { position: absolute; top: 150px; left: 0; right: 0; bottom: 80px; overflow: hidden; }
-        .spaceship { position: absolute; bottom: 10px; left: 50%; transform: translateX(-50%); font-size: 3rem; z-index: 30; filter: drop-shadow(0 0 15px var(--neon-gold)); transition: left 0.1s ease-out; }
-        .floating-item { position: absolute; font-size: clamp(0.5rem, 1.5vw, 0.75rem); padding: 8px 12px; background: rgba(139,69,19,0.8); border: 2px solid var(--neon-gold); border-radius: 8px; color: white; text-shadow: 1px 1px 2px black; cursor: crosshair; transition: transform 0.1s; z-index: 20; box-shadow: 0 0 10px rgba(255,215,0,0.5); max-width: 180px; text-align: center; }
-        .floating-item:hover { transform: scale(1.1); box-shadow: 0 0 20px var(--neon-gold); }
-        .challenge-item { position: absolute; width: 50px; height: 50px; display: flex; align-items: center; justify-content: center; cursor: pointer; z-index: 25; animation: float 2s ease-in-out infinite; font-size: 2rem; }
-        @keyframes float { 0%, 100% { transform: translateY(0); } 50% { transform: translateY(-10px); } }
-        .laser { position: absolute; width: 4px; background: linear-gradient(180deg, var(--neon-gold), var(--neon-orange)); box-shadow: 0 0 10px var(--neon-gold), 0 0 20px var(--neon-orange); z-index: 15; animation: laserShoot 0.3s ease-out forwards; }
-        @keyframes laserShoot { 0% { height: 0; opacity: 1; } 100% { height: 100px; opacity: 0; } }
-        .explosion { position: absolute; font-size: 2.5rem; animation: explode 0.5s ease-out forwards; z-index: 60; pointer-events: none; }
-        @keyframes explode { 0% { transform: scale(0.5); opacity: 1; } 50% { transform: scale(1.5); opacity: 1; } 100% { transform: scale(2); opacity: 0; } }
-        .feedback { position: absolute; top: 40%; left: 50%; transform: translate(-50%, -50%); font-family: 'Bangers', cursive; font-size: clamp(1.8rem, 5vw, 3rem); text-align: center; z-index: 70; animation: feedbackPop 1s ease-out forwards; pointer-events: none; }
-        .feedback.great { color: var(--neon-green); text-shadow: 0 0 20px var(--neon-green), 4px 4px 0 #006600; }
-        .feedback.oops { color: var(--neon-orange); text-shadow: 0 0 20px var(--neon-orange), 4px 4px 0 #993300; }
-        @keyframes feedbackPop { 0% { transform: translate(-50%, -50%) scale(0); opacity: 0; } 30% { transform: translate(-50%, -50%) scale(1.3); opacity: 1; } 60% { transform: translate(-50%, -50%) scale(1); opacity: 1; } 100% { transform: translate(-50%, -50%) scale(1); opacity: 0; } }
-        .stars-earned { margin: 20px 0; font-size: clamp(1.5rem, 5vw, 3rem); }
-        .stars-earned .star { display: inline-block; animation: starPop 0.5s ease-out forwards; opacity: 0; filter: drop-shadow(0 0 10px var(--neon-gold)); }
-        @keyframes starPop { 0% { transform: scale(0) rotate(0deg); opacity: 0; } 50% { transform: scale(1.3) rotate(180deg); opacity: 1; } 100% { transform: scale(1) rotate(360deg); opacity: 1; } }
-        .level-intro { font-size: clamp(0.4rem, 1.2vw, 0.6rem); color: var(--neon-silver); margin: 15px 0; text-align: center; max-width: 85%; line-height: 1.8; }
-        .final-score { font-size: clamp(0.5rem, 1.5vw, 0.8rem); color: var(--neon-gold); margin-top: 15px; text-shadow: 0 0 10px var(--neon-gold); }
-        .instructions { margin-top: 20px; padding: 15px 20px; background: rgba(0,0,0,0.5); border: 2px solid var(--neon-gold); border-radius: 10px; max-width: 85%; display: grid; grid-template-columns: auto 1fr; gap: 5px 10px; align-items: center; }
-        .instructions .level-icon { font-size: clamp(0.5rem, 1.2vw, 0.7rem); text-align: center; }
-        .instructions .level-text { font-size: clamp(0.35rem, 1vw, 0.5rem); color: white; text-align: left; }
-        .shoot-hint { position: absolute; bottom: 75px; left: 50%; transform: translateX(-50%); font-size: clamp(0.35rem, 1vw, 0.5rem); color: var(--neon-silver); text-shadow: 0 0 10px var(--neon-silver); animation: blink 1s infinite; z-index: 35; pointer-events: none; }
-        .btn-row { display: flex; flex-wrap: wrap; justify-content: center; gap: 10px; margin-top: 15px; }
-        .player-welcome { font-size: clamp(0.4rem, 1.2vw, 0.6rem); color: var(--neon-silver); margin-top: 10px; }
-        .level-select-row { display: flex; align-items: center; gap: 10px; margin: 15px 0; }
-        .level-select-label { font-size: clamp(0.4rem, 1.2vw, 0.6rem); color: var(--neon-silver); }
-        .level-select { background: rgba(0,0,0,0.7); border: 2px solid var(--neon-gold); color: var(--neon-gold); font-family: 'Press Start 2P', cursive; font-size: clamp(0.4rem, 1.2vw, 0.6rem); padding: 8px 12px; cursor: pointer; }
-        .level-select option { background: #1a0a2e; color: var(--neon-gold); }
-        .dictation-area { position: absolute; top: 50%; left: 50%; transform: translate(-50%, -50%); text-align: center; z-index: 45; background: rgba(0,0,0,0.9); padding: 30px; border: 3px solid var(--neon-gold); border-radius: 15px; }
-        .dictation-area.hidden { display: none; }
-        .dictation-prompt { font-size: clamp(1.2rem, 3vw, 2rem); color: var(--neon-gold); text-shadow: 0 0 15px var(--neon-gold); margin-bottom: 20px; }
-        .dictation-input { background: rgba(0,0,0,0.5); border: 2px solid var(--neon-silver); color: white; font-family: 'Press Start 2P', cursive; font-size: clamp(0.6rem, 1.5vw, 0.9rem); padding: 10px 15px; width: 100%; max-width: 300px; text-align: center; }
-        .dictation-input:focus { outline: none; border-color: var(--neon-gold); box-shadow: 0 0 15px var(--neon-gold); }
-        .dictation-hint { font-size: clamp(0.3rem, 0.8vw, 0.4rem); color: var(--neon-silver); margin-top: 10px; }
-        .challenge-modal { position: absolute; top: 50%; left: 50%; transform: translate(-50%, -50%); background: radial-gradient(ellipse at center, #3a2a5e 0%, #1a0a2e 100%); border: 4px solid var(--neon-gold); border-radius: 15px; padding: 25px; z-index: 200; text-align: center; max-width: 90%; max-height: 80%; overflow-y: auto; box-shadow: 0 0 50px var(--neon-gold); }
-        .challenge-modal.hidden { display: none; }
-        .challenge-title { font-size: clamp(0.6rem, 1.5vw, 0.9rem); color: var(--neon-gold); text-shadow: 0 0 10px var(--neon-gold); margin-bottom: 15px; }
-        .challenge-question { font-size: clamp(0.4rem, 1.2vw, 0.6rem); color: white; margin-bottom: 20px; line-height: 1.8; }
-        .challenge-options { display: flex; flex-direction: column; gap: 10px; }
-        .challenge-option { padding: 12px 20px; font-family: 'Press Start 2P', cursive; font-size: clamp(0.35rem, 1vw, 0.5rem); background: rgba(0,0,0,0.5); border: 2px solid var(--neon-silver); color: white; cursor: pointer; transition: all 0.2s; text-align: left; }
-        .challenge-option:hover { border-color: var(--neon-gold); background: rgba(255,215,0,0.2); }
-        .challenge-option.correct { border-color: var(--neon-green); background: rgba(0,255,0,0.2); }
-        .challenge-option.wrong { border-color: var(--neon-pink); background: rgba(255,0,0,0.2); }
-        .challenge-result { font-size: clamp(0.5rem, 1.2vw, 0.7rem); margin-top: 15px; padding: 10px; border-radius: 5px; }
-        .challenge-result.correct { color: var(--neon-green); text-shadow: 0 0 10px var(--neon-green); }
-        .challenge-result.wrong { color: var(--neon-orange); text-shadow: 0 0 10px var(--neon-orange); }
-        .double-down-section { margin-top: 15px; padding: 15px; border: 2px solid var(--neon-orange); border-radius: 10px; }
-        .double-down-text { font-size: clamp(0.4rem, 1vw, 0.5rem); color: var(--neon-orange); margin-bottom: 10px; }
-        .pause-overlay { position: absolute; top: 0; left: 0; width: 100%; height: 100%; background: rgba(0,0,0,0.85); display: flex; flex-direction: column; justify-content: center; align-items: center; z-index: 150; }
-        .pause-overlay.hidden { display: none; }
-        .pause-title { font-size: clamp(1.5rem, 4vw, 2.5rem); color: var(--neon-gold); text-shadow: 0 0 20px var(--neon-gold); margin-bottom: 30px; }
-        .music-toggle { position: absolute; bottom: 15px; right: 15px; width: 40px; height: 40px; border-radius: 50%; background: rgba(0,0,0,0.5); border: 2px solid var(--neon-gold); color: var(--neon-gold); font-size: 1.2rem; cursor: pointer; z-index: 100; display: flex; align-items: center; justify-content: center; }
-        .music-toggle:hover { background: rgba(255,215,0,0.2); }
-        .menu-btn { position: absolute; bottom: 15px; left: 15px; padding: 8px 15px; font-family: 'Press Start 2P', cursive; font-size: clamp(0.3rem, 0.8vw, 0.4rem); background: rgba(0,0,0,0.5); border: 2px solid var(--neon-gold); color: var(--neon-gold); cursor: pointer; z-index: 100; }
-        .scoreboard { max-height: 200px; overflow-y: auto; width: 90%; max-width: 400px; margin: 15px 0; background: rgba(0,0,0,0.5); border: 2px solid var(--neon-gold); border-radius: 8px; }
-        .score-row { display: flex; justify-content: space-between; padding: 8px 15px; font-size: clamp(0.35rem, 1vw, 0.5rem); color: white; border-bottom: 1px solid rgba(255,215,0,0.3); }
-        .score-row:last-child { border-bottom: none; }
-        .score-row.header { color: var(--neon-gold); font-weight: bold; }
-        .score-row.current-user { color: var(--neon-green); }
-        .stats-container { display: grid; grid-template-columns: repeat(2, 1fr); gap: 10px; margin: 15px; max-width: 400px; }
-        .stat-box { background: rgba(0,0,0,0.5); border: 2px solid var(--neon-gold); border-radius: 8px; padding: 10px; text-align: center; }
-        .stat-value { font-size: clamp(0.8rem, 2vw, 1.2rem); color: var(--neon-gold); text-shadow: 0 0 10px var(--neon-gold); }
-        .stat-label { font-size: clamp(0.3rem, 0.8vw, 0.4rem); color: var(--neon-silver); margin-top: 5px; }
+
+        :root {
+            --neon-pink: #ff00ff;
+            --neon-cyan: #00ffff;
+            --neon-yellow: #ffff00;
+            --neon-green: #00ff00;
+            --neon-orange: #ff6600;
+            --neon-gold: #ffd700;
+            --neon-silver: #c0c0c0;
+            --deep-space: #0a0a1a;
+            --royal-purple: #4a0080;
+        }
+
+        body {
+            background: var(--deep-space);
+            min-height: 100vh;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            font-family: 'Press Start 2P', cursive;
+            overflow: hidden;
+            touch-action: none;
+        }
+
+        .crt-overlay {
+            position: fixed;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            pointer-events: none;
+            z-index: 1000;
+            background: repeating-linear-gradient(0deg, rgba(0, 0, 0, 0.1) 0px, rgba(0, 0, 0, 0.1) 1px, transparent 1px, transparent 2px);
+        }
+
+        .starfield {
+            position: fixed;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            z-index: -1;
+        }
+
+        .bg-star {
+            position: absolute;
+            background: white;
+            border-radius: 50%;
+            animation: twinkle 2s infinite ease-in-out;
+        }
+
+        @keyframes twinkle {
+
+            0%,
+            100% {
+                opacity: 0.3;
+            }
+
+            50% {
+                opacity: 1;
+            }
+        }
+
+        .shooting-star {
+            position: absolute;
+            width: 80px;
+            height: 2px;
+            background: linear-gradient(90deg, transparent, #fffacd);
+            opacity: 0.5;
+            transform: rotate(135deg);
+            animation: shootingStar 1.2s linear forwards;
+            pointer-events: none;
+            z-index: 0;
+        }
+
+        @keyframes shootingStar {
+            0% {
+                transform: rotate(135deg) translateX(0);
+                opacity: 0.6;
+            }
+
+            70% {
+                opacity: 0.4;
+            }
+
+            100% {
+                transform: rotate(135deg) translateX(400px);
+                opacity: 0;
+            }
+        }
+
+        .game-container {
+            width: 100%;
+            max-width: 900px;
+            height: 100vh;
+            max-height: 700px;
+            background: linear-gradient(180deg, #1a0a2e 0%, #0a0a1a 50%, #2a1a3e 100%);
+            border: 8px solid var(--neon-gold);
+            position: relative;
+            overflow: hidden;
+            box-shadow: 0 0 30px var(--neon-gold), 0 0 60px var(--royal-purple), inset 0 0 100px rgba(74, 0, 128, 0.3);
+            cursor: crosshair;
+        }
+
+        .screen {
+            position: absolute;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            display: flex;
+            flex-direction: column;
+            justify-content: center;
+            align-items: center;
+            z-index: 100;
+            background: radial-gradient(ellipse at center, #2a1a4e 0%, #0a0a1a 70%);
+            cursor: default;
+        }
+
+        .screen.hidden {
+            display: none;
+        }
+
+        .game-title {
+            font-family: 'Press Start 2P', cursive;
+            font-size: clamp(1.1rem, 3.5vw, 1.8rem);
+            color: var(--neon-gold);
+            text-shadow: 0 0 10px var(--neon-gold), 0 0 20px var(--neon-orange), 0 0 40px var(--neon-orange), 3px 3px 0 #8B4513;
+            animation: titlePulse 1.5s infinite ease-in-out;
+            text-align: center;
+            letter-spacing: 1px;
+            line-height: 1.4;
+            padding: 10px 25px;
+            margin: 0;
+        }
+
+        @keyframes titlePulse {
+
+            0%,
+            100% {
+                transform: scale(1);
+            }
+
+            50% {
+                transform: scale(1.02);
+            }
+        }
+
+        .subtitle {
+            font-size: clamp(0.5rem, 1.5vw, 0.8rem);
+            color: var(--neon-silver);
+            margin-top: 15px;
+            text-shadow: 0 0 10px var(--neon-silver);
+            animation: blink 1s infinite;
+        }
+
+        @keyframes blink {
+
+            0%,
+            49% {
+                opacity: 1;
+            }
+
+            50%,
+            100% {
+                opacity: 0.3;
+            }
+        }
+
+        .btn {
+            margin-top: 20px;
+            padding: 15px 40px;
+            font-family: 'Press Start 2P', cursive;
+            font-size: clamp(0.6rem, 2vw, 0.9rem);
+            border: 4px solid var(--neon-gold);
+            color: #000;
+            cursor: pointer;
+            transition: all 0.1s;
+        }
+
+        .btn-gold {
+            background: linear-gradient(180deg, var(--neon-gold) 0%, #b8860b 100%);
+            box-shadow: 0 6px 0 #8B4513, 0 0 20px var(--neon-gold);
+        }
+
+        .btn-green {
+            background: linear-gradient(180deg, var(--neon-green) 0%, #00aa00 100%);
+            box-shadow: 0 6px 0 #006600, 0 0 20px var(--neon-green);
+        }
+
+        .btn-cyan {
+            background: linear-gradient(180deg, var(--neon-cyan) 0%, #0088aa 100%);
+            box-shadow: 0 6px 0 #005566, 0 0 20px var(--neon-cyan);
+        }
+
+        .btn-pink {
+            background: linear-gradient(180deg, var(--neon-pink) 0%, #aa00aa 100%);
+            box-shadow: 0 6px 0 #660066, 0 0 20px var(--neon-pink);
+            color: white;
+        }
+
+        .btn-orange {
+            background: linear-gradient(180deg, var(--neon-orange) 0%, #aa4400 100%);
+            box-shadow: 0 6px 0 #663300, 0 0 20px var(--neon-orange);
+        }
+
+        .btn-small {
+            padding: 10px 20px;
+            font-size: clamp(0.4rem, 1.2vw, 0.6rem);
+            margin: 10px;
+        }
+
+        .btn:hover {
+            transform: translateY(2px);
+        }
+
+        .btn:active {
+            transform: translateY(6px);
+        }
+
+        .username-input {
+            background: rgba(0, 0, 0, 0.5);
+            border: 3px solid var(--neon-gold);
+            color: var(--neon-gold);
+            font-family: 'Press Start 2P', cursive;
+            font-size: clamp(0.6rem, 2vw, 1rem);
+            padding: 15px 20px;
+            text-align: center;
+            width: 80%;
+            max-width: 300px;
+            margin: 20px 0;
+        }
+
+        .username-input:focus {
+            outline: none;
+            border-color: var(--neon-yellow);
+            box-shadow: 0 0 20px var(--neon-yellow);
+        }
+
+        .hud {
+            position: absolute;
+            top: 0;
+            left: 0;
+            width: 100%;
+            padding: 10px 15px;
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            flex-wrap: wrap;
+            gap: 5px;
+            background: linear-gradient(180deg, rgba(0, 0, 0, 0.8) 0%, transparent 100%);
+            z-index: 50;
+        }
+
+        .hud-item {
+            font-size: clamp(0.35rem, 1.1vw, 0.55rem);
+            color: var(--neon-gold);
+            text-shadow: 0 0 10px var(--neon-gold);
+        }
+
+        .hud-item.silver {
+            color: var(--neon-silver);
+            text-shadow: 0 0 10px var(--neon-silver);
+        }
+
+        .lives-display {
+            display: flex;
+            gap: 3px;
+        }
+
+        .life-icon {
+            font-size: clamp(0.8rem, 2vw, 1.2rem);
+            filter: drop-shadow(0 0 5px var(--neon-gold));
+        }
+
+        .pause-btn {
+            background: rgba(255, 255, 255, 0.1);
+            border: 2px solid var(--neon-gold);
+            color: var(--neon-gold);
+            font-family: 'Press Start 2P', cursive;
+            font-size: clamp(0.4rem, 1vw, 0.5rem);
+            padding: 5px 10px;
+            cursor: pointer;
+        }
+
+        .pause-btn:hover {
+            background: rgba(255, 215, 0, 0.2);
+        }
+
+        .target-area {
+            position: absolute;
+            top: 55px;
+            left: 50%;
+            transform: translateX(-50%);
+            text-align: center;
+            z-index: 40;
+        }
+
+        .target-label {
+            font-size: clamp(0.35rem, 1vw, 0.5rem);
+            color: var(--neon-silver);
+            text-shadow: 0 0 5px var(--neon-silver);
+            margin-bottom: 5px;
+        }
+
+        .target-word {
+            font-size: clamp(0.9rem, 2.5vw, 1.3rem);
+            color: var(--neon-gold);
+            text-shadow: 0 0 15px var(--neon-gold), 0 0 30px var(--neon-orange);
+            padding: 10px 20px;
+            background: rgba(0, 0, 0, 0.5);
+            border: 3px solid var(--neon-gold);
+            border-radius: 10px;
+            min-width: 120px;
+        }
+
+        .speak-btn {
+            margin-top: 8px;
+            padding: 5px 15px;
+            font-family: 'Press Start 2P', cursive;
+            font-size: clamp(0.3rem, 0.8vw, 0.4rem);
+            background: rgba(0, 0, 0, 0.5);
+            border: 2px solid var(--neon-silver);
+            color: var(--neon-silver);
+            cursor: pointer;
+        }
+
+        .speak-btn:hover {
+            background: rgba(192, 192, 192, 0.2);
+            border-color: var(--neon-gold);
+            color: var(--neon-gold);
+        }
+
+        .game-area {
+            position: absolute;
+            top: 150px;
+            left: 0;
+            right: 0;
+            bottom: 80px;
+            overflow: hidden;
+        }
+
+        .spaceship {
+            position: absolute;
+            bottom: 10px;
+            left: 50%;
+            transform: translateX(-50%);
+            font-size: 3rem;
+            z-index: 30;
+            filter: drop-shadow(0 0 15px var(--neon-gold));
+            transition: left 0.1s ease-out;
+        }
+
+        .floating-item {
+            position: absolute;
+            font-size: clamp(0.5rem, 1.5vw, 0.75rem);
+            padding: 8px 12px;
+            background: rgba(139, 69, 19, 0.8);
+            border: 2px solid var(--neon-gold);
+            border-radius: 8px;
+            color: white;
+            text-shadow: 1px 1px 2px black;
+            cursor: crosshair;
+            transition: transform 0.1s;
+            z-index: 20;
+            box-shadow: 0 0 10px rgba(255, 215, 0, 0.5);
+            max-width: 180px;
+            text-align: center;
+        }
+
+        .floating-item:hover {
+            transform: scale(1.1);
+            box-shadow: 0 0 20px var(--neon-gold);
+        }
+
+        .challenge-item {
+            position: absolute;
+            width: 50px;
+            height: 50px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            cursor: pointer;
+            z-index: 25;
+            animation: float 2s ease-in-out infinite;
+            font-size: 2rem;
+        }
+
+        @keyframes float {
+
+            0%,
+            100% {
+                transform: translateY(0);
+            }
+
+            50% {
+                transform: translateY(-10px);
+            }
+        }
+
+        .laser {
+            position: absolute;
+            width: 4px;
+            background: linear-gradient(180deg, var(--neon-gold), var(--neon-orange));
+            box-shadow: 0 0 10px var(--neon-gold), 0 0 20px var(--neon-orange);
+            z-index: 15;
+            animation: laserShoot 0.3s ease-out forwards;
+        }
+
+        @keyframes laserShoot {
+            0% {
+                height: 0;
+                opacity: 1;
+            }
+
+            100% {
+                height: 100px;
+                opacity: 0;
+            }
+        }
+
+        .explosion {
+            position: absolute;
+            font-size: 2.5rem;
+            animation: explode 0.5s ease-out forwards;
+            z-index: 60;
+            pointer-events: none;
+        }
+
+        @keyframes explode {
+            0% {
+                transform: scale(0.5);
+                opacity: 1;
+            }
+
+            50% {
+                transform: scale(1.5);
+                opacity: 1;
+            }
+
+            100% {
+                transform: scale(2);
+                opacity: 0;
+            }
+        }
+
+        .feedback {
+            position: absolute;
+            top: 40%;
+            left: 50%;
+            transform: translate(-50%, -50%);
+            font-family: 'Bangers', cursive;
+            font-size: clamp(1.8rem, 5vw, 3rem);
+            text-align: center;
+            z-index: 70;
+            animation: feedbackPop 1s ease-out forwards;
+            pointer-events: none;
+        }
+
+        .feedback.great {
+            color: var(--neon-green);
+            text-shadow: 0 0 20px var(--neon-green), 4px 4px 0 #006600;
+        }
+
+        .feedback.oops {
+            color: var(--neon-orange);
+            text-shadow: 0 0 20px var(--neon-orange), 4px 4px 0 #993300;
+        }
+
+        @keyframes feedbackPop {
+            0% {
+                transform: translate(-50%, -50%) scale(0);
+                opacity: 0;
+            }
+
+            30% {
+                transform: translate(-50%, -50%) scale(1.3);
+                opacity: 1;
+            }
+
+            60% {
+                transform: translate(-50%, -50%) scale(1);
+                opacity: 1;
+            }
+
+            100% {
+                transform: translate(-50%, -50%) scale(1);
+                opacity: 0;
+            }
+        }
+
+        .stars-earned {
+            margin: 20px 0;
+            font-size: clamp(1.5rem, 5vw, 3rem);
+        }
+
+        .stars-earned .star {
+            display: inline-block;
+            animation: starPop 0.5s ease-out forwards;
+            opacity: 0;
+            filter: drop-shadow(0 0 10px var(--neon-gold));
+        }
+
+        @keyframes starPop {
+            0% {
+                transform: scale(0) rotate(0deg);
+                opacity: 0;
+            }
+
+            50% {
+                transform: scale(1.3) rotate(180deg);
+                opacity: 1;
+            }
+
+            100% {
+                transform: scale(1) rotate(360deg);
+                opacity: 1;
+            }
+        }
+
+        .level-intro {
+            font-size: clamp(0.4rem, 1.2vw, 0.6rem);
+            color: var(--neon-silver);
+            margin: 15px 0;
+            text-align: center;
+            max-width: 85%;
+            line-height: 1.8;
+        }
+
+        .final-score {
+            font-size: clamp(0.5rem, 1.5vw, 0.8rem);
+            color: var(--neon-gold);
+            margin-top: 15px;
+            text-shadow: 0 0 10px var(--neon-gold);
+        }
+
+        .instructions {
+            margin-top: 20px;
+            padding: 15px 20px;
+            background: rgba(0, 0, 0, 0.5);
+            border: 2px solid var(--neon-gold);
+            border-radius: 10px;
+            max-width: 85%;
+            display: grid;
+            grid-template-columns: auto 1fr;
+            gap: 5px 10px;
+            align-items: center;
+        }
+
+        .instructions .level-icon {
+            font-size: clamp(0.5rem, 1.2vw, 0.7rem);
+            text-align: center;
+        }
+
+        .instructions .level-text {
+            font-size: clamp(0.35rem, 1vw, 0.5rem);
+            color: white;
+            text-align: left;
+        }
+
+        .shoot-hint {
+            position: absolute;
+            bottom: 75px;
+            left: 50%;
+            transform: translateX(-50%);
+            font-size: clamp(0.35rem, 1vw, 0.5rem);
+            color: var(--neon-silver);
+            text-shadow: 0 0 10px var(--neon-silver);
+            animation: blink 1s infinite;
+            z-index: 35;
+            pointer-events: none;
+        }
+
+        .btn-row {
+            display: flex;
+            flex-wrap: wrap;
+            justify-content: center;
+            gap: 10px;
+            margin-top: 15px;
+        }
+
+        .player-welcome {
+            font-size: clamp(0.4rem, 1.2vw, 0.6rem);
+            color: var(--neon-silver);
+            margin-top: 10px;
+        }
+
+        .level-select-row {
+            display: flex;
+            align-items: center;
+            gap: 10px;
+            margin: 15px 0;
+        }
+
+        .level-select-label {
+            font-size: clamp(0.4rem, 1.2vw, 0.6rem);
+            color: var(--neon-silver);
+        }
+
+        .level-select {
+            background: rgba(0, 0, 0, 0.7);
+            border: 2px solid var(--neon-gold);
+            color: var(--neon-gold);
+            font-family: 'Press Start 2P', cursive;
+            font-size: clamp(0.4rem, 1.2vw, 0.6rem);
+            padding: 8px 12px;
+            cursor: pointer;
+        }
+
+        .level-select option {
+            background: #1a0a2e;
+            color: var(--neon-gold);
+        }
+
+        .dictation-area {
+            position: absolute;
+            top: 50%;
+            left: 50%;
+            transform: translate(-50%, -50%);
+            text-align: center;
+            z-index: 45;
+            background: rgba(0, 0, 0, 0.9);
+            padding: 30px;
+            border: 3px solid var(--neon-gold);
+            border-radius: 15px;
+        }
+
+        .dictation-area.hidden {
+            display: none;
+        }
+
+        .dictation-prompt {
+            font-size: clamp(1.2rem, 3vw, 2rem);
+            color: var(--neon-gold);
+            text-shadow: 0 0 15px var(--neon-gold);
+            margin-bottom: 20px;
+        }
+
+        .dictation-input {
+            background: rgba(0, 0, 0, 0.5);
+            border: 2px solid var(--neon-silver);
+            color: white;
+            font-family: 'Press Start 2P', cursive;
+            font-size: clamp(0.6rem, 1.5vw, 0.9rem);
+            padding: 10px 15px;
+            width: 100%;
+            max-width: 300px;
+            text-align: center;
+        }
+
+        .dictation-input:focus {
+            outline: none;
+            border-color: var(--neon-gold);
+            box-shadow: 0 0 15px var(--neon-gold);
+        }
+
+        .dictation-hint {
+            font-size: clamp(0.3rem, 0.8vw, 0.4rem);
+            color: var(--neon-silver);
+            margin-top: 10px;
+        }
+
+        .challenge-modal {
+            position: absolute;
+            top: 50%;
+            left: 50%;
+            transform: translate(-50%, -50%);
+            background: radial-gradient(ellipse at center, #3a2a5e 0%, #1a0a2e 100%);
+            border: 4px solid var(--neon-gold);
+            border-radius: 15px;
+            padding: 25px;
+            z-index: 200;
+            text-align: center;
+            max-width: 90%;
+            max-height: 80%;
+            overflow-y: auto;
+            box-shadow: 0 0 50px var(--neon-gold);
+        }
+
+        .challenge-modal.hidden {
+            display: none;
+        }
+
+        .challenge-title {
+            font-size: clamp(0.6rem, 1.5vw, 0.9rem);
+            color: var(--neon-gold);
+            text-shadow: 0 0 10px var(--neon-gold);
+            margin-bottom: 15px;
+        }
+
+        .challenge-question {
+            font-size: clamp(0.4rem, 1.2vw, 0.6rem);
+            color: white;
+            margin-bottom: 20px;
+            line-height: 1.8;
+        }
+
+        .challenge-options {
+            display: flex;
+            flex-direction: column;
+            gap: 10px;
+        }
+
+        .challenge-option {
+            padding: 12px 20px;
+            font-family: 'Press Start 2P', cursive;
+            font-size: clamp(0.35rem, 1vw, 0.5rem);
+            background: rgba(0, 0, 0, 0.5);
+            border: 2px solid var(--neon-silver);
+            color: white;
+            cursor: pointer;
+            transition: all 0.2s;
+            text-align: left;
+        }
+
+        .challenge-option:hover {
+            border-color: var(--neon-gold);
+            background: rgba(255, 215, 0, 0.2);
+        }
+
+        .challenge-option.correct {
+            border-color: var(--neon-green);
+            background: rgba(0, 255, 0, 0.2);
+        }
+
+        .challenge-option.wrong {
+            border-color: var(--neon-pink);
+            background: rgba(255, 0, 0, 0.2);
+        }
+
+        .challenge-result {
+            font-size: clamp(0.5rem, 1.2vw, 0.7rem);
+            margin-top: 15px;
+            padding: 10px;
+            border-radius: 5px;
+        }
+
+        .challenge-result.correct {
+            color: var(--neon-green);
+            text-shadow: 0 0 10px var(--neon-green);
+        }
+
+        .challenge-result.wrong {
+            color: var(--neon-orange);
+            text-shadow: 0 0 10px var(--neon-orange);
+        }
+
+        .double-down-section {
+            margin-top: 15px;
+            padding: 15px;
+            border: 2px solid var(--neon-orange);
+            border-radius: 10px;
+        }
+
+        .double-down-text {
+            font-size: clamp(0.4rem, 1vw, 0.5rem);
+            color: var(--neon-orange);
+            margin-bottom: 10px;
+        }
+
+        .pause-overlay {
+            position: absolute;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            background: rgba(0, 0, 0, 0.85);
+            display: flex;
+            flex-direction: column;
+            justify-content: center;
+            align-items: center;
+            z-index: 150;
+        }
+
+        .pause-overlay.hidden {
+            display: none;
+        }
+
+        .pause-title {
+            font-size: clamp(1.5rem, 4vw, 2.5rem);
+            color: var(--neon-gold);
+            text-shadow: 0 0 20px var(--neon-gold);
+            margin-bottom: 30px;
+        }
+
+        .music-toggle {
+            position: absolute;
+            top: 50px;
+            right: 10px;
+            width: 35px;
+            height: 35px;
+            border-radius: 50%;
+            background: rgba(0, 0, 0, 0.5);
+            border: 2px solid var(--neon-gold);
+            color: var(--neon-gold);
+            font-size: 1.2rem;
+            cursor: pointer;
+            z-index: 60;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+        }
+
+        .music-toggle:hover {
+            background: rgba(255, 215, 0, 0.2);
+        }
+
+        .menu-btn {
+            display: none;
+        }
+
+        .scoreboard {
+            max-height: 200px;
+            overflow-y: auto;
+            width: 90%;
+            max-width: 400px;
+            margin: 15px 0;
+            background: rgba(0, 0, 0, 0.5);
+            border: 2px solid var(--neon-gold);
+            border-radius: 8px;
+        }
+
+        .score-row {
+            display: flex;
+            justify-content: space-between;
+            padding: 8px 15px;
+            font-size: clamp(0.35rem, 1vw, 0.5rem);
+            color: white;
+            border-bottom: 1px solid rgba(255, 215, 0, 0.3);
+        }
+
+        .score-row:last-child {
+            border-bottom: none;
+        }
+
+        .score-row.header {
+            color: var(--neon-gold);
+            font-weight: bold;
+        }
+
+        .score-row.current-user {
+            color: var(--neon-green);
+        }
+
+        .stats-container {
+            display: grid;
+            grid-template-columns: repeat(2, 1fr);
+            gap: 10px;
+            margin: 15px;
+            max-width: 400px;
+        }
+
+        .stat-box {
+            background: rgba(0, 0, 0, 0.5);
+            border: 2px solid var(--neon-gold);
+            border-radius: 8px;
+            padding: 10px;
+            text-align: center;
+        }
+
+        .stat-value {
+            font-size: clamp(0.8rem, 2vw, 1.2rem);
+            color: var(--neon-gold);
+            text-shadow: 0 0 10px var(--neon-gold);
+        }
+
+        .stat-label {
+            font-size: clamp(0.3rem, 0.8vw, 0.4rem);
+            color: var(--neon-silver);
+            margin-top: 5px;
+        }
     </style>
 </head>
+
 <body>
     <div class="crt-overlay"></div>
     <div class="starfield" id="starfield"></div>
@@ -344,10 +1116,10 @@
         };
 
         // Game State
-        let state = { user: '', score: 0, lives: 3, level: 1, round: 1, isPaused: false, isPlaying: false, target: null, items: [], challengeActive: false, usedChallenges: [], musicOn: true, audio: null };
+        let state = { user: '', score: 0, lives: 3, level: 1, round: 1, isPaused: false, isPlaying: false, target: null, items: [], challengeActive: false, usedChallenges: [], musicOn: true, audio: null, letterSpeed: 8000 };
 
         const $ = id => document.getElementById(id);
-        const shuffle = arr => { const a = [...arr]; for (let i = a.length - 1; i > 0; i--) { const j = Math.floor(Math.random() * (i + 1)); [a[i], a[j]] = [a[j], a[i]]; } return a; };
+        const shuffle = arr => { const a = [...arr]; for (let i = a.length - 1; i > 0; i--) { const j = Math.floor(Math.random() * (i + 1));[a[i], a[j]] = [a[j], a[i]]; } return a; };
 
         function createStars() {
             const sf = $('starfield'); sf.innerHTML = '';
@@ -376,7 +1148,7 @@
         function toggleMusic() {
             initAudio(); state.musicOn = !state.musicOn;
             $('musicToggle').textContent = state.musicOn ? '🔊' : '🔇';
-            state.musicOn && state.isPlaying ? state.audio.play().catch(()=>{}) : state.audio.pause();
+            state.musicOn && state.isPlaying ? state.audio.play().catch(() => { }) : state.audio.pause();
         }
 
         function playSound(t) {
@@ -385,7 +1157,7 @@
                 const o = ctx.createOscillator(), g = ctx.createGain(); o.connect(g); g.connect(ctx.destination);
                 o.frequency.value = t === 'correct' ? 880 : t === 'wrong' ? 220 : 440;
                 g.gain.value = 0.1; o.start(); o.stop(ctx.currentTime + 0.1);
-            } catch(e) {}
+            } catch (e) { }
         }
 
         function speak(text) {
@@ -419,7 +1191,7 @@
         function saveScore(name, score) {
             const scores = getScores();
             scores.push({ name, score, date: new Date().toISOString() });
-            scores.sort((a,b) => b.score - a.score);
+            scores.sort((a, b) => b.score - a.score);
             localStorage.setItem('wordWarriorScores', JSON.stringify(scores.slice(0, 50)));
         }
 
@@ -430,7 +1202,7 @@
             scores.slice(0, 10).forEach((s, i) => {
                 const row = document.createElement('div');
                 row.className = 'score-row' + (s.name === state.user ? ' current-user' : '');
-                row.innerHTML = `<span>${i+1}</span><span>${s.name}</span><span>${s.score}</span>`;
+                row.innerHTML = `<span>${i + 1}</span><span>${s.name}</span><span>${s.score}</span>`;
                 list.appendChild(row);
             });
             showScreen('scoreboardScreen');
@@ -439,7 +1211,7 @@
         function generateRound() {
             clearItems();
             const lv = state.level;
-            
+
             if (lv === 5) {
                 $('dictationArea').classList.remove('hidden');
                 $('gameArea').style.display = 'none';
@@ -451,12 +1223,12 @@
                 setTimeout(() => speak(w.word), 500);
                 return;
             }
-            
+
             $('dictationArea').classList.add('hidden');
             $('gameArea').style.display = 'block';
             $('shootHint').style.display = 'block';
             $('targetLabel').textContent = LEVELS[lv].label;
-            
+
             let opts;
             if (lv === 1) {
                 const r = ROOTS[Math.floor(Math.random() * ROOTS.length)];
@@ -485,9 +1257,9 @@
                 const wrong = shuffle(SAT_WORDS.filter(x => x.word !== w.word)).slice(0, 3).map(x => x.definition);
                 opts = shuffle([w.definition, ...wrong]);
             }
-            
+
             spawnItems(opts);
-            
+
             // Random challenge scroll
             if (Math.random() < 0.15 && state.usedChallenges.length < CHALLENGES.length) {
                 setTimeout(spawnChallenge, 1000);
@@ -497,39 +1269,98 @@
         function spawnItems(options) {
             const area = $('gameArea');
             const areaRect = area.getBoundingClientRect();
-            const positions = [];
-            
+            const usedX = [];
+
             options.forEach((opt, i) => {
                 const item = document.createElement('div');
                 item.className = 'floating-item';
                 item.textContent = opt;
                 item.dataset.value = opt;
-                
-                let x, y, attempts = 0;
+
+                // Spread items horizontally, avoiding overlap
+                let x, attempts = 0;
                 do {
                     x = Math.random() * (areaRect.width - 180);
-                    y = Math.random() * (areaRect.height - 60);
                     attempts++;
-                } while (attempts < 50 && positions.some(p => Math.abs(p.x - x) < 190 && Math.abs(p.y - y) < 70));
-                
-                positions.push({ x, y });
+                } while (attempts < 50 && usedX.some(ux => Math.abs(ux - x) < 190));
+                usedX.push(x);
+
                 item.style.left = x + 'px';
-                item.style.top = y + 'px';
-                
+                item.style.top = '-70px'; // Start above the game area
+                item.dataset.startTime = Date.now() + (i * 300); // Stagger spawn
+                item.dataset.duration = state.letterSpeed;
+
                 item.addEventListener('click', (e) => handleShot(e, opt));
                 area.appendChild(item);
                 state.items.push({ el: item, value: opt });
             });
+
+            // Start the game loop if not already running
+            requestAnimationFrame(gameLoop);
+        }
+
+        function updateItems() {
+            const area = $('gameArea');
+            const h = area.offsetHeight;
+            const shipRect = $('spaceship').getBoundingClientRect();
+
+            state.items = state.items.filter(item => {
+                const el = item.el;
+                if (!el || !el.parentNode) return false;
+
+                const startTime = parseInt(el.dataset.startTime);
+                const duration = parseInt(el.dataset.duration);
+                const elapsed = Date.now() - startTime;
+                const progress = Math.max(0, elapsed / duration);
+
+                if (progress >= 1) {
+                    // Item reached bottom without being clicked - lose a life
+                    if (!el.classList.contains('hit')) {
+                        state.lives--;
+                        updateHUD();
+                        playSound('wrong');
+
+                        // Show feedback
+                        const fb = document.createElement('div');
+                        fb.className = 'feedback oops';
+                        fb.textContent = 'MISSED!';
+                        $('gameContainer').appendChild(fb);
+                        setTimeout(() => fb.remove(), 1000);
+
+                        if (state.lives <= 0) {
+                            endGame();
+                            return false;
+                        }
+                    }
+                    el.remove();
+                    return false;
+                }
+
+                // Move item down
+                el.style.top = (-70 + (h + 140) * progress) + 'px';
+                return true;
+            });
+        }
+
+        function gameLoop() {
+            if (!state.isPlaying || state.isPaused) {
+                if (state.isPlaying) requestAnimationFrame(gameLoop);
+                return;
+            }
+
+            updateItems();
+
+            if (state.isPlaying) requestAnimationFrame(gameLoop);
         }
 
         function spawnChallenge() {
             if (state.challengeActive || !state.isPlaying) return;
             const available = CHALLENGES.filter((_, i) => !state.usedChallenges.includes(i));
             if (available.length === 0) return;
-            
+
             const idx = CHALLENGES.indexOf(available[Math.floor(Math.random() * available.length)]);
             state.usedChallenges.push(idx);
-            
+
             const area = $('gameArea');
             const areaRect = area.getBoundingClientRect();
             const item = document.createElement('div');
@@ -539,7 +1370,7 @@
             item.style.top = Math.random() * (areaRect.height - 60) + 'px';
             item.addEventListener('click', () => showChallenge(idx, item));
             area.appendChild(item);
-            
+
             setTimeout(() => item.remove(), 8000);
         }
 
@@ -570,7 +1401,7 @@
                 if (o.textContent === correct) o.classList.add('correct');
                 else if (o === btn && !isCorrect) o.classList.add('wrong');
             });
-            
+
             const result = $('challengeResult');
             if (isCorrect) {
                 result.textContent = '✓ Correct! +500 points!';
@@ -605,25 +1436,25 @@
         function handleShot(e, value) {
             if (state.isPaused || state.challengeActive) return;
             e.stopPropagation();
-            
+            e.target.classList.add('hit'); // Mark as hit to prevent double-counting
             const ship = $('spaceship');
             const rect = e.target.getBoundingClientRect();
             const gameRect = $('gameContainer').getBoundingClientRect();
-            
+
             // Move ship
-            ship.style.left = (rect.left - gameRect.left + rect.width/2) + 'px';
-            
+            ship.style.left = (rect.left - gameRect.left + rect.width / 2) + 'px';
+
             // Laser
             const laser = document.createElement('div');
             laser.className = 'laser';
-            laser.style.left = (rect.left - gameRect.left + rect.width/2 - 2) + 'px';
+            laser.style.left = (rect.left - gameRect.left + rect.width / 2 - 2) + 'px';
             laser.style.bottom = '70px';
             $('gameContainer').appendChild(laser);
             setTimeout(() => laser.remove(), 300);
-            
+
             // Check answer
             const isCorrect = value === state.target.answer;
-            
+
             // Explosion
             const exp = document.createElement('div');
             exp.className = 'explosion';
@@ -632,14 +1463,14 @@
             exp.style.top = (rect.top - gameRect.top) + 'px';
             $('gameContainer').appendChild(exp);
             setTimeout(() => exp.remove(), 500);
-            
+
             // Feedback
             const fb = document.createElement('div');
             fb.className = 'feedback ' + (isCorrect ? 'great' : 'oops');
             fb.textContent = isCorrect ? 'GREAT!' : 'OOPS!';
             $('gameContainer').appendChild(fb);
             setTimeout(() => fb.remove(), 1000);
-            
+
             if (isCorrect) {
                 state.score += 100;
                 playSound('correct');
@@ -647,14 +1478,14 @@
                 state.lives--;
                 playSound('wrong');
             }
-            
+
             updateHUD();
-            
+
             if (state.lives <= 0) {
                 endGame();
                 return;
             }
-            
+
             state.round++;
             if (state.round > 10) {
                 completeLevel();
@@ -667,13 +1498,13 @@
             const input = $('dictationInput').value.trim().toLowerCase();
             const correct = state.target.answer;
             const isCorrect = input === correct;
-            
+
             const fb = document.createElement('div');
             fb.className = 'feedback ' + (isCorrect ? 'great' : 'oops');
             fb.textContent = isCorrect ? 'GREAT!' : `It was: ${state.target.word}`;
             $('gameContainer').appendChild(fb);
             setTimeout(() => fb.remove(), 1500);
-            
+
             if (isCorrect) {
                 state.score += 150;
                 playSound('correct');
@@ -681,11 +1512,11 @@
                 state.lives--;
                 playSound('wrong');
             }
-            
+
             updateHUD();
-            
+
             if (state.lives <= 0) { endGame(); return; }
-            
+
             state.round++;
             if (state.round > 10) { completeLevel(); }
             else { setTimeout(generateRound, 1000); }
@@ -694,7 +1525,7 @@
         function completeLevel() {
             state.isPlaying = false;
             clearItems();
-            
+
             if (state.level >= 5) {
                 $('winScore').textContent = state.score;
                 const stars = $('winStars');
@@ -742,16 +1573,17 @@
             state.isPlaying = true;
             state.isPaused = false;
             state.usedChallenges = [];
-            
+
             showScreen('loginScreen'); // hide all first
             ['loginScreen', 'titleScreen', 'scoreboardScreen', 'levelComplete', 'gameComplete', 'gameOver'].forEach(s => $(s).classList.add('hidden'));
-            
+
             updateHUD();
             initAudio();
-            if (state.musicOn) state.audio.play().catch(()=>{});
-            
+            if (state.musicOn) state.audio.play().catch(() => { });
+
             setInterval(shootingStar, 2000);
             generateRound();
+            requestAnimationFrame(gameLoop);
         }
 
         // Event Listeners
@@ -762,7 +1594,7 @@
             $('playerName').textContent = name;
             showScreen('titleScreen');
         });
-        
+
         $('usernameInput').addEventListener('keypress', e => { if (e.key === 'Enter') $('loginBtn').click(); });
         $('startBtn').addEventListener('click', startGame);
         $('viewScoresBtn').addEventListener('click', showScoreboard);
@@ -777,7 +1609,7 @@
         $('resumeBtn').addEventListener('click', () => {
             state.isPaused = false;
             $('pauseOverlay').classList.add('hidden');
-            if (state.musicOn) state.audio.play().catch(()=>{});
+            if (state.musicOn) state.audio.play().catch(() => { });
         });
         $('quitBtn').addEventListener('click', () => {
             state.isPlaying = false;
@@ -829,4 +1661,5 @@
         createStars();
     </script>
 </body>
+
 </html>
