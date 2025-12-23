@@ -1106,7 +1106,8 @@
         };
 
         // Game State
-        let state = { user: '', score: 0, lives: 3, level: 1, round: 1, isPaused: false, isPlaying: false, target: null, items: [], activeLasers: [], canShoot: true, shootCooldown: 300, challengeActive: false, usedChallenges: [], musicOn: true, audio: null, letterSpeed: 8000, shipX: 0 };
+        // Game State
+        let state = { user: '', score: 0, lives: 3, level: 1, round: 1, isPaused: false, isPlaying: false, target: null, items: [], activeLasers: [], canShoot: true, shootCooldown: 300, challengeActive: false, usedChallenges: [], musicOn: true, audio: null, letterSpeed: 8000, shipX: 0, spawnInterval: null, spawnRate: 2000, currentOptions: [] };
 
         const $ = id => document.getElementById(id);
         const shuffle = arr => { const a = [...arr]; for (let i = a.length - 1; i > 0; i--) { const j = Math.floor(Math.random() * (i + 1));[a[i], a[j]] = [a[j], a[i]]; } return a; };
@@ -1209,6 +1210,7 @@
         }
 
         function generateRound() {
+            if (state.spawnInterval) clearInterval(state.spawnInterval);
             clearItems();
             const lv = state.level;
 
@@ -1235,30 +1237,31 @@
                 state.target = { display: r.root, answer: r.meaning };
                 $('targetWord').textContent = r.root.toUpperCase();
                 const wrong = shuffle(ROOTS.filter(x => x.root !== r.root)).slice(0, 3).map(x => x.meaning);
-                opts = shuffle([r.meaning, ...wrong]);
+                opts = [r.meaning, ...wrong];
             } else if (lv === 2) {
                 const r = ROOTS[Math.floor(Math.random() * ROOTS.length)];
                 const word = r.words[Math.floor(Math.random() * r.words.length)];
                 state.target = { display: r.meaning, answer: word };
                 $('targetWord').textContent = r.meaning.toUpperCase();
                 const wrong = shuffle(ROOTS.filter(x => x.root !== r.root)).slice(0, 3).map(x => x.words[0]);
-                opts = shuffle([word, ...wrong]);
+                opts = [word, ...wrong];
             } else if (lv === 3) {
                 const w = SAT_WORDS[Math.floor(Math.random() * SAT_WORDS.length)];
                 state.target = { display: w.word, answer: w.origin };
                 $('targetWord').textContent = w.word.toUpperCase();
                 const origins = ['Latin', 'Greek', 'French', 'German', 'Italian', 'Arabic', 'Old English'];
                 const wrong = shuffle(origins.filter(o => o !== w.origin)).slice(0, 3);
-                opts = shuffle([w.origin, ...wrong]);
+                opts = [w.origin, ...wrong];
             } else if (lv === 4) {
                 const w = SAT_WORDS[Math.floor(Math.random() * SAT_WORDS.length)];
                 state.target = { display: w.word, answer: w.definition };
                 $('targetWord').textContent = w.word.toUpperCase();
                 const wrong = shuffle(SAT_WORDS.filter(x => x.word !== w.word)).slice(0, 3).map(x => x.definition);
-                opts = shuffle([w.definition, ...wrong]);
+                opts = [w.definition, ...wrong];
             }
 
-            spawnItems(opts);
+            state.currentOptions = opts;
+            startSpawning();
 
             // Random challenge scroll
             if (Math.random() < 0.15 && state.usedChallenges.length < CHALLENGES.length) {
@@ -1266,36 +1269,40 @@
             }
         }
 
-        function spawnItems(options) {
+        function startSpawning() {
+            // Spawn initial set
+            state.currentOptions.forEach((opt, i) => {
+                setTimeout(() => spawnOneItem(opt), i * 500);
+            });
+            // Then continue on interval
+            state.spawnInterval = setInterval(() => {
+                if (!state.isPaused && state.isPlaying) {
+                    const opt = state.currentOptions[Math.floor(Math.random() * state.currentOptions.length)];
+                    spawnOneItem(opt);
+                }
+            }, state.spawnRate);
+        }
+
+        function spawnOneItem(val) {
             const area = $('gameArea');
             const areaRect = area.getBoundingClientRect();
-            const usedX = [];
+            const item = document.createElement('div');
+            item.className = 'floating-item';
+            item.textContent = val;
+            item.dataset.value = val;
 
-            options.forEach((opt, i) => {
-                const item = document.createElement('div');
-                item.className = 'floating-item';
-                item.textContent = opt;
-                item.dataset.value = opt;
+            const x = Math.random() * (areaRect.width - 180);
+            item.style.left = x + 'px';
+            item.style.top = '-70px';
+            item.dataset.startTime = Date.now();
+            item.dataset.duration = state.letterSpeed;
 
-                // Spread items horizontally, avoiding overlap
-                let x, attempts = 0;
-                do {
-                    x = Math.random() * (areaRect.width - 180);
-                    attempts++;
-                } while (attempts < 50 && usedX.some(ux => Math.abs(ux - x) < 190));
-                usedX.push(x);
+            area.appendChild(item);
+            state.items.push({ el: item, value: val });
+        }
 
-                item.style.left = x + 'px';
-                item.style.top = '-70px'; // Start above the game area
-                item.dataset.startTime = Date.now() + (i * 300); // Stagger spawn
-                item.dataset.duration = state.letterSpeed;
-
-                area.appendChild(item);
-                state.items.push({ el: item, value: opt });
-            });
-
-            // Start the game loop if not already running
-            requestAnimationFrame(gameLoop);
+        function spawnItems(options) {
+            // Retired in favor of continuous spawning
         }
 
         function updateItems() {
@@ -1547,6 +1554,7 @@
             state.items = state.items.filter(i => i !== itemObj);
 
             if (isCorrect) {
+                if (state.spawnInterval) clearInterval(state.spawnInterval);
                 state.round++;
                 if (state.round > 10) {
                     completeLevel();
@@ -1579,6 +1587,7 @@
 
             if (state.lives <= 0) { endGame(); return; }
 
+            if (state.spawnInterval) clearInterval(state.spawnInterval);
             state.round++;
             if (state.round > 10) { completeLevel(); }
             else { setTimeout(generateRound, 1000); }
@@ -1620,6 +1629,7 @@
 
         function endGame() {
             state.isPlaying = false;
+            if (state.spawnInterval) clearInterval(state.spawnInterval);
             clearItems();
             state.audio && state.audio.pause();
             $('finalScore').textContent = state.score;
@@ -1683,6 +1693,7 @@
         $('quitBtn').addEventListener('click', () => {
             state.isPlaying = false;
             state.isPaused = false;
+            if (state.spawnInterval) clearInterval(state.spawnInterval);
             $('pauseOverlay').classList.add('hidden');
             clearItems();
             showScreen('titleScreen');
@@ -1720,6 +1731,7 @@
             playSound('wrong');
             updateHUD();
             if (state.lives <= 0) { endGame(); return; }
+            if (state.spawnInterval) clearInterval(state.spawnInterval);
             state.round++;
             if (state.round > 10) { completeLevel(); }
             else { setTimeout(generateRound, 1000); }
