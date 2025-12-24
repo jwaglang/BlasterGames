@@ -301,16 +301,117 @@
             100% { transform: rotate(135deg) translateX(400px); opacity: 0; }
         }
 
-        /* Pixelated Light Switch */
-        .light-switch {
+        /* ============================================ */
+        /* COIN SLOT - Left side (center vertically)   */
+        /* ============================================ */
+        .coin-slot-container {
             position: fixed;
-            bottom: 20px;
-            right: 20px;
-            width: 70px;
-            height: 110px;
-            cursor: pointer;
+            left: 15px;
+            top: 50%;
+            transform: translateY(-50%);
+            display: flex;
+            flex-direction: column;
+            align-items: center;
             z-index: 100;
-            /* Pixel art rendering */
+        }
+
+        .coin-slot {
+            width: 70px;
+            height: 140px;
+            background: #2a2a3a;
+            border: 6px solid #4a4a5a;
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            padding: 10px 0;
+            gap: 4px;
+            box-shadow: 
+                inset 4px 4px 0 #3a3a4a,
+                inset -4px -4px 0 #1a1a2a,
+                0 6px 0 #0a0a1a;
+            image-rendering: pixelated;
+            image-rendering: crisp-edges;
+        }
+
+        .coin-slot-label {
+            font-size: 8px;
+            color: var(--neon-yellow);
+            text-shadow: 0 0 8px var(--neon-yellow);
+            letter-spacing: 2px;
+        }
+
+        /* VERTICAL coin opening - deep and dark */
+        .coin-opening {
+            width: 8px;
+            height: 45px;
+            background: #000000;
+            border: 4px solid #252525;
+            box-shadow: 
+                inset 3px 0 0 #000,
+                inset -3px 0 0 #000,
+                inset 0 4px 8px #000,
+                0 0 15px rgba(255, 215, 0, 0.3);
+            margin: 6px 0;
+            position: relative;
+        }
+
+        .coin-opening::after {
+            content: "";
+            position: absolute;
+            top: 0;
+            left: 0;
+            right: 0;
+            bottom: 0;
+            background: linear-gradient(90deg, #000 0%, #111 50%, #000 100%);
+        }
+
+        .coin-return-label {
+            font-size: 6px;
+            color: #888;
+            margin-top: 6px;
+            letter-spacing: 1px;
+        }
+
+        .coin-return {
+            width: 36px;
+            height: 16px;
+            background: #0a0a0a;
+            border: 4px solid #3a3a4a;
+            box-shadow: inset 2px 2px 0 #1a1a1a;
+        }
+
+        .insert-coin-text {
+            font-size: 7px;
+            color: var(--neon-yellow);
+            text-shadow: 0 0 10px var(--neon-yellow), 0 0 20px var(--neon-orange);
+            margin-top: 12px;
+            animation: insertCoinFlash 0.5s ease-in-out infinite alternate;
+            white-space: nowrap;
+        }
+
+        @keyframes insertCoinFlash {
+            0% { opacity: 1; text-shadow: 0 0 15px var(--neon-yellow), 0 0 30px var(--neon-orange); }
+            100% { opacity: 0.3; text-shadow: 0 0 5px var(--neon-yellow); }
+        }
+
+        /* ============================================ */
+        /* MUSIC SWITCH - Right side (center vertically) */
+        /* ============================================ */
+        .music-switch-container {
+            position: fixed;
+            right: 15px;
+            top: 50%;
+            transform: translateY(-50%);
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            z-index: 100;
+        }
+
+        .light-switch {
+            width: 70px;
+            height: 140px;
+            cursor: pointer;
             image-rendering: pixelated;
             image-rendering: crisp-edges;
         }
@@ -318,142 +419,148 @@
         .switch-plate {
             width: 100%;
             height: 100%;
-            background: linear-gradient(180deg, #3a3a4a 0%, #2a2a3a 50%, #1a1a2a 100%);
-            border: 4px solid #4a4a5a;
-            border-radius: 8px;
+            background: #2a2a3a;
+            border: 6px solid #4a4a5a;
             box-shadow: 
-                inset 0 2px 0 #5a5a6a,
-                inset 0 -2px 0 #0a0a1a,
-                0 4px 8px rgba(0,0,0,0.5);
+                inset 4px 4px 0 #3a3a4a,
+                inset -4px -4px 0 #1a1a2a,
+                0 6px 0 #0a0a1a;
             display: flex;
             flex-direction: column;
             align-items: center;
             justify-content: space-between;
-            padding: 8px 0;
-            position: relative;
+            padding: 10px 0;
         }
 
         .switch-label {
             font-family: 'Press Start 2P', monospace;
-            font-size: 8px;
-            color: #666;
-            text-shadow: 0 1px 0 #000;
+            font-size: 10px;
+            color: #555;
+            text-shadow: 2px 2px 0 #000;
         }
 
-        .switch-label.on { color: #444; }
-        .switch-label.off { color: #444; }
-
         .switch-slot {
-            width: 36px;
-            height: 50px;
+            width: 40px;
+            height: 55px;
             background: #0a0a0a;
-            border: 3px solid #2a2a2a;
-            border-radius: 4px;
+            border: 4px solid #2a2a2a;
             position: relative;
-            box-shadow: inset 0 2px 4px rgba(0,0,0,0.8);
+            box-shadow: inset 2px 2px 0 #1a1a1a;
         }
 
         .switch-lever {
             position: absolute;
-            width: 30px;
+            width: 32px;
             height: 24px;
-            background: linear-gradient(180deg, #e0e0e0 0%, #b0b0b0 50%, #909090 100%);
-            border: 2px solid #c0c0c0;
-            border-radius: 3px;
+            background: #909090;
+            border: 4px solid #b0b0b0;
             left: 50%;
             transform: translateX(-50%);
-            transition: top 0.15s ease, box-shadow 0.3s ease;
+            transition: top 0.1s ease;
             box-shadow: 
-                inset 0 2px 0 #fff,
-                inset 0 -2px 0 #707070,
-                0 2px 4px rgba(0,0,0,0.5);
+                inset 4px 4px 0 #c0c0c0,
+                inset -4px -4px 0 #606060,
+                0 4px 0 #404040;
         }
 
         /* OFF state - lever down */
         .light-switch.off .switch-lever {
-            top: 22px;
+            top: 23px;
+            background: #808080;
         }
 
         .light-switch.off .switch-label.off {
             color: var(--neon-cyan);
-            text-shadow: 0 0 8px var(--neon-cyan);
+            text-shadow: 0 0 10px var(--neon-cyan), 2px 2px 0 #000;
         }
 
         /* ON state - lever up */
         .light-switch.on .switch-lever {
-            top: 2px;
-            background: linear-gradient(180deg, #ffe0f0 0%, #ffb0d0 50%, #ff80b0 100%);
-            border-color: #ffc0e0;
+            top: 4px;
+            background: #ff80b0;
+            border-color: #ffa0c0;
             box-shadow: 
-                inset 0 2px 0 #fff,
-                inset 0 -2px 0 #ff6090,
-                0 0 15px rgba(255, 0, 255, 0.6),
-                0 2px 4px rgba(0,0,0,0.5);
+                inset 4px 4px 0 #ffc0d0,
+                inset -4px -4px 0 #ff4080,
+                0 4px 0 #cc3366,
+                0 0 20px rgba(255, 0, 255, 0.6);
         }
 
         .light-switch.on .switch-label.on {
             color: var(--neon-pink);
-            text-shadow: 0 0 8px var(--neon-pink);
+            text-shadow: 0 0 10px var(--neon-pink), 2px 2px 0 #000;
         }
 
         .light-switch.on .switch-plate {
             box-shadow: 
-                inset 0 2px 0 #5a5a6a,
-                inset 0 -2px 0 #0a0a1a,
-                0 4px 8px rgba(0,0,0,0.5),
-                0 0 20px rgba(255, 0, 255, 0.3);
+                inset 4px 4px 0 #3a3a4a,
+                inset -4px -4px 0 #1a1a2a,
+                0 6px 0 #0a0a1a,
+                0 0 25px rgba(255, 0, 255, 0.3);
         }
 
         .light-switch:hover .switch-plate {
-            border-color: #6a6a7a;
+            border-color: #5a5a6a;
         }
 
         .light-switch:active .switch-lever {
             transform: translateX(-50%) scale(0.95);
         }
 
-        /* Music Control Hint */
+        /* Music Control Hint - flashes for 5 seconds then fades */
         .music-hint {
-            position: fixed;
-            bottom: 140px;
-            right: 15px;
             display: flex;
             flex-direction: column;
             align-items: center;
-            z-index: 99;
-            animation: hintFlash 0.4s ease-in-out 8 alternate;
-            transition: opacity 0.5s ease;
+            margin-top: 15px;
+            animation: hintFlashAndFade 5s ease-in-out forwards;
         }
 
         .music-hint-text {
-            font-family: 'Press Start 2P', monospace;
-            font-size: 14px;
+            font-size: 18px;
             color: var(--neon-yellow);
-            text-shadow: 0 0 15px var(--neon-yellow), 0 0 30px var(--neon-orange), 0 0 45px var(--neon-orange);
-            white-space: nowrap;
+            text-shadow: 0 0 20px var(--neon-yellow), 0 0 40px var(--neon-orange), 0 0 60px var(--neon-orange);
+            background: rgba(0,0,0,0.9);
+            padding: 12px 18px;
+            border: 4px solid var(--neon-yellow);
             margin-bottom: 8px;
-            background: rgba(0,0,0,0.7);
-            padding: 10px 15px;
-            border: 3px solid var(--neon-yellow);
-            border-radius: 8px;
+            animation: textPulse 0.3s ease-in-out infinite alternate;
+        }
+
+        @keyframes textPulse {
+            from { transform: scale(1); }
+            to { transform: scale(1.05); }
         }
 
         .music-hint-arrow {
-            font-size: 48px;
+            font-size: 50px;
             color: var(--neon-pink);
-            text-shadow: 0 0 15px var(--neon-pink), 0 0 30px var(--neon-pink), 0 0 45px var(--neon-cyan);
+            text-shadow: 0 0 20px var(--neon-pink), 0 0 40px var(--neon-pink);
             animation: arrowBounce 0.3s ease-in-out infinite alternate;
+            transform: rotate(180deg);
         }
 
-        @keyframes hintFlash {
-            from { opacity: 1; transform: scale(1); }
-            to { opacity: 0.5; transform: scale(1.05); }
+        @keyframes hintFlashAndFade {
+            0% { opacity: 1; }
+            10% { opacity: 0.3; }
+            20% { opacity: 1; }
+            30% { opacity: 0.3; }
+            40% { opacity: 1; }
+            50% { opacity: 0.3; }
+            60% { opacity: 1; }
+            70% { opacity: 0.3; }
+            80% { opacity: 1; }
+            90% { opacity: 0.5; }
+            100% { opacity: 0; visibility: hidden; }
         }
 
         @keyframes arrowBounce {
-            from { transform: translateY(0); }
-            to { transform: translateY(10px); }
+            from { transform: translateY(0) rotate(180deg); }
+            to { transform: translateY(-8px) rotate(180deg); }
         }
+
+        /* Hide old music hint position */
+        /* Old music hint styles removed - using new integrated version */
     </style>
 </head>
 <body>
@@ -517,20 +624,31 @@
         </div>
     </div>
 
-    <!-- Music Control Hint -->
-    <div class="music-hint" id="musicHint">
-        <span class="music-hint-text">MUSIC</span>
-        <span class="music-hint-arrow">↓</span>
+    <!-- COIN SLOT - Left side -->
+    <div class="coin-slot-container">
+        <div class="coin-slot">
+            <span class="coin-slot-label">COIN</span>
+            <div class="coin-opening"></div>
+            <span class="coin-return-label">RETURN</span>
+            <div class="coin-return"></div>
+        </div>
+        <div class="insert-coin-text">>>INSERT COIN<<</div>
     </div>
 
-    <!-- Pixelated Light Switch for Music -->
-    <div class="light-switch on" id="musicSwitch" title="Toggle Music">
-        <div class="switch-plate">
-            <span class="switch-label on">ON</span>
-            <div class="switch-slot">
-                <div class="switch-lever"></div>
+    <!-- MUSIC SWITCH - Right side -->
+    <div class="music-switch-container">
+        <div class="light-switch on" id="musicSwitch" title="Toggle Music">
+            <div class="switch-plate">
+                <span class="switch-label on">ON</span>
+                <div class="switch-slot">
+                    <div class="switch-lever"></div>
+                </div>
+                <span class="switch-label off">OFF</span>
             </div>
-            <span class="switch-label off">OFF</span>
+        </div>
+        <div class="music-hint" id="musicHint">
+            <span class="music-hint-text">🎵 MUSIC</span>
+            <span class="music-hint-arrow">↓</span>
         </div>
     </div>
 
@@ -605,9 +723,6 @@
             if (isPlaying) {
                 bgMusic.play();
             }
-            // Hide the music hint after music starts
-            const hint = document.getElementById('musicHint');
-            if (hint) hint.style.opacity = '0';
         }
         document.addEventListener('click', initMusic);
         document.addEventListener('keydown', initMusic);
@@ -636,12 +751,6 @@
                 isPlaying = true;
             }
         });
-
-        // Hide music hint after 4 seconds
-        setTimeout(() => {
-            const hint = document.getElementById('musicHint');
-            if (hint) hint.style.opacity = '0';
-        }, 4000);
     </script>
 </body>
 </html>
