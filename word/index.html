@@ -363,7 +363,7 @@
             font-size: 3rem;
             z-index: 30;
             filter: drop-shadow(0 0 15px var(--neon-gold));
-            transition: left 0.1s ease-out;
+            /* Removed movement transition for zero-lag responsiveness */
         }
 
         .floating-item {
@@ -1109,7 +1109,7 @@
 
         // Game State
         // Game State
-        let state = { user: '', score: 0, lives: 3, level: 1, round: 1, isPaused: false, isPlaying: false, target: null, items: [], activeLasers: [], canShoot: true, shootCooldown: 300, challengeActive: false, usedChallenges: [], musicOn: true, audio: null, letterSpeed: 8000, shipX: 0, spawnInterval: null, spawnRate: 2000, currentOptions: [], targetMissed: false, lastLane: -1 };
+        let state = { user: '', score: 0, lives: 3, level: 1, round: 1, isPaused: false, isPlaying: false, target: null, items: [], activeLasers: [], canShoot: true, shootCooldown: 300, challengeActive: false, usedChallenges: [], musicOn: true, audio: null, letterSpeed: 8000, shipX: 0, spawnInterval: null, spawnRate: 2000, currentOptions: [], targetMissed: false, lastLane: -1, gameLoopId: null };
 
         const $ = id => document.getElementById(id);
         const shuffle = arr => { const a = [...arr]; for (let i = a.length - 1; i > 0; i--) { const j = Math.floor(Math.random() * (i + 1));[a[i], a[j]] = [a[j], a[i]]; } return a; };
@@ -1310,8 +1310,8 @@
             do { lane = Math.floor(Math.random() * lanes); } while (lane === state.lastLane);
             state.lastLane = lane;
 
-            const x = lane * laneWidth + (laneWidth - item.offsetWidth) / 2;
-            item.style.left = Math.max(0, Math.min(areaRect.width - 150, x)) + 'px';
+            const x = lane * laneWidth + (laneWidth - (val.length * 8 + 40)) / 2;
+            item.style.left = Math.max(0, Math.min(areaRect.width - 120, x)) + 'px';
             item.style.top = '-70px';
             item.dataset.startTime = Date.now();
             item.dataset.duration = state.letterSpeed;
@@ -1443,14 +1443,14 @@
 
         function gameLoop() {
             if (!state.isPlaying || state.isPaused) {
-                if (state.isPlaying) requestAnimationFrame(gameLoop);
+                if (state.isPlaying) state.gameLoopId = requestAnimationFrame(gameLoop);
                 return;
             }
 
             updateItems();
             updateLasers();
 
-            if (state.isPlaying) requestAnimationFrame(gameLoop);
+            if (state.isPlaying) state.gameLoopId = requestAnimationFrame(gameLoop);
         }
 
         function spawnChallenge() {
@@ -1657,6 +1657,7 @@
 
         function endGame() {
             state.isPlaying = false;
+            if (state.gameLoopId) cancelAnimationFrame(state.gameLoopId);
             if (state.spawnInterval) clearInterval(state.spawnInterval);
             clearItems();
             state.audio && state.audio.pause();
@@ -1690,7 +1691,8 @@
             $('spaceship').style.transform = 'none';
 
             generateRound();
-            requestAnimationFrame(gameLoop);
+            if (state.gameLoopId) cancelAnimationFrame(state.gameLoopId);
+            state.gameLoopId = requestAnimationFrame(gameLoop);
         }
 
         // Event Listeners
@@ -1721,6 +1723,7 @@
         $('quitBtn').addEventListener('click', () => {
             state.isPlaying = false;
             state.isPaused = false;
+            if (state.gameLoopId) cancelAnimationFrame(state.gameLoopId);
             if (state.spawnInterval) clearInterval(state.spawnInterval);
             $('pauseOverlay').classList.add('hidden');
             clearItems();
