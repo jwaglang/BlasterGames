@@ -979,11 +979,13 @@
             <p class="final-score">SCORE: <span id="winScore">0</span></p>
             <div class="stars-earned" id="winStars"></div>
             <button class="btn btn-gold" id="playAgainBtn">PLAY AGAIN</button>
+            <button class="btn btn-small btn-gold" id="winMenuBtn">MENU</button>
         </div>
         <div class="screen hidden" id="gameOver">
             <h2 style="color: var(--neon-pink); font-size: clamp(1.5rem, 4vw, 2.5rem);">GAME OVER</h2>
             <p class="final-score">SCORE: <span id="finalScore">0</span></p>
             <button class="btn btn-gold" id="retryBtn">TRY AGAIN</button>
+            <button class="btn btn-small btn-gold" id="gameOverMenuBtn">MENU</button>
         </div>
     </div>
     <script>
@@ -1107,7 +1109,7 @@
 
         // Game State
         // Game State
-        let state = { user: '', score: 0, lives: 3, level: 1, round: 1, isPaused: false, isPlaying: false, target: null, items: [], activeLasers: [], canShoot: true, shootCooldown: 300, challengeActive: false, usedChallenges: [], musicOn: true, audio: null, letterSpeed: 8000, shipX: 0, spawnInterval: null, spawnRate: 2000, currentOptions: [] };
+        let state = { user: '', score: 0, lives: 3, level: 1, round: 1, isPaused: false, isPlaying: false, target: null, items: [], activeLasers: [], canShoot: true, shootCooldown: 300, challengeActive: false, usedChallenges: [], musicOn: true, audio: null, letterSpeed: 8000, shipX: 0, spawnInterval: null, spawnRate: 2000, currentOptions: [], targetMissed: false, lastLane: -1 };
 
         const $ = id => document.getElementById(id);
         const shuffle = arr => { const a = [...arr]; for (let i = a.length - 1; i > 0; i--) { const j = Math.floor(Math.random() * (i + 1));[a[i], a[j]] = [a[j], a[i]]; } return a; };
@@ -1214,22 +1216,27 @@
             clearItems();
             const lv = state.level;
 
+            $('targetLabel').textContent = LEVELS[lv].label;
+
             if (lv === 5) {
+                $('targetWord').textContent = 'LISTEN...';
                 $('dictationArea').classList.remove('hidden');
                 $('gameArea').style.display = 'none';
                 $('shootHint').style.display = 'none';
-                const w = SAT_WORDS[Math.floor(Math.random() * SAT_WORDS.length)];
-                state.target = { answer: w.word.toLowerCase(), word: w.word };
+                // Pick a word from any root
+                const root = ROOTS[Math.floor(Math.random() * ROOTS.length)];
+                const word = root.words[Math.floor(Math.random() * root.words.length)];
+                state.target = { answer: word.toLowerCase(), word: word };
                 $('dictationPrompt').textContent = '🔊 Listen & Spell';
                 $('dictationInput').value = '';
-                setTimeout(() => speak(w.word), 500);
+                setTimeout(() => speak(word), 500);
                 return;
             }
 
             $('dictationArea').classList.add('hidden');
             $('gameArea').style.display = 'block';
             $('shootHint').style.display = 'block';
-            $('targetLabel').textContent = LEVELS[lv].label;
+            state.targetMissed = false;
 
             let opts;
             if (lv === 1) {
@@ -1277,7 +1284,13 @@
             // Then continue on interval
             state.spawnInterval = setInterval(() => {
                 if (!state.isPaused && state.isPlaying) {
-                    const opt = state.currentOptions[Math.floor(Math.random() * state.currentOptions.length)];
+                    let opt;
+                    if (state.targetMissed) {
+                        opt = state.target.answer;
+                        state.targetMissed = false;
+                    } else {
+                        opt = state.currentOptions[Math.floor(Math.random() * state.currentOptions.length)];
+                    }
                     spawnOneItem(opt);
                 }
             }, state.spawnRate);
@@ -1291,8 +1304,14 @@
             item.textContent = val;
             item.dataset.value = val;
 
-            const x = Math.random() * (areaRect.width - 180);
-            item.style.left = x + 'px';
+            const lanes = 5;
+            const laneWidth = (areaRect.width - 60) / lanes;
+            let lane;
+            do { lane = Math.floor(Math.random() * lanes); } while (lane === state.lastLane);
+            state.lastLane = lane;
+
+            const x = lane * laneWidth + (laneWidth - item.offsetWidth) / 2;
+            item.style.left = Math.max(0, Math.min(areaRect.width - 150, x)) + 'px';
             item.style.top = '-70px';
             item.dataset.startTime = Date.now();
             item.dataset.duration = state.letterSpeed;
@@ -1320,7 +1339,10 @@
                 const elapsed = Date.now() - startTime;
                 const progress = Math.min(1.1, elapsed / duration); // Allow slightly beyond 1
 
-                if (progress >= 1.05) {
+                if (progress >= 1.0) {
+                    if (item.value === state.target.answer && !el.classList.contains('hit')) {
+                        state.targetMissed = true;
+                    }
                     el.remove();
                     return false;
                 }
@@ -1330,11 +1352,17 @@
 
                 // Only check collision with ship when item is near the bottom
                 if (progress > 0.8) {
+                    const shipHitbox = {
+                        left: shipRect.left + shipRect.width * 0.25,
+                        right: shipRect.right - shipRect.width * 0.25,
+                        top: shipRect.top + shipRect.height * 0.25,
+                        bottom: shipRect.bottom - shipRect.height * 0.25
+                    };
                     const itemRect = el.getBoundingClientRect();
-                    const collision = !(itemRect.right < shipRect.left ||
-                        itemRect.left > shipRect.right ||
-                        itemRect.bottom < shipRect.top ||
-                        itemRect.top > shipRect.bottom);
+                    const collision = !(itemRect.right < shipHitbox.left ||
+                        itemRect.left > shipHitbox.right ||
+                        itemRect.bottom < shipHitbox.top ||
+                        itemRect.top > shipHitbox.bottom);
 
                     if (collision && !el.classList.contains('hit')) {
                         // Collided with ship
@@ -1590,7 +1618,7 @@
             if (state.spawnInterval) clearInterval(state.spawnInterval);
             state.round++;
             if (state.round > 10) { completeLevel(); }
-            else { setTimeout(generateRound, 1000); }
+            else { setTimeout(generateRound, 2000); }
         }
 
         function completeLevel() {
@@ -1717,6 +1745,8 @@
         });
         $('playAgainBtn').addEventListener('click', startGame);
         $('retryBtn').addEventListener('click', startGame);
+        $('winMenuBtn').addEventListener('click', () => showScreen('titleScreen'));
+        $('gameOverMenuBtn').addEventListener('click', () => showScreen('titleScreen'));
         $('musicToggle').addEventListener('click', toggleMusic);
         $('speakBtn').addEventListener('click', () => speak($('targetWord').textContent));
         $('dictationSubmitBtn').addEventListener('click', handleDictation);
