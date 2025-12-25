@@ -136,6 +136,10 @@
             display: none;
         }
 
+        .hidden {
+            display: none !important;
+        }
+
         .game-title {
             font-family: 'Press Start 2P', cursive;
             font-size: clamp(1.1rem, 3.5vw, 1.8rem);
@@ -302,6 +306,234 @@
             background: rgba(255, 215, 0, 0.2);
         }
 
+        /* === SWORD POWER TIMER === */
+        .timer-sword {
+            position: absolute;
+            top: 50px;
+            left: 10px;
+            display: flex;
+            align-items: center;
+            gap: 8px;
+            z-index: 55;
+            background: rgba(0, 0, 0, 0.6);
+            padding: 5px 8px;
+            border-radius: 6px;
+            border: 2px solid var(--neon-gold);
+            box-shadow: 0 0 10px rgba(255, 215, 0, 0.3);
+            transform: scale(0.7);
+            transform-origin: top left;
+        }
+
+        .timer-sword .sword-icon {
+            font-size: clamp(1.4rem, 3vw, 1.8rem);
+            transform: rotate(-45deg);
+            filter: drop-shadow(0 0 6px var(--neon-gold));
+        }
+
+        .timer-sword .power-meter {
+            display: flex;
+            flex-direction: column;
+            gap: 3px;
+        }
+
+        .timer-sword .power-label {
+            font-family: 'Press Start 2P', cursive;
+            font-size: clamp(0.3rem, 0.8vw, 0.35rem);
+            color: var(--neon-silver);
+            text-shadow: 0 0 5px var(--neon-silver);
+        }
+
+        .timer-sword .power-bar {
+            display: flex;
+            gap: 2px;
+        }
+
+        .timer-sword .power-segment {
+            width: clamp(8px, 2vw, 11px);
+            height: clamp(14px, 3vw, 20px);
+            background: #1a1a2e;
+            border: 2px solid #444;
+            border-radius: 2px;
+            transition: all 0.2s ease;
+        }
+
+        .timer-sword .power-segment.active {
+            background: linear-gradient(180deg, #ffd700 0%, #ff8800 100%);
+            border-color: #ffd700;
+            box-shadow: 0 0 10px rgba(255, 215, 0, 0.6);
+        }
+
+        .timer-sword .power-segment.warning {
+            background: linear-gradient(180deg, #ff8800 0%, #ff4400 100%);
+            border-color: #ff6600;
+            box-shadow: 0 0 10px rgba(255, 102, 0, 0.6);
+        }
+
+        .timer-sword .power-segment.critical {
+            background: linear-gradient(180deg, #ff0000 0%, #aa0000 100%);
+            border-color: #ff0000;
+            box-shadow: 0 0 12px rgba(255, 0, 0, 0.8);
+            animation: segmentPulse 0.3s infinite;
+        }
+
+        @keyframes segmentPulse {
+            0%, 100% { opacity: 1; transform: scaleY(1); }
+            50% { opacity: 0.6; transform: scaleY(0.95); }
+        }
+
+        .timer-sword .power-time {
+            font-family: 'Press Start 2P', cursive;
+            font-size: clamp(0.5rem, 1.2vw, 0.65rem);
+            color: var(--neon-gold);
+            text-shadow: 0 0 8px var(--neon-gold);
+            text-align: right;
+            min-width: 35px;
+        }
+
+        .timer-sword .power-time.warning {
+            color: var(--neon-orange);
+            text-shadow: 0 0 8px var(--neon-orange);
+        }
+
+        .timer-sword .power-time.critical {
+            color: #ff0000;
+            text-shadow: 0 0 10px #ff0000;
+            animation: timePulse 0.3s infinite;
+        }
+
+        @keyframes timePulse {
+            0%, 100% { opacity: 1; }
+            50% { opacity: 0.5; }
+        }
+
+        .penalty-indicator {
+            position: absolute;
+            top: 130px;
+            left: 15px;
+            display: flex;
+            flex-direction: column;
+            gap: 6px;
+            z-index: 55;
+        }
+
+        .penalty-badge {
+            font-family: 'Press Start 2P', cursive;
+            font-size: clamp(0.3rem, 0.9vw, 0.4rem);
+            padding: 6px 10px;
+            border-radius: 4px;
+            animation: badgeGlow 1.5s infinite;
+        }
+
+        .penalty-badge.danger-mode {
+            background: rgba(255, 100, 0, 0.3);
+            border: 2px solid #ff6600;
+            color: #ffaa00;
+            text-shadow: 0 0 5px #ff6600;
+        }
+
+        .penalty-badge.panic-mode {
+            background: rgba(255, 0, 0, 0.3);
+            border: 2px solid #ff0000;
+            color: #ff4444;
+            text-shadow: 0 0 5px #ff0000;
+        }
+
+        @keyframes badgeGlow {
+            0%, 100% { opacity: 0.9; }
+            50% { opacity: 1; box-shadow: 0 0 15px currentColor; }
+        }
+
+        .timeout-flash {
+            position: fixed;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            pointer-events: none;
+            z-index: 999;
+            animation: flashOut 0.6s forwards;
+        }
+
+        .timeout-flash.danger {
+            background: rgba(255, 100, 0, 0.5);
+        }
+
+        .timeout-flash.panic {
+            background: rgba(255, 0, 0, 0.5);
+        }
+
+        .timeout-flash.death {
+            background: rgba(100, 0, 0, 0.7);
+        }
+
+        @keyframes flashOut {
+            0% { opacity: 1; }
+            100% { opacity: 0; }
+        }
+
+        .mode-announce {
+            position: absolute;
+            top: 50%;
+            left: 50%;
+            transform: translate(-50%, -50%);
+            font-family: 'Press Start 2P', cursive;
+            font-size: clamp(0.8rem, 3vw, 1.4rem);
+            text-align: center;
+            z-index: 200;
+            white-space: nowrap;
+            animation: modeAnnounce 2.5s forwards;
+            padding: 15px 25px;
+            border-radius: 8px;
+        }
+
+        .mode-announce.danger {
+            color: #ffcc00;
+            text-shadow: 0 0 10px #ff6600, 0 0 20px #ff6600, 3px 3px 0 #000;
+            background: rgba(255, 100, 0, 0.2);
+            border: 3px solid #ff6600;
+            box-shadow: 0 0 30px rgba(255, 100, 0, 0.5);
+        }
+
+        .mode-announce.panic {
+            color: #ff4444;
+            text-shadow: 0 0 10px #ff0000, 0 0 20px #ff0000, 3px 3px 0 #000;
+            background: rgba(255, 0, 0, 0.2);
+            border: 3px solid #ff0000;
+            box-shadow: 0 0 30px rgba(255, 0, 0, 0.5);
+            animation: modeAnnouncePanic 2.5s forwards;
+        }
+
+        .mode-announce.death {
+            color: #ffffff;
+            text-shadow: 0 0 10px #ff0000, 0 0 30px #aa0000, 3px 3px 0 #000;
+            background: rgba(50, 0, 0, 0.8);
+            border: 3px solid #aa0000;
+        }
+
+        @keyframes modeAnnounce {
+            0% { transform: translate(-50%, -50%) scale(0.3); opacity: 0; }
+            15% { transform: translate(-50%, -50%) scale(1.2); opacity: 1; }
+            25% { transform: translate(-50%, -50%) scale(1); }
+            75% { transform: translate(-50%, -50%) scale(1); opacity: 1; }
+            100% { transform: translate(-50%, -50%) scale(1); opacity: 0; }
+        }
+
+        @keyframes modeAnnouncePanic {
+            0% { transform: translate(-50%, -50%) scale(0.3) rotate(-5deg); opacity: 0; }
+            10% { transform: translate(-50%, -50%) scale(1.3) rotate(3deg); opacity: 1; }
+            20% { transform: translate(-50%, -50%) scale(1) rotate(-2deg); }
+            30% { transform: translate(-50%, -50%) scale(1.05) rotate(2deg); }
+            40% { transform: translate(-50%, -50%) scale(1) rotate(0deg); }
+            75% { transform: translate(-50%, -50%) scale(1); opacity: 1; }
+            100% { transform: translate(-50%, -50%) scale(1); opacity: 0; }
+        }
+
+        .mode-subtitle {
+            font-size: clamp(0.4rem, 1.5vw, 0.7rem);
+            margin-top: 8px;
+            opacity: 0.9;
+        }
+
         .target-area {
             position: absolute;
             top: 55px;
@@ -376,6 +608,13 @@
             text-align: center;
             user-select: none;
             pointer-events: auto;
+        }
+
+        /* Smaller text for Level 4 definitions */
+        .floating-item.definition-item {
+            font-size: clamp(0.9rem, 2.5vw, 1.3rem);
+            max-width: 180px;
+            line-height: 1.2;
         }
 
         .floating-item:hover {
@@ -949,6 +1188,26 @@
         </div>
         <button class="music-toggle" id="musicToggle">🔊</button>
         <button class="menu-btn" id="menuBtn">MENU</button>
+        <div class="timer-sword hidden" id="timerSword">
+            <span class="sword-icon">⚔️</span>
+            <div class="power-meter">
+                <span class="power-label">TIME</span>
+                <div class="power-bar" id="powerBar">
+                    <div class="power-segment active"></div>
+                    <div class="power-segment active"></div>
+                    <div class="power-segment active"></div>
+                    <div class="power-segment active"></div>
+                    <div class="power-segment active"></div>
+                    <div class="power-segment active"></div>
+                    <div class="power-segment active"></div>
+                    <div class="power-segment active"></div>
+                    <div class="power-segment active"></div>
+                    <div class="power-segment active"></div>
+                </div>
+                <span class="power-time" id="powerTime">30s</span>
+            </div>
+        </div>
+        <div class="penalty-indicator" id="penaltyIndicator"></div>
         <div class="target-area">
             <div class="target-label" id="targetLabel">🎯 SHOOT THE MEANING 🎯</div>
             <div class="target-word" id="targetWord">DICT</div>
@@ -956,7 +1215,7 @@
         </div>
         <div class="game-area" id="gameArea"></div>
         <div class="shoot-hint" id="shootHint">TAP TO SHOOT! ⚔️</div>
-        <div class="spaceship" id="spaceship">🛡️</div>
+        <div class="spaceship" id="spaceship">🏹</div>
         <div class="dictation-area hidden" id="dictationArea">
             <div class="dictation-prompt" id="dictationPrompt">🔊 Listen & Spell</div>
             <input type="text" class="dictation-input" id="dictationInput" placeholder="Type the word...">
@@ -1008,8 +1267,9 @@
         </div>
     </div>
     <script>
-        // Word Data
+        // Word Data - 100 Latin/Greek Roots
         const ROOTS = [
+            // Original 25
             { root: 'dict', meaning: 'to say/speak', words: ['dictate', 'predict', 'verdict', 'contradict'] },
             { root: 'scrib', meaning: 'to write', words: ['scribble', 'describe', 'prescribe', 'transcribe'] },
             { root: 'port', meaning: 'to carry', words: ['transport', 'export', 'import', 'portable'] },
@@ -1035,9 +1295,89 @@
             { root: 'pend', meaning: 'to hang/weigh', words: ['pendant', 'suspend', 'depend', 'pending'] },
             { root: 'vers/vert', meaning: 'to turn', words: ['reverse', 'convert', 'diverse', 'revert'] },
             { root: 'voc/vok', meaning: 'voice/call', words: ['vocal', 'invoke', 'provoke', 'advocate'] },
+            // 25 more
+            { root: 'act', meaning: 'to do/drive', words: ['action', 'react', 'activate', 'actor'] },
+            { root: 'anim', meaning: 'life/spirit', words: ['animal', 'animate', 'unanimous', 'animosity'] },
+            { root: 'ann/enn', meaning: 'year', words: ['annual', 'anniversary', 'perennial', 'centennial'] },
+            { root: 'aqua', meaning: 'water', words: ['aquarium', 'aquatic', 'aqueduct', 'aquamarine'] },
+            { root: 'arch', meaning: 'chief/ruler', words: ['monarch', 'anarchy', 'architect', 'patriarch'] },
+            { root: 'art', meaning: 'skill/craft', words: ['artist', 'artifact', 'artificial', 'artisan'] },
+            { root: 'aster', meaning: 'star', words: ['asteroid', 'astronaut', 'astronomy', 'disaster'] },
+            { root: 'bell', meaning: 'war', words: ['rebel', 'bellicose', 'belligerent', 'antebellum'] },
+            { root: 'cap/cept', meaning: 'to take/seize', words: ['capture', 'accept', 'capable', 'intercept'] },
+            { root: 'carn', meaning: 'flesh/meat', words: ['carnal', 'carnival', 'carnivore', 'incarnate'] },
+            { root: 'ced/cess', meaning: 'to go/yield', words: ['proceed', 'access', 'exceed', 'concede'] },
+            { root: 'cent', meaning: 'hundred', words: ['century', 'centipede', 'percent', 'centennial'] },
+            { root: 'cide', meaning: 'to kill', words: ['homicide', 'suicide', 'pesticide', 'genocide'] },
+            { root: 'circum', meaning: 'around', words: ['circumference', 'circumstance', 'circumvent', 'circus'] },
+            { root: 'civ', meaning: 'citizen', words: ['civil', 'civilian', 'civilization', 'civic'] },
+            { root: 'claim/clam', meaning: 'to shout', words: ['exclaim', 'proclaim', 'acclaim', 'clamor'] },
+            { root: 'clar', meaning: 'clear', words: ['clarify', 'declare', 'clarity', 'clarinet'] },
+            { root: 'cogn', meaning: 'to know', words: ['recognize', 'cognition', 'incognito', 'cognitive'] },
+            { root: 'corp', meaning: 'body', words: ['corpse', 'corporation', 'incorporate', 'corporal'] },
+            { root: 'cosm', meaning: 'universe/order', words: ['cosmos', 'cosmic', 'cosmopolitan', 'microcosm'] },
+            { root: 'crat/cracy', meaning: 'rule/power', words: ['democracy', 'aristocrat', 'bureaucracy', 'autocrat'] },
+            { root: 'crypt', meaning: 'hidden', words: ['crypt', 'cryptic', 'encrypt', 'cryptography'] },
+            { root: 'cur/curs', meaning: 'to run', words: ['current', 'occur', 'cursor', 'excursion'] },
+            { root: 'dem', meaning: 'people', words: ['democracy', 'epidemic', 'demographic', 'endemic'] },
+            { root: 'dent', meaning: 'tooth', words: ['dentist', 'dental', 'denture', 'indent'] },
+            // 25 more
+            { root: 'derm', meaning: 'skin', words: ['dermatology', 'epidermis', 'hypodermic', 'taxidermy'] },
+            { root: 'div', meaning: 'to separate', words: ['divide', 'divorce', 'individual', 'dividend'] },
+            { root: 'doc/doct', meaning: 'to teach', words: ['doctor', 'doctrine', 'document', 'docile'] },
+            { root: 'dom', meaning: 'house/master', words: ['domain', 'dominate', 'domestic', 'predominant'] },
+            { root: 'dorm', meaning: 'to sleep', words: ['dormitory', 'dormant', 'dormer'] },
+            { root: 'dox', meaning: 'belief/opinion', words: ['orthodox', 'paradox', 'doxology', 'heterodox'] },
+            { root: 'dur', meaning: 'to last/hard', words: ['durable', 'endure', 'duration', 'during'] },
+            { root: 'dyn', meaning: 'power', words: ['dynamic', 'dynasty', 'dynamite', 'dynamo'] },
+            { root: 'equ', meaning: 'equal', words: ['equal', 'equation', 'equator', 'equivalent'] },
+            { root: 'err', meaning: 'to wander', words: ['error', 'errant', 'erratic', 'aberrant'] },
+            { root: 'fab/fam', meaning: 'to speak', words: ['fable', 'famous', 'infamous', 'fabulous'] },
+            { root: 'fac/fect', meaning: 'to make/do', words: ['factory', 'effect', 'perfect', 'defect'] },
+            { root: 'fer', meaning: 'to carry/bear', words: ['transfer', 'refer', 'prefer', 'infer'] },
+            { root: 'fid', meaning: 'faith/trust', words: ['fidelity', 'confident', 'confide', 'infidel'] },
+            { root: 'fin', meaning: 'end/limit', words: ['finish', 'final', 'define', 'infinite'] },
+            { root: 'fix', meaning: 'to fasten', words: ['prefix', 'suffix', 'fixture', 'affix'] },
+            { root: 'flam', meaning: 'fire', words: ['flame', 'flammable', 'inflame', 'inflammatory'] },
+            { root: 'flex/flect', meaning: 'to bend', words: ['flexible', 'reflect', 'deflect', 'inflection'] },
+            { root: 'flu/flux', meaning: 'to flow', words: ['fluid', 'influence', 'fluctuate', 'affluent'] },
+            { root: 'form', meaning: 'shape', words: ['form', 'reform', 'transform', 'conform'] },
+            { root: 'fort', meaning: 'strong', words: ['fort', 'fortress', 'fortify', 'comfort'] },
+            { root: 'frag/fract', meaning: 'to break', words: ['fragile', 'fraction', 'fracture', 'fragment'] },
+            { root: 'fug', meaning: 'to flee', words: ['fugitive', 'refuge', 'centrifuge', 'fugue'] },
+            { root: 'funct', meaning: 'to perform', words: ['function', 'malfunction', 'defunct', 'functional'] },
+            { root: 'gen', meaning: 'birth/race', words: ['generate', 'gene', 'generous', 'genesis'] },
+            // 25 more
+            { root: 'grad/gress', meaning: 'to step/go', words: ['grade', 'progress', 'graduate', 'congress'] },
+            { root: 'gram', meaning: 'to write', words: ['grammar', 'diagram', 'program', 'telegram'] },
+            { root: 'grat', meaning: 'pleasing', words: ['gratitude', 'grateful', 'congratulate', 'gratuity'] },
+            { root: 'grav', meaning: 'heavy', words: ['gravity', 'grave', 'aggravate', 'gravitate'] },
+            { root: 'hab', meaning: 'to have/hold', words: ['habit', 'inhabit', 'habitat', 'prohibit'] },
+            { root: 'hemo', meaning: 'blood', words: ['hemorrhage', 'hemoglobin', 'hemophilia', 'hematology'] },
+            { root: 'herb', meaning: 'plant/grass', words: ['herb', 'herbivore', 'herbal', 'herbicide'] },
+            { root: 'hydr', meaning: 'water', words: ['hydrate', 'hydraulic', 'hydrogen', 'dehydrate'] },
+            { root: 'hypn', meaning: 'sleep', words: ['hypnosis', 'hypnotic', 'hypnotize', 'hypnotism'] },
+            { root: 'jac/ject', meaning: 'to throw', words: ['eject', 'inject', 'object', 'trajectory'] },
+            { root: 'jud', meaning: 'to judge', words: ['judge', 'judicial', 'prejudice', 'judgment'] },
+            { root: 'junct', meaning: 'to join', words: ['junction', 'conjunction', 'disjunction', 'adjunct'] },
+            { root: 'jur', meaning: 'law/to swear', words: ['jury', 'justice', 'perjury', 'jurisdiction'] },
+            { root: 'juven', meaning: 'young', words: ['juvenile', 'rejuvenate', 'juvenilia'] },
+            { root: 'lab', meaning: 'to work', words: ['labor', 'laboratory', 'collaborate', 'elaborate'] },
+            { root: 'lect/leg', meaning: 'to read/choose', words: ['lecture', 'collect', 'elect', 'legible'] },
+            { root: 'liber', meaning: 'free', words: ['liberty', 'liberal', 'liberate', 'libertarian'] },
+            { root: 'ling', meaning: 'tongue/language', words: ['lingual', 'bilingual', 'linguist', 'linguistics'] },
+            { root: 'lit', meaning: 'letter', words: ['literal', 'literature', 'literate', 'illiterate'] },
+            { root: 'loc', meaning: 'place', words: ['local', 'locate', 'location', 'allocate'] },
+            { root: 'loqu/loc', meaning: 'to speak', words: ['eloquent', 'loquacious', 'colloquial', 'soliloquy'] },
+            { root: 'luc/lum', meaning: 'light', words: ['lucid', 'illuminate', 'luminous', 'translucent'] },
+            { root: 'magn', meaning: 'great/large', words: ['magnify', 'magnificent', 'magnitude', 'magnate'] },
+            { root: 'man', meaning: 'hand', words: ['manual', 'manufacture', 'manuscript', 'manipulate'] },
+            { root: 'mar', meaning: 'sea', words: ['marine', 'maritime', 'submarine', 'mariner'] },
         ];
 
+        // 200 SAT/GRE Words
         const SAT_WORDS = [
+            // Original 25
             { word: 'ubiquitous', origin: 'Latin', definition: 'present everywhere at once' },
             { word: 'ephemeral', origin: 'Greek', definition: 'lasting for a very short time' },
             { word: 'sycophant', origin: 'Greek', definition: 'a person who flatters for gain' },
@@ -1063,6 +1403,188 @@
             { word: 'capricious', origin: 'Italian', definition: 'given to sudden mood changes' },
             { word: 'deferential', origin: 'Latin', definition: 'showing respect' },
             { word: 'equivocal', origin: 'Latin', definition: 'ambiguous, open to interpretation' },
+            // 25 more (26-50)
+            { word: 'fastidious', origin: 'Latin', definition: 'very attentive to detail' },
+            { word: 'garrulous', origin: 'Latin', definition: 'excessively talkative' },
+            { word: 'hapless', origin: 'Old Norse', definition: 'unfortunate, unlucky' },
+            { word: 'iconoclast', origin: 'Greek', definition: 'one who attacks traditions' },
+            { word: 'judicious', origin: 'Latin', definition: 'having good judgment' },
+            { word: 'kinetic', origin: 'Greek', definition: 'relating to motion' },
+            { word: 'laconic', origin: 'Greek', definition: 'using very few words' },
+            { word: 'magnanimous', origin: 'Latin', definition: 'generous and forgiving' },
+            { word: 'nascent', origin: 'Latin', definition: 'just beginning to develop' },
+            { word: 'obsequious', origin: 'Latin', definition: 'overly obedient or attentive' },
+            { word: 'panacea', origin: 'Greek', definition: 'a cure for all problems' },
+            { word: 'quixotic', origin: 'Spanish', definition: 'extremely idealistic' },
+            { word: 'reticent', origin: 'Latin', definition: 'not revealing thoughts easily' },
+            { word: 'sagacious', origin: 'Latin', definition: 'having keen mental discernment' },
+            { word: 'taciturn', origin: 'Latin', definition: 'reserved, saying little' },
+            { word: 'ubiquitous', origin: 'Latin', definition: 'present everywhere' },
+            { word: 'vacillate', origin: 'Latin', definition: 'to waver between options' },
+            { word: 'wanton', origin: 'Old English', definition: 'deliberate and unprovoked' },
+            { word: 'xenophobia', origin: 'Greek', definition: 'fear of foreigners' },
+            { word: 'yoke', origin: 'Old English', definition: 'to join or link together' },
+            { word: 'zephyr', origin: 'Greek', definition: 'a gentle, mild breeze' },
+            { word: 'acerbic', origin: 'Latin', definition: 'sharp and critical' },
+            { word: 'bellicose', origin: 'Latin', definition: 'eager to fight' },
+            { word: 'cogent', origin: 'Latin', definition: 'clear and convincing' },
+            { word: 'diatribe', origin: 'Greek', definition: 'a bitter verbal attack' },
+            // 25 more (51-75)
+            { word: 'ebullient', origin: 'Latin', definition: 'cheerful and full of energy' },
+            { word: 'facetious', origin: 'Latin', definition: 'treating serious issues lightly' },
+            { word: 'germane', origin: 'Latin', definition: 'relevant to the subject' },
+            { word: 'hegemony', origin: 'Greek', definition: 'dominance over others' },
+            { word: 'ignominious', origin: 'Latin', definition: 'deserving of shame' },
+            { word: 'jejune', origin: 'Latin', definition: 'naive and simplistic' },
+            { word: 'kowtow', origin: 'Chinese', definition: 'to act in a submissive way' },
+            { word: 'lugubrious', origin: 'Latin', definition: 'looking sad or gloomy' },
+            { word: 'mendacious', origin: 'Latin', definition: 'not telling the truth' },
+            { word: 'nefarious', origin: 'Latin', definition: 'wicked or criminal' },
+            { word: 'obstreperous', origin: 'Latin', definition: 'noisy and difficult to control' },
+            { word: 'parsimonious', origin: 'Latin', definition: 'extremely unwilling to spend' },
+            { word: 'quotidian', origin: 'Latin', definition: 'occurring every day' },
+            { word: 'rancorous', origin: 'Latin', definition: 'characterized by bitterness' },
+            { word: 'surreptitious', origin: 'Latin', definition: 'kept secret, stealthy' },
+            { word: 'truculent', origin: 'Latin', definition: 'eager to fight, aggressive' },
+            { word: 'unctuous', origin: 'Latin', definition: 'excessively flattering' },
+            { word: 'venal', origin: 'Latin', definition: 'susceptible to bribery' },
+            { word: 'winsome', origin: 'Old English', definition: 'attractive and charming' },
+            { word: 'acrimonious', origin: 'Latin', definition: 'angry and bitter' },
+            { word: 'bombastic', origin: 'Greek', definition: 'high-sounding but meaningless' },
+            { word: 'circumspect', origin: 'Latin', definition: 'wary and unwilling to take risks' },
+            { word: 'deleterious', origin: 'Greek', definition: 'causing harm or damage' },
+            { word: 'enervate', origin: 'Latin', definition: 'to weaken or drain energy' },
+            { word: 'furtive', origin: 'Latin', definition: 'secretive, attempting to avoid notice' },
+            // 25 more (76-100)
+            { word: 'guileless', origin: 'Old French', definition: 'innocent and without deception' },
+            { word: 'histrionic', origin: 'Latin', definition: 'overly dramatic' },
+            { word: 'impecunious', origin: 'Latin', definition: 'having little money' },
+            { word: 'jocular', origin: 'Latin', definition: 'fond of joking' },
+            { word: 'kleptomaniac', origin: 'Greek', definition: 'one who compulsively steals' },
+            { word: 'languid', origin: 'Latin', definition: 'lacking energy or vitality' },
+            { word: 'mellifluous', origin: 'Latin', definition: 'sweet-sounding' },
+            { word: 'nonchalant', origin: 'French', definition: 'casually calm and relaxed' },
+            { word: 'officious', origin: 'Latin', definition: 'asserting authority annoyingly' },
+            { word: 'pedantic', origin: 'Greek', definition: 'excessively concerned with details' },
+            { word: 'quiescent', origin: 'Latin', definition: 'in a state of inactivity' },
+            { word: 'redolent', origin: 'Latin', definition: 'strongly reminiscent of' },
+            { word: 'spurious', origin: 'Latin', definition: 'not genuine, false' },
+            { word: 'temerity', origin: 'Latin', definition: 'excessive confidence or boldness' },
+            { word: 'umbrage', origin: 'Latin', definition: 'offense or annoyance' },
+            { word: 'verbose', origin: 'Latin', definition: 'using more words than needed' },
+            { word: 'whimsical', origin: 'English', definition: 'playfully unpredictable' },
+            { word: 'acumen', origin: 'Latin', definition: 'the ability to judge well' },
+            { word: 'brusque', origin: 'French', definition: 'abrupt in manner' },
+            { word: 'complacent', origin: 'Latin', definition: 'smugly self-satisfied' },
+            { word: 'diffident', origin: 'Latin', definition: 'modest or shy' },
+            { word: 'emulate', origin: 'Latin', definition: 'to match or surpass' },
+            { word: 'fortuitous', origin: 'Latin', definition: 'happening by chance' },
+            { word: 'gratuitous', origin: 'Latin', definition: 'uncalled for, unwarranted' },
+            { word: 'hedonist', origin: 'Greek', definition: 'one who seeks pleasure' },
+            // 25 more (101-125)
+            { word: 'impetuous', origin: 'Latin', definition: 'acting without thinking' },
+            { word: 'juxtapose', origin: 'Latin', definition: 'to place side by side' },
+            { word: 'kitsch', origin: 'German', definition: 'art considered to be tacky' },
+            { word: 'litigious', origin: 'Latin', definition: 'prone to bringing lawsuits' },
+            { word: 'morose', origin: 'Latin', definition: 'sullen and ill-tempered' },
+            { word: 'noxious', origin: 'Latin', definition: 'harmful or poisonous' },
+            { word: 'opulent', origin: 'Latin', definition: 'ostentatiously rich' },
+            { word: 'prolific', origin: 'Latin', definition: 'producing much fruit or work' },
+            { word: 'querulous', origin: 'Latin', definition: 'complaining in a whining way' },
+            { word: 'repudiate', origin: 'Latin', definition: 'to refuse to accept' },
+            { word: 'salient', origin: 'Latin', definition: 'most noticeable or important' },
+            { word: 'tangential', origin: 'Latin', definition: 'only slightly relevant' },
+            { word: 'unequivocal', origin: 'Latin', definition: 'leaving no doubt' },
+            { word: 'venerate', origin: 'Latin', definition: 'to regard with respect' },
+            { word: 'wistful', origin: 'English', definition: 'having a feeling of longing' },
+            { word: 'abstruse', origin: 'Latin', definition: 'difficult to understand' },
+            { word: 'bucolic', origin: 'Greek', definition: 'relating to pleasant countryside' },
+            { word: 'candor', origin: 'Latin', definition: 'the quality of being open' },
+            { word: 'dogmatic', origin: 'Greek', definition: 'inclined to impose beliefs' },
+            { word: 'esoteric', origin: 'Greek', definition: 'understood by only a few' },
+            { word: 'frivolous', origin: 'Latin', definition: 'not having serious purpose' },
+            { word: 'hackneyed', origin: 'English', definition: 'overused and unoriginal' },
+            { word: 'idyllic', origin: 'Greek', definition: 'extremely happy and peaceful' },
+            { word: 'jingoistic', origin: 'English', definition: 'extremely patriotic' },
+            { word: 'lachrymose', origin: 'Latin', definition: 'tearful or inducing tears' },
+            // 25 more (126-150)
+            { word: 'malaise', origin: 'French', definition: 'a general feeling of discomfort' },
+            { word: 'nebulous', origin: 'Latin', definition: 'unclear, vague' },
+            { word: 'obstinate', origin: 'Latin', definition: 'stubbornly refusing to change' },
+            { word: 'placate', origin: 'Latin', definition: 'to make someone less angry' },
+            { word: 'recondite', origin: 'Latin', definition: 'little known, abstruse' },
+            { word: 'soporific', origin: 'Latin', definition: 'tending to induce sleep' },
+            { word: 'trepidation', origin: 'Latin', definition: 'a feeling of fear' },
+            { word: 'untenable', origin: 'French', definition: 'not able to be maintained' },
+            { word: 'vindictive', origin: 'Latin', definition: 'having a strong revenge wish' },
+            { word: 'zealot', origin: 'Greek', definition: 'a fanatical supporter' },
+            { word: 'aesthetic', origin: 'Greek', definition: 'concerned with beauty' },
+            { word: 'banal', origin: 'French', definition: 'boring due to overuse' },
+            { word: 'caustic', origin: 'Greek', definition: 'sarcastic in a bitter way' },
+            { word: 'desultory', origin: 'Latin', definition: 'lacking a plan or purpose' },
+            { word: 'egregious', origin: 'Latin', definition: 'outstandingly bad' },
+            { word: 'fallacious', origin: 'Latin', definition: 'based on a mistaken belief' },
+            { word: 'glib', origin: 'German', definition: 'fluent but insincere' },
+            { word: 'hubris', origin: 'Greek', definition: 'excessive pride or arrogance' },
+            { word: 'insidious', origin: 'Latin', definition: 'proceeding harmfully but subtly' },
+            { word: 'jaundiced', origin: 'French', definition: 'affected by envy or resentment' },
+            { word: 'laud', origin: 'Latin', definition: 'to praise highly' },
+            { word: 'maverick', origin: 'English', definition: 'an independent-minded person' },
+            { word: 'nihilism', origin: 'Latin', definition: 'rejection of all values' },
+            { word: 'onerous', origin: 'Latin', definition: 'involving heavy obligation' },
+            { word: 'palatable', origin: 'Latin', definition: 'pleasant to taste or accept' },
+            // 25 more (151-175)
+            { word: 'rancid', origin: 'Latin', definition: 'smelling unpleasant' },
+            { word: 'sardonic', origin: 'Greek', definition: 'grimly mocking' },
+            { word: 'tenuous', origin: 'Latin', definition: 'very weak or slight' },
+            { word: 'ursine', origin: 'Latin', definition: 'relating to bears' },
+            { word: 'virulent', origin: 'Latin', definition: 'extremely severe or harmful' },
+            { word: 'wizened', origin: 'Old English', definition: 'shriveled with age' },
+            { word: 'austere', origin: 'Greek', definition: 'severe or strict in manner' },
+            { word: 'blasé', origin: 'French', definition: 'unimpressed due to overexposure' },
+            { word: 'clandestine', origin: 'Latin', definition: 'kept secret or hidden' },
+            { word: 'duplicitous', origin: 'Latin', definition: 'deceitful' },
+            { word: 'erudite', origin: 'Latin', definition: 'having great knowledge' },
+            { word: 'fervent', origin: 'Latin', definition: 'having passionate intensity' },
+            { word: 'gaffe', origin: 'French', definition: 'an embarrassing blunder' },
+            { word: 'harangue', origin: 'French', definition: 'a lengthy aggressive speech' },
+            { word: 'imperious', origin: 'Latin', definition: 'assuming power arrogantly' },
+            { word: 'jovial', origin: 'Latin', definition: 'cheerful and friendly' },
+            { word: 'laudable', origin: 'Latin', definition: 'deserving praise' },
+            { word: 'maelstrom', origin: 'Dutch', definition: 'a powerful whirlpool' },
+            { word: 'narcissism', origin: 'Greek', definition: 'excessive self-admiration' },
+            { word: 'obdurate', origin: 'Latin', definition: 'stubbornly refusing to change' },
+            { word: 'paucity', origin: 'Latin', definition: 'the presence of too little' },
+            { word: 'replete', origin: 'Latin', definition: 'filled to satisfaction' },
+            { word: 'sacrosanct', origin: 'Latin', definition: 'regarded as too important' },
+            { word: 'tacit', origin: 'Latin', definition: 'understood without being stated' },
+            { word: 'usurp', origin: 'Latin', definition: 'to seize power illegally' },
+            // 25 more (176-200)
+            { word: 'vapid', origin: 'Latin', definition: 'offering nothing stimulating' },
+            { word: 'wary', origin: 'Old English', definition: 'feeling caution about dangers' },
+            { word: 'accolade', origin: 'French', definition: 'an award or privilege' },
+            { word: 'beguile', origin: 'Old French', definition: 'to charm or enchant' },
+            { word: 'cajole', origin: 'French', definition: 'to persuade by flattery' },
+            { word: 'debacle', origin: 'French', definition: 'a sudden disaster' },
+            { word: 'ennui', origin: 'French', definition: 'a feeling of boredom' },
+            { word: 'fiasco', origin: 'Italian', definition: 'a complete failure' },
+            { word: 'gauche', origin: 'French', definition: 'lacking social grace' },
+            { word: 'harbinger', origin: 'Old French', definition: 'a forerunner of something' },
+            { word: 'incisive', origin: 'Latin', definition: 'intelligently analytical' },
+            { word: 'juggernaut', origin: 'Hindi', definition: 'a huge overwhelming force' },
+            { word: 'kudos', origin: 'Greek', definition: 'praise and honor' },
+            { word: 'listless', origin: 'Old English', definition: 'lacking energy or enthusiasm' },
+            { word: 'mitigate', origin: 'Latin', definition: 'to make less severe' },
+            { word: 'nuance', origin: 'French', definition: 'a subtle difference' },
+            { word: 'obsolete', origin: 'Latin', definition: 'no longer produced or used' },
+            { word: 'paradox', origin: 'Greek', definition: 'a seemingly absurd statement' },
+            { word: 'quintessential', origin: 'Latin', definition: 'representing a perfect example' },
+            { word: 'rhetoric', origin: 'Greek', definition: 'the art of persuasive speaking' },
+            { word: 'scrupulous', origin: 'Latin', definition: 'diligent and thorough' },
+            { word: 'tantamount', origin: 'Old French', definition: 'equivalent in effect' },
+            { word: 'unprecedented', origin: 'Latin', definition: 'never done before' },
+            { word: 'voracious', origin: 'Latin', definition: 'wanting great quantities' },
+            { word: 'watershed', origin: 'English', definition: 'a turning point' },
         ];
 
         const CHALLENGES = [
@@ -1127,7 +1649,11 @@
         };
 
         // Game State
-        let state = { user: '', score: 0, lives: 3, level: 1, round: 1, isPaused: false, isPlaying: false, target: null, items: [], activeLasers: [], canShoot: true, shootCooldown: 300, challengeActive: false, challengeStartTime: 0, currentChallengeIdx: -1, isDoubleDown: false, usedChallenges: [], musicOn: true, audio: null, challengeAudio: null, letterSpeed: 8000, shipX: 0, spawnInterval: null, spawnRate: 2000, currentOptions: [], targetMissed: false, lastLane: -1, gameLoopId: null };
+        let state = { user: '', score: 0, lives: 3, level: 1, round: 1, isPaused: false, isPlaying: false, target: null, items: [], activeLasers: [], canShoot: true, shootCooldown: 300, challengeActive: false, challengeStartTime: 0, currentChallengeIdx: -1, isDoubleDown: false, usedChallenges: [], musicOn: true, audio: null, challengeAudio: null, letterSpeed: 8000, shipX: 0, spawnInterval: null, spawnRate: 2000, currentOptions: [], targetMissed: false, lastLane: -1, gameLoopId: null, 
+            // Timer & Penalty System
+            roundTimer: 15, timerInterval: null, timeoutCount: 0, touchHurts: false, speedPenalty: false, baseLetterSpeed: 8000,
+            // Lane tracking to prevent overlaps
+            occupiedLanes: [] };
 
         // Challenge music URL - Tiger Tracks by Lexica
         const CHALLENGE_MUSIC_URL = 'https://drive.google.com/uc?export=download&id=1kQeaAQNeMIK-P9Rl4Bli1jhqILCbspae';
@@ -1313,6 +1839,35 @@
                         osc.start(now + i * 0.06);
                         osc.stop(now + i * 0.06 + 0.2);
                     });
+
+                } else if (type === 'timerTick') {
+                    // Urgent tick sound for low timer
+                    const osc = ctx.createOscillator();
+                    const gain = ctx.createGain();
+                    osc.type = 'square';
+                    osc.frequency.value = 880;
+                    gain.gain.setValueAtTime(0.08, now);
+                    gain.gain.exponentialRampToValueAtTime(0.001, now + 0.08);
+                    osc.connect(gain);
+                    gain.connect(ctx.destination);
+                    osc.start(now);
+                    osc.stop(now + 0.08);
+
+                } else if (type === 'timeout') {
+                    // Timeout alarm - descending danger tones
+                    const notes = [880, 660, 440, 220];
+                    notes.forEach((freq, i) => {
+                        const osc = ctx.createOscillator();
+                        const gain = ctx.createGain();
+                        osc.type = 'sawtooth';
+                        osc.frequency.value = freq;
+                        gain.gain.setValueAtTime(0.15, now + i * 0.12);
+                        gain.gain.exponentialRampToValueAtTime(0.001, now + i * 0.12 + 0.15);
+                        osc.connect(gain);
+                        gain.connect(ctx.destination);
+                        osc.start(now + i * 0.12);
+                        osc.stop(now + i * 0.12 + 0.15);
+                    });
                 }
             } catch (e) { console.log('Audio error:', e); }
         }
@@ -1334,6 +1889,158 @@
             }
         }
 
+        // === SWORD POWER TIMER SYSTEM ===
+        function startTimer() {
+            stopTimer();
+            state.roundTimer = 15;
+            $('timerSword').classList.remove('hidden');
+            updateTimerDisplay();
+            state.timerInterval = setInterval(tickTimer, 1000);
+        }
+
+        function stopTimer() {
+            if (state.timerInterval) {
+                clearInterval(state.timerInterval);
+                state.timerInterval = null;
+            }
+            $('timerSword').classList.add('hidden');
+        }
+
+        function resetTimer() {
+            state.roundTimer = 15;
+            updateTimerDisplay();
+        }
+
+        function tickTimer() {
+            if (state.isPaused || state.challengeActive || !state.isPlaying) return;
+            
+            state.roundTimer--;
+            updateTimerDisplay();
+            
+            // Sound effects for low time
+            if (state.roundTimer <= 10 && state.roundTimer > 0) {
+                playSound('timerTick');
+            }
+            
+            // Time's up!
+            if (state.roundTimer <= 0) {
+                handleTimeout();
+            }
+        }
+
+        function updateTimerDisplay() {
+            const segments = document.querySelectorAll('#powerBar .power-segment');
+            const timeDisplay = $('powerTime');
+            const timePercent = state.roundTimer / 15;
+            const activeSegments = Math.ceil(timePercent * 10);
+            
+            // Update segments
+            segments.forEach((seg, i) => {
+                seg.classList.remove('active', 'warning', 'critical');
+                if (i < activeSegments) {
+                    if (state.roundTimer <= 5) {
+                        seg.classList.add('critical');
+                    } else if (state.roundTimer <= 10) {
+                        seg.classList.add('warning');
+                    } else {
+                        seg.classList.add('active');
+                    }
+                }
+            });
+            
+            // Update time text
+            timeDisplay.textContent = state.roundTimer + 's';
+            timeDisplay.classList.remove('warning', 'critical');
+            if (state.roundTimer <= 5) {
+                timeDisplay.classList.add('critical');
+            } else if (state.roundTimer <= 10) {
+                timeDisplay.classList.add('warning');
+            }
+        }
+
+        function handleTimeout() {
+            state.timeoutCount++;
+            playSound('timeout');
+            
+            if (state.timeoutCount === 1) {
+                // 1st timeout: DANGER MODE - Touch hurts
+                state.touchHurts = true;
+                
+                // Orange flash
+                const flash = document.createElement('div');
+                flash.className = 'timeout-flash danger';
+                document.body.appendChild(flash);
+                setTimeout(() => flash.remove(), 600);
+                
+                // DANGER MODE announcement
+                showModeAnnouncement('⚠️ DANGER MODE ⚠️', 'Targets now hurt!', 'danger');
+                updatePenaltyIndicators();
+                resetTimer();
+                
+            } else if (state.timeoutCount === 2) {
+                // 2nd timeout: PANIC MODE - Speed increase
+                state.speedPenalty = true;
+                state.letterSpeed = state.baseLetterSpeed * 0.6; // 40% faster
+                
+                // Red flash
+                const flash = document.createElement('div');
+                flash.className = 'timeout-flash panic';
+                document.body.appendChild(flash);
+                setTimeout(() => flash.remove(), 600);
+                
+                // PANIC MODE announcement
+                showModeAnnouncement('🔥 PANIC MODE 🔥', 'Speed increased!', 'panic');
+                updatePenaltyIndicators();
+                resetTimer();
+                
+            } else if (state.timeoutCount >= 3) {
+                // 3rd timeout: GAME OVER
+                const flash = document.createElement('div');
+                flash.className = 'timeout-flash death';
+                document.body.appendChild(flash);
+                setTimeout(() => flash.remove(), 800);
+                
+                showModeAnnouncement('💀 GAME OVER 💀', null, 'death');
+                setTimeout(() => endGame(), 2000);
+                return;
+            }
+        }
+
+        function showModeAnnouncement(text, subtitle, mode) {
+            const announce = document.createElement('div');
+            announce.className = 'mode-announce ' + mode;
+            announce.innerHTML = text + (subtitle ? `<div class="mode-subtitle">${subtitle}</div>` : '');
+            $('gameContainer').appendChild(announce);
+            setTimeout(() => announce.remove(), 2500);
+        }
+
+        function updatePenaltyIndicators() {
+            const container = $('penaltyIndicator');
+            container.innerHTML = '';
+            
+            if (state.touchHurts) {
+                const badge = document.createElement('div');
+                badge.className = 'penalty-badge danger-mode';
+                badge.textContent = '⚠️ DANGER';
+                container.appendChild(badge);
+            }
+            
+            if (state.speedPenalty) {
+                const badge = document.createElement('div');
+                badge.className = 'penalty-badge panic-mode';
+                badge.textContent = '🔥 PANIC';
+                container.appendChild(badge);
+            }
+        }
+
+        function resetPenalties() {
+            state.timeoutCount = 0;
+            state.touchHurts = false;
+            state.speedPenalty = false;
+            state.letterSpeed = state.baseLetterSpeed;
+            $('penaltyIndicator').innerHTML = '';
+        }
+
         function moveShip(clientX) {
             const container = $('gameContainer');
             const rect = container.getBoundingClientRect();
@@ -1347,6 +2054,7 @@
         function clearItems() {
             state.items.forEach(i => i.el && i.el.remove());
             state.items = [];
+            state.occupiedLanes = [];
         }
 
         function showScreen(id) {
@@ -1441,13 +2149,29 @@
         }
 
         function startSpawning() {
-            // Spawn initial set
-            state.currentOptions.forEach((opt, i) => {
-                setTimeout(() => spawnOneItem(opt), i * 500);
-            });
+            // Clear occupied lanes
+            state.occupiedLanes = [];
+            
+            // Level 4 (definitions) - spawn only 1-2 at a time, not all 4
+            if (state.level === 4) {
+                // Spawn first 2 options with delay
+                const initialSpawn = Math.min(2, state.currentOptions.length);
+                for (let i = 0; i < initialSpawn; i++) {
+                    setTimeout(() => spawnOneItem(state.currentOptions[i]), i * 800);
+                }
+            } else {
+                // Other levels - spawn initial set staggered
+                state.currentOptions.forEach((opt, i) => {
+                    setTimeout(() => spawnOneItem(opt), i * 500);
+                });
+            }
+            
             // Then continue on interval
             state.spawnInterval = setInterval(() => {
                 if (!state.isPaused && state.isPlaying) {
+                    // Check if we can spawn (have available lanes)
+                    if (state.occupiedLanes.length >= 5) return; // All lanes full
+                    
                     let opt;
                     if (state.targetMissed) {
                         opt = state.target.answer;
@@ -1463,10 +2187,41 @@
         function spawnOneItem(val) {
             const area = $('gameArea');
             const areaRect = area.getBoundingClientRect();
+            
+            // Find available lane (not occupied by item in top 40% of screen)
+            const lanes = 5;
+            const availableLanes = [];
+            for (let i = 0; i < lanes; i++) {
+                if (!state.occupiedLanes.includes(i)) {
+                    availableLanes.push(i);
+                }
+            }
+            
+            // If no lanes available, skip this spawn
+            if (availableLanes.length === 0) return;
+            
+            // Pick a lane that's different from last used if possible
+            let lane;
+            const filteredLanes = availableLanes.filter(l => l !== state.lastLane);
+            if (filteredLanes.length > 0) {
+                lane = filteredLanes[Math.floor(Math.random() * filteredLanes.length)];
+            } else {
+                lane = availableLanes[Math.floor(Math.random() * availableLanes.length)];
+            }
+            state.lastLane = lane;
+            state.occupiedLanes.push(lane);
+            
             const item = document.createElement('div');
             item.className = 'floating-item';
+            
+            // Level 4 gets smaller text for definitions
+            if (state.level === 4) {
+                item.classList.add('definition-item');
+            }
+            
             item.textContent = val;
             item.dataset.value = val;
+            item.dataset.lane = lane;
 
             // Gold palette colors for variety
             const colors = ['#ffd700', '#ffaa00', '#ff6600', '#ffff00', '#ff9933', '#ffcc00'];
@@ -1474,12 +2229,7 @@
             item.style.color = color;
             item.style.textShadow = `0 0 10px ${color}, 0 0 20px ${color}, 0 0 30px ${color}`;
 
-            const lanes = 5;
             const laneWidth = (areaRect.width - 60) / lanes;
-            let lane;
-            do { lane = Math.floor(Math.random() * lanes); } while (lane === state.lastLane);
-            state.lastLane = lane;
-
             const x = lane * laneWidth + (laneWidth - (val.length * 8 + 40)) / 2;
             item.style.left = Math.max(0, Math.min(areaRect.width - 120, x)) + 'px';
             item.style.top = '-70px';
@@ -1487,7 +2237,7 @@
             item.dataset.duration = state.letterSpeed;
 
             area.appendChild(item);
-            state.items.push({ el: item, value: val });
+            state.items.push({ el: item, value: val, lane: lane });
         }
 
         function spawnItems(options) {
@@ -1512,6 +2262,12 @@
                 const elapsed = Date.now() - startTime;
                 const progress = Math.min(1.1, elapsed / duration); // Allow slightly beyond 1
 
+                // Free up lane when item passes 40% mark (no longer blocking new spawns)
+                if (progress > 0.4 && item.lane !== undefined && state.occupiedLanes.includes(item.lane)) {
+                    state.occupiedLanes = state.occupiedLanes.filter(l => l !== item.lane);
+                    item.lane = undefined; // Mark as freed so we don't try again
+                }
+
                 if (progress >= 1.0) {
                     if (item.value === state.target.answer && !el.classList.contains('hit')) {
                         state.targetMissed = true;
@@ -1524,7 +2280,8 @@
                 el.style.top = (-70 + (h + 140) * progress) + 'px';
 
                 // Only check collision with ship when item is near the bottom
-                if (progress > 0.8) {
+                // AND only apply damage if touchHurts penalty is active
+                if (progress > 0.8 && state.touchHurts) {
                     const shipHitbox = {
                         left: shipRect.left + shipRect.width * 0.25,
                         right: shipRect.right - shipRect.width * 0.25,
@@ -1538,7 +2295,7 @@
                         itemRect.top > shipHitbox.bottom);
 
                     if (collision && !el.classList.contains('hit')) {
-                        // Collided with ship
+                        // Collided with ship - only hurts when penalty active
                         el.classList.add('hit');
                         state.lives--;
                         updateHUD();
@@ -1869,6 +2626,7 @@
                 state.score += 100;
                 playSound('correct');
                 playSound('explosion');
+                resetTimer(); // Reset timer on correct hit
             } else {
                 state.lives--;
                 playSound('wrong');
@@ -1911,6 +2669,7 @@
             if (isCorrect) {
                 state.score += 150;
                 playSound('correct');
+                resetTimer(); // Reset timer on correct dictation
             } else {
                 state.lives--;
                 playSound('wrong');
@@ -1928,6 +2687,7 @@
 
         function completeLevel() {
             state.isPlaying = false;
+            stopTimer();
             clearItems();
 
             if (state.level >= 5) {
@@ -1962,6 +2722,7 @@
 
         function endGame() {
             state.isPlaying = false;
+            stopTimer();
             if (state.gameLoopId) cancelAnimationFrame(state.gameLoopId);
             if (state.spawnInterval) clearInterval(state.spawnInterval);
             clearItems();
@@ -1979,6 +2740,10 @@
             state.isPlaying = true;
             state.isPaused = false;
             state.usedChallenges = [];
+            
+            // Reset penalties and timer for new game
+            resetPenalties();
+            state.letterSpeed = state.baseLetterSpeed;
 
             showScreen('loginScreen'); // hide all first
             ['loginScreen', 'titleScreen', 'scoreboardScreen', 'levelComplete', 'gameComplete', 'gameOver'].forEach(s => $(s).classList.add('hidden'));
@@ -1996,6 +2761,7 @@
             $('spaceship').style.transform = 'none';
 
             generateRound();
+            startTimer(); // Start the 30-second timer
             if (state.gameLoopId) cancelAnimationFrame(state.gameLoopId);
             state.gameLoopId = requestAnimationFrame(gameLoop);
         }
@@ -2028,6 +2794,8 @@
         $('quitBtn').addEventListener('click', () => {
             state.isPlaying = false;
             state.isPaused = false;
+            stopTimer();
+            resetPenalties();
             if (state.gameLoopId) cancelAnimationFrame(state.gameLoopId);
             if (state.spawnInterval) clearInterval(state.spawnInterval);
             $('pauseOverlay').classList.add('hidden');
@@ -2050,6 +2818,7 @@
             ['levelComplete'].forEach(s => $(s).classList.add('hidden'));
             updateHUD();
             generateRound();
+            startTimer(); // Restart timer for new level
             // Restart the game loop
             if (state.gameLoopId) cancelAnimationFrame(state.gameLoopId);
             state.gameLoopId = requestAnimationFrame(gameLoop);
@@ -2059,7 +2828,17 @@
         $('winMenuBtn').addEventListener('click', () => showScreen('titleScreen'));
         $('gameOverMenuBtn').addEventListener('click', () => showScreen('titleScreen'));
         $('musicToggle').addEventListener('click', toggleMusic);
-        $('speakBtn').addEventListener('click', () => speak($('targetWord').textContent));
+        $('speakBtn').addEventListener('click', () => {
+            // In Level 5, speak the actual word (not "LISTEN...")
+            // In other levels, speak the displayed target
+            if (state.level === 5 && state.target && state.target.word) {
+                speak(state.target.word);
+            } else if (state.target && state.target.display) {
+                speak(state.target.display);
+            } else {
+                speak($('targetWord').textContent);
+            }
+        });
         $('dictationSubmitBtn').addEventListener('click', handleDictation);
         $('dictationInput').addEventListener('keypress', e => { if (e.key === 'Enter') handleDictation(); });
         $('beatsMeBtn').addEventListener('click', () => {
