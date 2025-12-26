@@ -1,12 +1,12 @@
 <!DOCTYPE html>
-<html lang="en">
+<html lang="pt">
 
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0, user-scalable=no">
     <title>🐟 BACALHAU À BLÁST! 🐟</title>
     <style>
-        @import url('https://fonts.googleapis.com/css2?family=Press+Start+2P&display=swap');
+        @import url('https://fonts.googleapis.com/css2?family=Press+Start+2P&family=VT323&display=swap');
 
         * {
             margin: 0;
@@ -675,8 +675,8 @@
         }
 
         .target-letter {
-            font-family: 'Press Start 2P', cursive;
-            font-size: clamp(1.1rem, 3vw, 1.6rem);
+            font-family: 'VT323', 'Press Start 2P', monospace;
+            font-size: clamp(1.5rem, 4vw, 2.2rem);
             color: #ffffff;
             text-shadow: 0 0 15px var(--azulejo-blue), 0 0 30px var(--azulejo-blue), 0 0 45px var(--neon-cyan);
             padding: 10px 20px;
@@ -731,8 +731,8 @@
         .floating-letter,
         .floating-word {
             position: absolute;
-            font-family: 'Press Start 2P', cursive;
-            font-size: clamp(1.05rem, 3vw, 1.5rem);
+            font-family: 'VT323', 'Press Start 2P', monospace;
+            font-size: clamp(1.4rem, 4vw, 2rem);
             user-select: none;
             pointer-events: auto;
             text-transform: none !important;
@@ -740,7 +740,7 @@
         }
 
         .floating-word {
-            font-size: clamp(0.75rem, 2.25vw, 1.2rem);
+            font-size: clamp(1.1rem, 3vw, 1.6rem);
             letter-spacing: 1px;
             text-transform: none !important;
         }
@@ -972,7 +972,7 @@
         }
 
         .dictation-prompt {
-            font-family: 'Press Start 2P', cursive;
+            font-family: 'VT323', 'Press Start 2P', monospace;
             font-size: clamp(3rem, 10vw, 5rem);
             color: var(--neon-yellow);
             text-shadow: 0 0 20px var(--neon-yellow);
@@ -984,8 +984,8 @@
             background: rgba(0, 0, 0, 0.5);
             border: 3px solid var(--neon-cyan);
             color: var(--neon-cyan);
-            font-family: 'Press Start 2P', cursive;
-            font-size: clamp(0.8rem, 2vw, 1.2rem);
+            font-family: 'VT323', 'Press Start 2P', monospace;
+            font-size: clamp(1.2rem, 3vw, 1.8rem);
             padding: 15px 25px;
             text-align: center;
             width: 100%;
@@ -1492,8 +1492,9 @@
 
 
 <body>
-    <!-- Challenge Music - loaded from shared audio folder -->
+    <!-- Challenge Music - tries same folder first, then ../audio/ -->
     <audio id="challengeMusic" loop preload="auto">
+        <source src="ES_Press X Twice - Lexica.mp3" type="audio/mpeg">
         <source src="../audio/ES_Press X Twice - Lexica.mp3" type="audio/mpeg">
     </audio>
     
@@ -2566,19 +2567,17 @@
 
         function loadExternalTracks() {
             // Audio files are in the same folder as the game HTML
-            // List all potential tracks - they'll show in playlist, error handling on play
+            // List common track naming patterns - they show in playlist
             const potentialTracks = [
-                { id: 'track1', name: '🎸 Track 1', file: 'track1.mp3' },
-                { id: 'track2', name: '🎻 Track 2', file: 'track2.mp3' },
-                { id: 'track3', name: '🎹 Track 3', file: 'track3.mp3' },
-                { id: 'fado', name: '🎸 Fado', file: 'fado.mp3' },
-                { id: 'folk', name: '🎻 Folk', file: 'folk.mp3' },
-                { id: 'bossa', name: '🎷 Bossa Nova', file: 'bossa.mp3' },
-                { id: 'modern', name: '🎹 Modern', file: 'modern.mp3' },
+                { id: 'lexica', name: '🎸 Press X Twice', file: 'ES_Press X Twice - Lexica.mp3' },
+                { id: 'track1', name: '🎵 Track 1', file: 'track1.mp3' },
+                { id: 'track2', name: '🎵 Track 2', file: 'track2.mp3' },
+                { id: 'track3', name: '🎵 Track 3', file: 'track3.mp3' },
                 { id: 'music1', name: '🎵 Music 1', file: 'music1.mp3' },
                 { id: 'music2', name: '🎵 Music 2', file: 'music2.mp3' },
                 { id: 'music', name: '🎵 Music', file: 'music.mp3' },
                 { id: 'background', name: '🎵 Background', file: 'background.mp3' },
+                { id: 'fado', name: '🎸 Fado', file: 'fado.mp3' },
                 { id: 'portuguese', name: '🇵🇹 Portuguese', file: 'portuguese.mp3' }
             ];
             
