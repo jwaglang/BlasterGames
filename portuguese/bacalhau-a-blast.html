@@ -1494,9 +1494,7 @@
 <body>
     <!-- Challenge Music - loaded from shared audio folder -->
     <audio id="challengeMusic" loop preload="auto">
-        <source src="../audio/challenge.mp3" type="audio/mpeg">
-        <source src="../audio/tiger.mp3" type="audio/mpeg">
-        <source src="../audio/challenge_music.mp3" type="audio/mpeg">
+        <source src="../audio/ES_Press X Twice - Lexica.mp3" type="audio/mpeg">
     </audio>
     
     <div class="crt-overlay"></div>
@@ -2047,6 +2045,30 @@
             if ('speechSynthesis' in window) {
                 speechSynthesis.onvoiceschanged = () => speechSynthesis.getVoices();
             }
+            
+            // Setup challenge music error handling
+            const challengeMusic = document.getElementById('challengeMusic');
+            if (challengeMusic) {
+                challengeMusic.onerror = (e) => {
+                    console.log('Challenge music file not found');
+                };
+                challengeMusic.oncanplaythrough = () => {
+                    console.log('Challenge music loaded successfully:', challengeMusic.currentSrc);
+                };
+            }
+            
+            // Start background music on menu (requires user interaction first)
+            document.addEventListener('click', function startMusicOnce() {
+                if (gameState.musicEnabled) {
+                    initAudio();
+                    if (gameState.currentTrack === '8bit') {
+                        startMusic();
+                    } else {
+                        playExternalTrack(gameState.currentTrack);
+                    }
+                }
+                document.removeEventListener('click', startMusicOnce);
+            }, { once: true });
         }
 
         function createStarfield() {
@@ -2542,9 +2564,9 @@
             }
         }
 
-        async function loadExternalTracks() {
+        function loadExternalTracks() {
             // Audio files are in the same folder as the game HTML
-            // Define potential tracks - these will be checked for existence
+            // List all potential tracks - they'll show in playlist, error handling on play
             const potentialTracks = [
                 { id: 'track1', name: '🎸 Track 1', file: 'track1.mp3' },
                 { id: 'track2', name: '🎻 Track 2', file: 'track2.mp3' },
@@ -2555,39 +2577,24 @@
                 { id: 'modern', name: '🎹 Modern', file: 'modern.mp3' },
                 { id: 'music1', name: '🎵 Music 1', file: 'music1.mp3' },
                 { id: 'music2', name: '🎵 Music 2', file: 'music2.mp3' },
-                { id: 'music', name: '🎵 Music', file: 'music.mp3' }
+                { id: 'music', name: '🎵 Music', file: 'music.mp3' },
+                { id: 'background', name: '🎵 Background', file: 'background.mp3' },
+                { id: 'portuguese', name: '🇵🇹 Portuguese', file: 'portuguese.mp3' }
             ];
             
-            // Check which files actually exist
-            const availableTracks = [];
-            for (const track of potentialTracks) {
-                try {
-                    const response = await fetch(track.file, { method: 'HEAD' });
-                    if (response.ok) {
-                        availableTracks.push(track);
-                    }
-                } catch (e) {
-                    // File doesn't exist, skip it
-                }
-            }
+            gameState.externalTracks = potentialTracks;
             
-            gameState.externalTracks = availableTracks;
-            
-            // Update playlist UI
+            // Update playlist UI - show all tracks
             el.playlistTracks.innerHTML = '';
-            if (availableTracks.length === 0) {
-                el.playlistTracks.innerHTML = '<p class="playlist-info">No MP3 files found.<br>Add MP3s to this folder.</p>';
-            } else {
-                availableTracks.forEach(track => {
-                    const btn = document.createElement('button');
-                    btn.className = 'playlist-track';
-                    if (gameState.currentTrack === track.id) btn.classList.add('active');
-                    btn.dataset.track = track.id;
-                    btn.textContent = track.name;
-                    btn.onclick = () => selectTrack(track.id);
-                    el.playlistTracks.appendChild(btn);
-                });
-            }
+            potentialTracks.forEach(track => {
+                const btn = document.createElement('button');
+                btn.className = 'playlist-track';
+                if (gameState.currentTrack === track.id) btn.classList.add('active');
+                btn.dataset.track = track.id;
+                btn.textContent = track.name;
+                btn.onclick = () => selectTrack(track.id);
+                el.playlistTracks.appendChild(btn);
+            });
         }
 
         function selectTrack(trackId) {
@@ -2618,15 +2625,26 @@
 
             stopExternalAudio();
             
+            console.log('Trying to play:', track.file);
+            
             gameState.externalAudio = new Audio(track.file);
             gameState.externalAudio.loop = true;
             gameState.externalAudio.volume = 0.5;
             
-            gameState.externalAudio.play().catch(err => {
-                console.log('External audio not available:', err);
+            gameState.externalAudio.onerror = () => {
+                console.log('Audio file not found:', track.file);
+                showFeedback('Track not found!', 'oops');
                 // Fall back to 8-bit
                 gameState.currentTrack = '8bit';
-                selectTrack('8bit');
+                document.querySelectorAll('.playlist-track').forEach(btn => {
+                    btn.classList.remove('active');
+                    if (btn.dataset.track === '8bit') btn.classList.add('active');
+                });
+                if (gameState.isPlaying && !gameState.isPaused) startMusic();
+            };
+            
+            gameState.externalAudio.play().catch(err => {
+                console.log('External audio play failed:', err);
             });
         }
 
@@ -3254,10 +3272,16 @@
             if (gameState.challengeAudioEnabled) {
                 playSound('challenge');
                 const challengeMusic = document.getElementById('challengeMusic');
+                console.log('Challenge music element:', challengeMusic);
                 if (challengeMusic) {
+                    console.log('Challenge music src:', challengeMusic.currentSrc || 'no source loaded');
                     challengeMusic.volume = 0.4;
                     challengeMusic.currentTime = 0;
-                    challengeMusic.play().catch(e => console.log('Challenge music blocked:', e));
+                    challengeMusic.play().then(() => {
+                        console.log('Challenge music playing!');
+                    }).catch(e => console.log('Challenge music blocked:', e));
+                } else {
+                    console.log('Challenge music element NOT found!');
                 }
             }
 
