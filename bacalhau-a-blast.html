@@ -1323,8 +1323,7 @@
             top: 50px;
             right: 10px;
             display: flex;
-            align-items: center;
-            gap: 8px;
+            gap: 5px;
             z-index: 60;
         }
 
@@ -1338,7 +1337,6 @@
             border-radius: 50%;
             cursor: pointer;
             transition: all 0.2s;
-            flex-shrink: 0;
         }
 
         .music-toggle:hover, .playlist-btn:hover {
@@ -1358,77 +1356,6 @@
         .music-toggle.muted {
             opacity: 0.5;
             border-style: dashed;
-        }
-
-        /* Volume Sliders */
-        .volume-slider {
-            -webkit-appearance: none;
-            appearance: none;
-            width: 80px;
-            height: 8px;
-            background: rgba(0, 0, 0, 0.5);
-            border: 2px solid var(--neon-cyan);
-            border-radius: 4px;
-            outline: none;
-            cursor: pointer;
-        }
-
-        .volume-slider::-webkit-slider-thumb {
-            -webkit-appearance: none;
-            appearance: none;
-            width: 16px;
-            height: 16px;
-            background: var(--neon-cyan);
-            border-radius: 50%;
-            cursor: pointer;
-            box-shadow: 0 0 10px var(--neon-cyan);
-            transition: all 0.2s;
-        }
-
-        .volume-slider::-moz-range-thumb {
-            width: 16px;
-            height: 16px;
-            background: var(--neon-cyan);
-            border: none;
-            border-radius: 50%;
-            cursor: pointer;
-            box-shadow: 0 0 10px var(--neon-cyan);
-        }
-
-        .volume-slider:hover::-webkit-slider-thumb {
-            transform: scale(1.2);
-            box-shadow: 0 0 15px var(--neon-cyan);
-        }
-
-        .volume-slider.challenge-volume {
-            width: 70px;
-            border-color: var(--neon-orange);
-        }
-
-        .volume-slider.challenge-volume::-webkit-slider-thumb {
-            background: var(--neon-orange);
-            box-shadow: 0 0 10px var(--neon-orange);
-        }
-
-        .volume-slider.challenge-volume::-moz-range-thumb {
-            background: var(--neon-orange);
-            box-shadow: 0 0 10px var(--neon-orange);
-        }
-
-        /* Challenge audio controls container */
-        .challenge-audio-controls {
-            position: absolute;
-            top: 15px;
-            right: 15px;
-            display: flex;
-            align-items: center;
-            gap: 8px;
-        }
-
-        .challenge-audio-controls .challenge-music-toggle {
-            position: relative;
-            top: auto;
-            right: auto;
         }
 
         /* Playlist Menu */
@@ -1670,7 +1597,6 @@
         <!-- Audio Controls -->
         <div class="audio-controls">
             <button class="music-toggle" id="musicToggle" title="Toggle Music">🔊</button>
-            <input type="range" class="volume-slider" id="bgVolumeSlider" min="0" max="100" value="50" title="Background Music Volume">
             <button class="playlist-btn" id="playlistBtn" title="Music Playlist">🎵</button>
         </div>
 
@@ -1759,10 +1685,7 @@
 
         <!-- Challenge Modal (Treasure Chest) -->
         <div class="challenge-modal hidden" id="challengeModal">
-            <div class="challenge-audio-controls">
-                <button class="challenge-music-toggle" id="challengeMusicToggle" title="Toggle Challenge Music">🔊</button>
-                <input type="range" class="volume-slider challenge-volume" id="challengeVolumeSlider" min="0" max="100" value="50" title="Challenge Music Volume">
-            </div>
+            <button class="challenge-music-toggle" id="challengeMusicToggle" title="Toggle Challenge Music">🔊</button>
             <h2 class="challenge-title">
                 🏴‍☠️ TREASURE CHALLENGE! 🏴‍☠️
             </h2>
@@ -2013,8 +1936,7 @@
             spawnInterval: null, shipX: 50,
             canShoot: true, shootCooldown: 250,
             currentUser: null, musicEnabled: true,
-            challengeAudioEnabled: true, currentTrack: 'lexica',
-            bgMusicVolume: 0.5, challengeMusicVolume: 0.5,
+            challengeAudioEnabled: true, currentTrack: '8bit',
             externalAudio: null, externalTracks: [],
             challengeFreezeTime: 0,
             // Timer system
@@ -2066,8 +1988,6 @@
             playlistClose: document.getElementById('playlistClose'),
             playlistTracks: document.getElementById('playlistTracks'),
             challengeMusicToggle: document.getElementById('challengeMusicToggle'),
-            bgVolumeSlider: document.getElementById('bgVolumeSlider'),
-            challengeVolumeSlider: document.getElementById('challengeVolumeSlider'),
             targetLabel: document.getElementById('targetLabel'),
             targetLetter: document.getElementById('targetLetter'),
             speakBtn: document.getElementById('speakBtn'),
@@ -2141,12 +2061,9 @@
             document.addEventListener('click', function startMusicOnce() {
                 if (gameState.musicEnabled) {
                     initAudio();
-                    // Default is 'lexica' - try to play it, fallback to 8bit if not found
                     if (gameState.currentTrack === '8bit') {
                         startMusic();
                     } else {
-                        // For initial load, directly try the lexica file
-                        gameState.externalTracks = [{ id: 'lexica', name: '🎸 Press X Twice', file: 'ES_Press X Twice - Lexica.mp3' }];
                         playExternalTrack(gameState.currentTrack);
                     }
                 }
@@ -2623,7 +2540,6 @@
             const challengeMusic = document.getElementById('challengeMusic');
             if (challengeMusic) {
                 if (gameState.challengeAudioEnabled) {
-                    challengeMusic.volume = gameState.challengeMusicVolume;
                     challengeMusic.play().catch(e => {});
                 } else {
                     challengeMusic.pause();
@@ -2650,7 +2566,7 @@
 
         function loadExternalTracks() {
             // Audio files are in the same folder as the game HTML
-            // Only show tracks that actually exist
+            // List common track naming patterns - they show in playlist
             const potentialTracks = [
                 { id: 'lexica', name: '🎸 Press X Twice', file: 'ES_Press X Twice - Lexica.mp3' },
                 { id: 'track1', name: '🎵 Track 1', file: 'track1.mp3' },
@@ -2664,45 +2580,19 @@
                 { id: 'portuguese', name: '🇵🇹 Portuguese', file: 'portuguese.mp3' }
             ];
             
-            // Show loading state
-            el.playlistTracks.innerHTML = '<p class="playlist-info">Detecting tracks...</p>';
+            gameState.externalTracks = potentialTracks;
             
-            // Check which files exist
-            detectExistingTracks(potentialTracks).then(detectedTracks => {
-                gameState.externalTracks = detectedTracks;
-                
-                // Update playlist UI - show only detected tracks
-                el.playlistTracks.innerHTML = '';
-                
-                if (detectedTracks.length === 0) {
-                    el.playlistTracks.innerHTML = '<p class="playlist-info">No MP3 files found in folder</p>';
-                } else {
-                    detectedTracks.forEach(track => {
-                        const btn = document.createElement('button');
-                        btn.className = 'playlist-track';
-                        if (gameState.currentTrack === track.id) btn.classList.add('active');
-                        btn.dataset.track = track.id;
-                        btn.textContent = track.name;
-                        btn.onclick = () => selectTrack(track.id);
-                        el.playlistTracks.appendChild(btn);
-                    });
-                }
+            // Update playlist UI - show all tracks
+            el.playlistTracks.innerHTML = '';
+            potentialTracks.forEach(track => {
+                const btn = document.createElement('button');
+                btn.className = 'playlist-track';
+                if (gameState.currentTrack === track.id) btn.classList.add('active');
+                btn.dataset.track = track.id;
+                btn.textContent = track.name;
+                btn.onclick = () => selectTrack(track.id);
+                el.playlistTracks.appendChild(btn);
             });
-        }
-
-        async function detectExistingTracks(candidates) {
-            const detected = [];
-            for (const track of candidates) {
-                try {
-                    const response = await fetch(track.file, { method: 'HEAD' });
-                    if (response.ok) {
-                        detected.push(track);
-                    }
-                } catch (e) {
-                    // File doesn't exist, skip
-                }
-            }
-            return detected;
         }
 
         function selectTrack(trackId) {
@@ -2729,34 +2619,26 @@
 
         function playExternalTrack(trackId) {
             const track = gameState.externalTracks.find(t => t.id === trackId);
-            if (!track) {
-                // Track not in detected list, try to play anyway (for initial load)
-                const fallbackTrack = { id: trackId, file: 'ES_Press X Twice - Lexica.mp3' };
-                playExternalTrackDirect(fallbackTrack);
-                return;
-            }
-            playExternalTrackDirect(track);
-        }
+            if (!track) return;
 
-        function playExternalTrackDirect(track) {
             stopExternalAudio();
             
             console.log('Trying to play:', track.file);
             
             gameState.externalAudio = new Audio(track.file);
             gameState.externalAudio.loop = true;
-            gameState.externalAudio.volume = gameState.bgMusicVolume;
+            gameState.externalAudio.volume = 0.5;
             
             gameState.externalAudio.onerror = () => {
                 console.log('Audio file not found:', track.file);
-                // Fall back to 8-bit silently on initial load
+                showFeedback('Track not found!', 'oops');
+                // Fall back to 8-bit
                 gameState.currentTrack = '8bit';
                 document.querySelectorAll('.playlist-track').forEach(btn => {
                     btn.classList.remove('active');
                     if (btn.dataset.track === '8bit') btn.classList.add('active');
                 });
-                if (gameState.musicEnabled) startMusic();
-            };
+                if (gameState.isPlaying && !gameState.isPaused) startMusic();
             };
             
             gameState.externalAudio.play().catch(err => {
@@ -3391,7 +3273,7 @@
                 console.log('Challenge music element:', challengeMusic);
                 if (challengeMusic) {
                     console.log('Challenge music src:', challengeMusic.currentSrc || 'no source loaded');
-                    challengeMusic.volume = gameState.challengeMusicVolume;
+                    challengeMusic.volume = 0.4;
                     challengeMusic.currentTime = 0;
                     challengeMusic.play().then(() => {
                         console.log('Challenge music playing!');
@@ -4002,28 +3884,6 @@
             el.playlistBtn.onclick = openPlaylist;
             el.playlistClose.onclick = closePlaylist;
             el.challengeMusicToggle.onclick = toggleChallengeAudio;
-            
-            // Volume sliders
-            el.bgVolumeSlider.oninput = (e) => {
-                gameState.bgMusicVolume = e.target.value / 100;
-                if (gameState.externalAudio) {
-                    gameState.externalAudio.volume = gameState.bgMusicVolume;
-                }
-                // Update mute button visual
-                el.musicToggle.textContent = gameState.bgMusicVolume === 0 ? '🔇' : '🔊';
-                el.musicToggle.classList.toggle('muted', gameState.bgMusicVolume === 0);
-            };
-            
-            el.challengeVolumeSlider.oninput = (e) => {
-                gameState.challengeMusicVolume = e.target.value / 100;
-                const challengeMusic = document.getElementById('challengeMusic');
-                if (challengeMusic) {
-                    challengeMusic.volume = gameState.challengeMusicVolume;
-                }
-                // Update mute button visual
-                el.challengeMusicToggle.textContent = gameState.challengeMusicVolume === 0 ? '🔇' : '🔊';
-                el.challengeMusicToggle.classList.toggle('muted', gameState.challengeMusicVolume === 0);
-            };
             
             // 8-bit track button in playlist
             document.querySelector('.playlist-track[data-track="8bit"]').onclick = () => selectTrack('8bit');
