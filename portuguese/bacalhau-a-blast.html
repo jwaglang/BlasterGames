@@ -3094,7 +3094,7 @@
         }
 
         function updateModeDisplay() {
-            const modeNames = ['', 'SOUNDS', 'WORDS WITH SOUNDS', 'FALSE FRIENDS', 'VOCABULARY', 'DICTATION'];
+            const modeNames = ['', 'SOUNDS', 'WORDS WITH SOUNDS', 'FALSE FRIENDS', 'LISTEN & FIND', 'DICTATION'];
             el.modeDisplay.textContent = `LVL ${gameState.level}: ${modeNames[gameState.level]}`;
 
             if (gameState.level === 1) {
@@ -3107,8 +3107,8 @@
                 el.targetLabel.textContent = '🎯 SHOOT TRUE MEANING 🎯';
                 el.targetLetter.classList.remove('hidden-letter');
             } else if (gameState.level === 4) {
-                el.targetLabel.textContent = '🎯 SHOOT THE MEANING 🎯';
-                el.targetLetter.classList.remove('hidden-letter');
+                el.targetLabel.textContent = '🔊 LISTEN & SHOOT 🔊';
+                el.targetLetter.classList.add('hidden-letter');
             } else if (gameState.level === 5) {
                 el.targetLabel.textContent = '✍️ TYPE PORTUGUESE ✍️';
                 el.targetLetter.classList.add('hidden-letter');
@@ -3140,10 +3140,10 @@
                 el.targetLetter.classList.remove('hidden-letter');
                 setTimeout(() => speakItem(targetObj.word), 300);
             } else if (gameState.level === 4) {
-                // Show English meaning, shoot Portuguese word
-                el.targetLetter.textContent = targetObj.meaning;
-                el.targetLetter.classList.remove('hidden-letter');
-                // Speak the Portuguese word (not the English meaning)
+                // AUDIO ONLY - hide visual prompt, speak Portuguese word
+                el.targetLetter.textContent = '🔊 LISTEN';
+                el.targetLetter.classList.add('hidden-letter');
+                // Speak the Portuguese word
                 setTimeout(() => speakItem(targetObj.word), 300);
             }
         }
@@ -3193,22 +3193,49 @@
                 item.dataset.meaning = `contains "${contentObj.sound}" - ${contentObj.meaning}`;
                 item.dataset.item = JSON.stringify(contentObj);
             } else if (gameState.level === 3) {
-                // Level 3: Show either true meaning OR false cognate as target
-                // 50% chance to show the false cognate as a trap!
-                const showFalseCognate = !isTarget && Math.random() < 0.4;
+                // Level 3: False Friends
+                // Must show: current target's correct answer AND its false cognate trap
+                // Plus distractors from other words
                 
-                if (showFalseCognate) {
-                    // Show false cognate (TRAP!)
-                    const falseItem = pool[Math.floor(Math.random() * pool.length)];
-                    item.textContent = falseItem.false;
-                    item.dataset.meaning = `⚠️ FALSE FRIEND! ${falseItem.word} ≠ ${falseItem.false}`;
-                    item.dataset.item = JSON.stringify({...falseItem, isFalseCognate: true});
-                    item.dataset.isFalseCognate = 'true';
+                const targetWord = gameState.targetItem;
+                const isTrueFriend = targetWord.correct === targetWord.false || targetWord.meaning === targetWord.false;
+                
+                if (isTarget) {
+                    // Show the CORRECT answer for current target
+                    item.textContent = targetWord.correct;
+                    if (isTrueFriend) {
+                        item.dataset.meaning = `✅ TRUE FRIEND! ${targetWord.word} = ${targetWord.meaning}`;
+                    } else {
+                        item.dataset.meaning = `${targetWord.word} = ${targetWord.meaning}`;
+                    }
+                    item.dataset.item = JSON.stringify(targetWord);
                 } else {
-                    // Show correct meaning
-                    item.textContent = contentObj.correct;
-                    item.dataset.meaning = `${contentObj.word} = ${contentObj.meaning}`;
-                    item.dataset.item = JSON.stringify(contentObj);
+                    // 50% chance: show the FALSE cognate TRAP for current target
+                    // 50% chance: show a distractor (correct answer from different word)
+                    const showTrap = Math.random() < 0.5 && !isTrueFriend;
+                    
+                    if (showTrap) {
+                        // Show the FALSE cognate (TRAP!) for the CURRENT target
+                        item.textContent = targetWord.false;
+                        item.dataset.meaning = `⚠️ FALSE FRIEND! ${targetWord.word} ≠ ${targetWord.false}`;
+                        item.dataset.item = JSON.stringify({...targetWord, isFalseCognate: true});
+                        item.dataset.isFalseCognate = 'true';
+                    } else {
+                        // Show a distractor (correct answer from a DIFFERENT word)
+                        let distractor = pool[Math.floor(Math.random() * pool.length)];
+                        // Make sure it's not the same as current target
+                        while (distractor.word === targetWord.word) {
+                            distractor = pool[Math.floor(Math.random() * pool.length)];
+                        }
+                        const distractorIsTrueFriend = distractor.correct === distractor.false || distractor.meaning === distractor.false;
+                        item.textContent = distractor.correct;
+                        if (distractorIsTrueFriend) {
+                            item.dataset.meaning = `✅ TRUE FRIEND: ${distractor.word} = ${distractor.meaning}`;
+                        } else {
+                            item.dataset.meaning = `${distractor.word} = ${distractor.meaning}`;
+                        }
+                        item.dataset.item = JSON.stringify(distractor);
+                    }
                 }
             } else if (gameState.level === 4) {
                 // Level 4: Show Portuguese word, target is meaning
