@@ -1364,13 +1364,20 @@
         .volume-slider {
             -webkit-appearance: none;
             appearance: none;
-            width: 80px;
+            width: 0;
             height: 8px;
             background: rgba(0, 0, 0, 0.5);
             border: 2px solid var(--neon-cyan);
             border-radius: 4px;
             outline: none;
             cursor: pointer;
+            opacity: 0;
+            transition: width 0.3s, opacity 0.3s;
+        }
+
+        .audio-controls:hover .volume-slider {
+            width: 80px;
+            opacity: 1;
         }
 
         .volume-slider::-webkit-slider-thumb {
@@ -1401,8 +1408,13 @@
         }
 
         .volume-slider.challenge-volume {
-            width: 70px;
+            width: 0;
             border-color: var(--neon-orange);
+        }
+
+        .challenge-audio-controls:hover .volume-slider.challenge-volume {
+            width: 70px;
+            opacity: 1;
         }
 
         .volume-slider.challenge-volume::-webkit-slider-thumb {
@@ -1854,18 +1866,48 @@
 
         // False Friends (Level 3)
         const FALSE_FRIENDS = [
-            { word: 'acordar', meaning: 'to wake up', false: 'to accord', correct: 'wake up' },
-            { word: 'assistir', meaning: 'to attend', false: 'to assist', correct: 'attend' },
-            { word: 'atualmente', meaning: 'currently', false: 'actually', correct: 'currently' },
+            // False Friends (tricky ones - the main gameplay!)
             { word: 'constipado', meaning: 'has a cold', false: 'constipated', correct: 'cold' },
-            { word: 'embaraçada', meaning: 'embarrassed', false: 'pregnant', correct: 'embarrassed' },
-            { word: 'esquisito', meaning: 'strange', false: 'exquisite', correct: 'strange' },
-            { word: 'fábrica', meaning: 'factory', false: 'fabric', correct: 'factory' },
-            { word: 'livraria', meaning: 'bookstore', false: 'library', correct: 'bookstore' },
-            { word: 'parentes', meaning: 'relatives', false: 'parents', correct: 'relatives' },
-            { word: 'pretender', meaning: 'to intend', false: 'to pretend', correct: 'intend' },
+            { word: 'preservativo', meaning: 'condom', false: 'preservative', correct: 'condom' },
+            { word: 'exquisito', meaning: 'strange/weird', false: 'exquisite', correct: 'strange' },
+            { word: 'livraria', meaning: 'bookshop', false: 'library', correct: 'bookshop' },
             { word: 'puxar', meaning: 'to pull', false: 'to push', correct: 'pull' },
-            { word: 'sensível', meaning: 'sensitive', false: 'sensible', correct: 'sensitive' }
+            { word: 'assistir', meaning: 'to watch/attend', false: 'to assist', correct: 'watch' },
+            { word: 'colégio', meaning: 'high school', false: 'college', correct: 'high school' },
+            { word: 'pretender', meaning: 'to intend/plan', false: 'to pretend', correct: 'intend' },
+            { word: 'sensível', meaning: 'sensitive', false: 'sensible', correct: 'sensitive' },
+            { word: 'atualmente', meaning: 'currently/nowadays', false: 'actually', correct: 'currently' },
+            { word: 'eventual', meaning: 'possible/occasional', false: 'eventual', correct: 'possible' },
+            { word: 'notícia', meaning: 'news', false: 'notice', correct: 'news' },
+            { word: 'parente', meaning: 'relative', false: 'parent', correct: 'relative' },
+            { word: 'pasta', meaning: 'folder/briefcase', false: 'pasta', correct: 'folder' },
+            { word: 'propaganda', meaning: 'advertisement', false: 'propaganda', correct: 'advertisement' },
+            { word: 'realizar', meaning: 'to accomplish/achieve', false: 'to realize', correct: 'accomplish' },
+            { word: 'recordar', meaning: 'to remember', false: 'to record', correct: 'remember' },
+            { word: 'resumo', meaning: 'summary', false: 'resume', correct: 'summary' },
+            { word: 'costume', meaning: 'habit/custom', false: 'costume', correct: 'habit' },
+            { word: 'data', meaning: 'date (calendar)', false: 'data', correct: 'date' },
+            { word: 'intoxicado', meaning: 'food poisoned', false: 'intoxicated', correct: 'poisoned' },
+            { word: 'largo', meaning: 'wide/square (plaza)', false: 'large', correct: 'wide' },
+            { word: 'legenda', meaning: 'subtitle/caption', false: 'legend', correct: 'subtitle' },
+            { word: 'particular', meaning: 'private', false: 'particular', correct: 'private' },
+            { word: 'taxa', meaning: 'fee/rate', false: 'tax', correct: 'fee' },
+            { word: 'compromisso', meaning: 'commitment/appointment', false: 'compromise', correct: 'commitment' },
+            { word: 'decepção', meaning: 'disappointment', false: 'deception', correct: 'disappointment' },
+            { word: 'educado', meaning: 'polite/well-mannered', false: 'educated', correct: 'polite' },
+            { word: 'fábrica', meaning: 'factory', false: 'fabric', correct: 'factory' },
+            { word: 'acordar', meaning: 'to wake up', false: 'to accord', correct: 'wake up' },
+            // True Friends (cognates that DO match - easier ones)
+            { word: 'telefone', meaning: 'telephone', false: 'telephone', correct: 'telephone' },
+            { word: 'música', meaning: 'music', false: 'music', correct: 'music' },
+            { word: 'hospital', meaning: 'hospital', false: 'hospital', correct: 'hospital' },
+            { word: 'problema', meaning: 'problem', false: 'problem', correct: 'problem' },
+            { word: 'importante', meaning: 'important', false: 'important', correct: 'important' },
+            { word: 'diferente', meaning: 'different', false: 'different', correct: 'different' },
+            { word: 'animal', meaning: 'animal', false: 'animal', correct: 'animal' },
+            { word: 'natural', meaning: 'natural', false: 'natural', correct: 'natural' },
+            { word: 'central', meaning: 'central', false: 'central', correct: 'central' },
+            { word: 'total', meaning: 'total', false: 'total', correct: 'total' }
         ];
 
         // Vocabulary (Level 4) - Tiered by difficulty
@@ -1947,35 +1989,272 @@
 
         // Challenge Questions (Portuguese culture, history, food)
         const CHALLENGE_QUESTIONS = [
-            { q: "What is Portugal's famous salted fish dish?", options: ["Bacalhau", "Paella", "Sushi", "Fish & Chips"], a: "Bacalhau" },
-            { q: "Which explorer discovered the sea route to India?", options: ["Columbus", "Vasco da Gama", "Magellan", "Drake"], a: "Vasco da Gama" },
-            { q: "What is Portugal's famous sweet custard tart?", options: ["Croissant", "Éclair", "Pastel de Nata", "Churro"], a: "Pastel de Nata" },
-            { q: "What traditional music style is Portugal known for?", options: ["Flamenco", "Fado", "Salsa", "Tango"], a: "Fado" },
-            { q: "Which Portuguese city is famous for port wine?", options: ["Lisbon", "Faro", "Porto", "Coimbra"], a: "Porto" },
-            { q: "What does 'saudade' roughly mean?", options: ["Happiness", "Anger", "Longing/Nostalgia", "Fear"], a: "Longing/Nostalgia" },
-            { q: "How many ways can bacalhau be cooked (saying)?", options: ["50", "100", "365", "1000"], a: "365" },
-            { q: "What is the capital of Portugal?", options: ["Porto", "Lisbon", "Faro", "Coimbra"], a: "Lisbon" },
-            { q: "What is the westernmost point of continental Europe?", options: ["Sintra", "Cabo da Roca", "Sagres", "Cascais"], a: "Cabo da Roca" },
-            { q: "What is Portugal's national animal?", options: ["Eagle", "Lion", "Rooster", "Bull"], a: "Rooster" },
-            { q: "What language is spoken in Brazil?", options: ["Spanish", "Portuguese", "Brazilian", "Latin"], a: "Portuguese" },
-            { q: "Which prince started the Age of Discovery?", options: ["Prince Henry", "Prince Charles", "Prince Philip", "Prince Edward"], a: "Prince Henry" },
-            { q: "What is 'obrigado' in English?", options: ["Hello", "Goodbye", "Thank you", "Please"], a: "Thank you" },
-            { q: "What color is NOT in the Portuguese flag?", options: ["Green", "Red", "Yellow", "Blue"], a: "Blue" },
-            { q: "What is a popular Portuguese soup?", options: ["Gazpacho", "Caldo Verde", "Minestrone", "Pho"], a: "Caldo Verde" },
-            { q: "Which ocean borders Portugal?", options: ["Pacific", "Indian", "Atlantic", "Arctic"], a: "Atlantic" },
-            { q: "What is 'adeus' in English?", options: ["Hello", "Goodbye", "Please", "Sorry"], a: "Goodbye" },
-            { q: "What is the Portuguese word for 'fish'?", options: ["Carne", "Peixe", "Frango", "Porco"], a: "Peixe" },
-            { q: "Which country colonized Brazil?", options: ["Spain", "France", "Portugal", "England"], a: "Portugal" },
-            { q: "What is the currency of Portugal?", options: ["Escudo", "Peso", "Euro", "Real"], a: "Euro" }
+            // ============================================
+            // CATEGORY 1: PORTUGUESE LANGUAGE CURIOSITIES (50)
+            // ============================================
+            
+            // Untranslatable words & unique concepts
+            { q: "What Portuguese word describes 'the art of improvising solutions with limited resources'?", options: ["Saudade", "Desenrascanço", "Aconchego", "Madrugada"], a: "Desenrascanço" },
+            { q: "What does 'saudade' most accurately describe?", options: ["Happiness", "A melancholic longing for something absent", "Anger", "Fear"], a: "A melancholic longing for something absent" },
+            { q: "What does 'madrugada' refer to in Portuguese?", options: ["Midnight exactly", "The early morning hours before dawn", "Sunset", "Noon"], a: "The early morning hours before dawn" },
+            { q: "What does 'lusco-fusco' poetically describe?", options: ["A loud noise", "The twilight hour between day and night", "A type of fish", "A dance"], a: "The twilight hour between day and night" },
+            { q: "'Aconchego' describes a feeling of:", options: ["Sadness", "Cozy warmth and comfort", "Anger", "Confusion"], a: "Cozy warmth and comfort" },
+            
+            // Portuguese linguistic uniqueness
+            { q: "What grammatical feature is unique to Portuguese among Romance languages?", options: ["Gendered nouns", "The personal infinitive", "Verb conjugations", "Articles"], a: "The personal infinitive" },
+            { q: "The mesoclisis (putting pronouns inside verbs) is used in:", options: ["Casual speech", "Formal/literary Portuguese", "Only in Brazil", "Never anymore"], a: "Formal/literary Portuguese" },
+            { q: "What is 'tu' vs 'você' usage like in Portugal?", options: ["Tu is never used", "Tu is informal, você varies by region", "They're identical", "Você is never used"], a: "Tu is informal, você varies by region" },
+            { q: "In European Portuguese, the word 'autocarro' means:", options: ["Car", "Bus", "Train", "Taxi"], a: "Bus" },
+            { q: "What does 'telemóvel' mean in European Portuguese?", options: ["Television", "Mobile phone", "Remote control", "Telephone"], a: "Mobile phone" },
+            
+            // Grammar & language quirks
+            { q: "What term did Fernando Pessoa invent for his literary alter-egos?", options: ["Pseudonyms", "Heteronyms", "Synonyms", "Antonyms"], a: "Heteronyms" },
+            { q: "Portuguese is the official language of how many countries?", options: ["5", "7", "9", "11"], a: "9" },
+            { q: "What is the global community of Portuguese-speaking nations called?", options: ["Lusofonia", "Portugalidade", "Comunidade", "Iberia"], a: "Lusofonia" },
+            { q: "European Portuguese is known for 'eating' which sounds?", options: ["Consonants", "Unstressed vowels", "Final syllables", "Nothing"], a: "Unstressed vowels" },
+            { q: "The 'ão' nasal sound in Portuguese is often compared to:", options: ["French nasal vowels", "Spanish 'ñ'", "Italian double consonants", "German umlauts"], a: "French nasal vowels" },
+            { q: "What is the Portuguese personal infinitive?", options: ["An infinitive verb with personal endings", "A type of noun", "A past tense", "A subjunctive mood"], a: "An infinitive verb with personal endings" },
+            { q: "In Portuguese, 'você' is:", options: ["Always formal", "Always informal", "Varies by region and context", "Never used"], a: "Varies by region and context" },
+            { q: "The word 'saudade' likely comes from the Latin word for:", options: ["Sadness", "Solitude", "Soul", "Sound"], a: "Solitude" },
+            { q: "What percentage of Portuguese vocabulary comes from Latin?", options: ["About 50%", "About 70%", "About 90%", "About 30%"], a: "About 90%" },
+            { q: "Which language influenced Portuguese with words like 'alfândega' and 'azulejo'?", options: ["French", "Arabic", "Greek", "German"], a: "Arabic" },
+            
+            // Etymology & word origins
+            { q: "'Azulejo' (Portuguese tile) comes from Arabic meaning:", options: ["Blue tile", "Small polished stone", "Wall art", "Ceramic"], a: "Small polished stone" },
+            { q: "The word 'fado' comes from Latin 'fatum' meaning:", options: ["Song", "Fate/destiny", "Sadness", "Guitar"], a: "Fate/destiny" },
+            { q: "Portuguese word 'chá' (tea) came from:", options: ["Chinese", "English", "Indian", "Japanese"], a: "Chinese" },
+            { q: "'Fetiche' was a Portuguese word later borrowed into English as:", options: ["Festival", "Fetish", "Feature", "Finish"], a: "Fetish" },
+            { q: "The English word 'marmalade' comes from Portuguese:", options: ["Marmelada (quince jam)", "Maravilha", "Maracujá", "Morango"], a: "Marmelada (quince jam)" },
+            { q: "Which Portuguese word became English 'cobra'?", options: ["Cobra de capelo", "Serpente", "Lagarto", "Víbora"], a: "Cobra de capelo" },
+            { q: "'Embarcar' (to embark) gave English which word?", options: ["Embargo", "Embarrass", "Embrace", "Embark"], a: "Embargo" },
+            { q: "The word 'baroque' likely comes from Portuguese 'barroco' meaning:", options: ["Ornate style", "Irregular pearl", "Church art", "Royal palace"], a: "Irregular pearl" },
+            
+            // Expressions & idioms
+            { q: "'Tirar o cavalinho da chuva' means:", options: ["Take your horse from the rain", "Give up on something", "Start something new", "Work harder"], a: "Give up on something" },
+            { q: "'Pagar o pato' (pay the duck) means:", options: ["Buy poultry", "Take the blame for others", "Win a prize", "Celebrate"], a: "Take the blame for others" },
+            { q: "What does 'Estou com a pulga atrás da orelha' express?", options: ["I have an itch", "I'm suspicious about something", "I'm happy", "I'm tired"], a: "I'm suspicious about something" },
+            { q: "'Ficar com a cara no chão' means:", options: ["Fall asleep", "Be deeply embarrassed", "Be angry", "Be confused"], a: "Be deeply embarrassed" },
+            { q: "'Meter água' literally means 'to put water in' but actually means:", options: ["To water plants", "To fail or make mistakes", "To clean", "To cook"], a: "To fail or make mistakes" },
+            { q: "'Engolir sapos' (swallow frogs) means:", options: ["Eat exotic food", "Accept humiliation silently", "Be brave", "Talk nonsense"], a: "Accept humiliation silently" },
+            { q: "What is 'falar pelos cotovelos'?", options: ["Whisper", "Talk excessively", "Speak quietly", "Sing"], a: "Talk excessively" },
+            { q: "'Dar com os burros n'água' means:", options: ["Find water for donkeys", "Fail completely", "Succeed against odds", "Travel far"], a: "Fail completely" },
+            
+            // Pronunciation & phonetics
+            { q: "The Portuguese 'nh' sound is similar to:", options: ["Spanish 'ñ'", "French 'gn'", "Both Spanish 'ñ' and French 'gn'", "Neither"], a: "Both Spanish 'ñ' and French 'gn'" },
+            { q: "In European Portuguese, unstressed 'e' often sounds like:", options: ["A clear 'e'", "Almost silent or 'uh'", "Like 'i'", "Like 'a'"], a: "Almost silent or 'uh'" },
+            { q: "The Portuguese 'lh' makes a sound similar to:", options: ["English 'l'", "Spanish 'll' or Italian 'gl'", "French 'l'", "German 'l'"], a: "Spanish 'll' or Italian 'gl'" },
+            { q: "In European Portuguese, final 's' before a pause sounds like:", options: ["English 's'", "English 'sh'", "Silent", "Buzzing 'z'"], a: "English 'sh'" },
+            { q: "The European Portuguese 'r' in Lisbon is pronounced:", options: ["Rolled like Spanish", "Guttural like French", "Silent", "Like English 'r'"], a: "Guttural like French" },
+            
+            // ============================================
+            // CATEGORY 2: PORTUGUESE HISTORY (50)
+            // ============================================
+            
+            // Carnation Revolution
+            { q: "What was the secret code name for the 1974 revolution?", options: ["Operation Freedom", "Operation Historic Turn", "Operation Democracy", "Operation April"], a: "Operation Historic Turn" },
+            { q: "Which song was the radio signal to start the Carnation Revolution?", options: ["Fado Português", "Grândola, Vila Morena", "A Portuguesa", "April in Portugal"], a: "Grândola, Vila Morena" },
+            { q: "Who wrote 'Grândola, Vila Morena'?", options: ["Amália Rodrigues", "José Afonso (Zeca Afonso)", "Carlos Paredes", "Dulce Pontes"], a: "José Afonso (Zeca Afonso)" },
+            { q: "The first signal on the radio played which Eurovision entry?", options: ["A Festa da Vida", "E Depois do Adeus", "Playback", "Bem Bom"], a: "E Depois do Adeus" },
+            { q: "Who was the captain who led troops to surround the Carmo Barracks?", options: ["Otelo Saraiva de Carvalho", "Salgueiro Maia", "Vasco Lourenço", "Vítor Alves"], a: "Salgueiro Maia" },
+            { q: "Who was President of Portugal when the Carnation Revolution happened?", options: ["António de Spínola", "Américo Tomás", "Marcelo Caetano", "Mário Soares"], a: "Américo Tomás" },
+            { q: "Who was Prime Minister during the Carnation Revolution?", options: ["Salazar", "Marcelo Caetano", "Mário Soares", "Spínola"], a: "Marcelo Caetano" },
+            { q: "Where did Marcelo Caetano surrender on April 25, 1974?", options: ["São Bento Palace", "Carmo Barracks", "Belém Palace", "Ajuda Palace"], a: "Carmo Barracks" },
+            { q: "How many people died from revolutionary forces during the Carnation Revolution?", options: ["Hundreds", "Dozens", "Four civilians (by secret police)", "None"], a: "Four civilians (by secret police)" },
+            { q: "Who gave carnations to soldiers, inspiring the revolution's name?", options: ["Amália Rodrigues", "Celeste Caeiro", "Maria de Medeiros", "Sophia de Mello"], a: "Celeste Caeiro" },
+            { q: "Who coordinated the revolution from the Pontinha command post?", options: ["Salgueiro Maia", "Otelo Saraiva de Carvalho", "Spínola", "Ramalho Eanes"], a: "Otelo Saraiva de Carvalho" },
+            { q: "What was the MFA (Movimento das Forças Armadas)?", options: ["A political party", "The Armed Forces Movement that overthrew the regime", "A trade union", "A newspaper"], a: "The Armed Forces Movement that overthrew the regime" },
+            { q: "What famous quote did Salgueiro Maia say about the revolution?", options: ["Today we make history", "The revolution doesn't stop for red lights", "Freedom at last", "Victory is ours"], a: "The revolution doesn't stop for red lights" },
+            
+            // Estado Novo & Salazar
+            { q: "For how many years did the Estado Novo dictatorship last?", options: ["28 years", "36 years", "41 years", "48 years"], a: "41 years" },
+            { q: "What was Salazar's profession before entering politics?", options: ["Military general", "Lawyer", "University professor of economics", "Businessman"], a: "University professor of economics" },
+            { q: "At which university did Salazar teach before becoming dictator?", options: ["University of Lisbon", "University of Porto", "University of Coimbra", "University of Évora"], a: "University of Coimbra" },
+            { q: "What was PIDE?", options: ["A political party", "The secret police", "A news agency", "A labor union"], a: "The secret police" },
+            { q: "What happened to Salazar in 1968?", options: ["He was assassinated", "He fell from a chair and suffered a stroke", "He fled to Brazil", "He was voted out"], a: "He fell from a chair and suffered a stroke" },
+            { q: "After Salazar's stroke, who replaced him as leader?", options: ["Américo Tomás", "Marcelo Caetano", "António de Spínola", "Mário Soares"], a: "Marcelo Caetano" },
+            { q: "Did Salazar know he had been replaced as Prime Minister?", options: ["Yes, immediately", "No, he was never told", "Yes, after 6 months", "He demanded to be reinstated"], a: "No, he was never told" },
+            { q: "What was Tarrafal?", options: ["A beach resort", "A concentration camp in Cape Verde", "A military base", "A palace"], a: "A concentration camp in Cape Verde" },
+            { q: "What did Portugal claim about its African territories?", options: ["They were independent nations", "They were overseas provinces of Portugal", "They were temporary colonies", "They were UN mandates"], a: "They were overseas provinces of Portugal" },
+            { q: "Who was Humberto Delgado?", options: ["A fado singer", "An opposition leader assassinated by PIDE", "Salazar's successor", "A military general loyal to Salazar"], a: "An opposition leader assassinated by PIDE" },
+            { q: "Portugal was neutral during WWII but secretly traded what with Nazi Germany?", options: ["Oil", "Wolfram (tungsten)", "Iron", "Gold"], a: "Wolfram (tungsten)" },
+            { q: "In 2007, who won the controversial 'Greatest Portuguese' TV poll?", options: ["Vasco da Gama", "Fernando Pessoa", "António de Oliveira Salazar", "Luís de Camões"], a: "António de Oliveira Salazar" },
+            
+            // Age of Discovery
+            { q: "What year did Vasco da Gama reach India by sea?", options: ["1488", "1492", "1498", "1500"], a: "1498" },
+            { q: "The Treaty of Tordesillas (1494) divided the world between:", options: ["Portugal and England", "Portugal and Spain", "Portugal and France", "Spain and England"], a: "Portugal and Spain" },
+            { q: "How many leagues west of Cape Verde was the Tordesillas line?", options: ["100 leagues", "270 leagues", "370 leagues", "500 leagues"], a: "370 leagues" },
+            { q: "Which Portuguese explorer first rounded the Cape of Good Hope?", options: ["Vasco da Gama", "Bartolomeu Dias", "Pedro Álvares Cabral", "Ferdinand Magellan"], a: "Bartolomeu Dias" },
+            { q: "Who officially 'discovered' Brazil for Portugal in 1500?", options: ["Vasco da Gama", "Pedro Álvares Cabral", "Ferdinand Magellan", "Afonso de Albuquerque"], a: "Pedro Álvares Cabral" },
+            { q: "Which prince earned the title 'Navigator' for promoting exploration?", options: ["Prince Pedro", "Prince Henry", "Prince Ferdinand", "Prince Afonso"], a: "Prince Henry" },
+            { q: "Ferdinand Magellan, though Portuguese, sailed under which flag?", options: ["Portuguese", "Spanish", "English", "Dutch"], a: "Spanish" },
+            { q: "What was Portugal's main goal in the Age of Discovery?", options: ["Spreading democracy", "Finding spices and trade routes to Asia", "Escaping famine", "Finding gold in Americas"], a: "Finding spices and trade routes to Asia" },
+            { q: "Which city did Portugal conquer to control the spice trade in 1510?", options: ["Calcutta", "Goa", "Mumbai", "Chennai"], a: "Goa" },
+            { q: "What Portuguese innovation made long ocean voyages possible?", options: ["The caravel ship", "The steam engine", "The compass (invented in Portugal)", "The submarine"], a: "The caravel ship" },
+            { q: "Macau was a Portuguese territory until which year?", options: ["1975", "1987", "1997", "1999"], a: "1999" },
+            { q: "How long was the Portuguese Colonial War in Africa?", options: ["5 years", "8 years", "13 years", "20 years"], a: "13 years" },
+            
+            // Other History
+            { q: "When did Portugal become a republic?", options: ["1822", "1890", "1910", "1926"], a: "1910" },
+            { q: "What was the Reconquista?", options: ["Portuguese independence from Spain", "Christian reconquest of Iberia from Moors", "Colonial expansion", "Industrial revolution"], a: "Christian reconquest of Iberia from Moors" },
+            { q: "When did Portugal gain independence from the Kingdom of León?", options: ["1139", "1249", "1385", "1415"], a: "1139" },
+            { q: "Who was Portugal's first king?", options: ["Afonso Henriques", "Sancho I", "Dinis I", "João I"], a: "Afonso Henriques" },
+            { q: "The 1755 Lisbon earthquake occurred on which religious holiday?", options: ["Easter", "Christmas", "All Saints' Day", "Good Friday"], a: "All Saints' Day" },
+            { q: "Who rebuilt Lisbon after the 1755 earthquake?", options: ["King José I", "Marquês de Pombal", "Prince Henry", "Queen Maria I"], a: "Marquês de Pombal" },
+            { q: "When did Portugal join the European Union (then EEC)?", options: ["1974", "1981", "1986", "1992"], a: "1986" },
+            { q: "The Battle of Aljubarrota (1385) secured independence from:", options: ["Spain", "Castile", "Morocco", "France"], a: "Castile" },
+            
+            // ============================================
+            // CATEGORY 3: PORTUGUESE CULTURE TRIVIA (50)
+            // ============================================
+            
+            // Food & Drink
+            { q: "According to Portuguese tradition, how many ways can bacalhau be cooked?", options: ["100", "200", "365", "500"], a: "365" },
+            { q: "What is the main ingredient in 'Caldo Verde'?", options: ["Potatoes and kale", "Tomatoes and onions", "Fish and rice", "Beans and sausage"], a: "Potatoes and kale" },
+            { q: "Pastel de nata originated from which Lisbon neighborhood?", options: ["Alfama", "Belém", "Bairro Alto", "Chiado"], a: "Belém" },
+            { q: "What type of wine is Port wine?", options: ["Dry white", "Fortified sweet wine", "Sparkling", "Rosé"], a: "Fortified sweet wine" },
+            { q: "What is 'francesinha'?", options: ["A French woman", "A sandwich covered in melted cheese and sauce from Porto", "A type of bread", "A dessert"], a: "A sandwich covered in melted cheese and sauce from Porto" },
+            { q: "Ginjinha is a Portuguese liqueur made from:", options: ["Grapes", "Sour cherries", "Oranges", "Almonds"], a: "Sour cherries" },
+            { q: "What is 'tripas à moda do Porto'?", options: ["Grilled fish", "Tripe stew", "Roasted chicken", "Seafood rice"], a: "Tripe stew" },
+            { q: "Why are people from Porto called 'tripeiros'?", options: ["They love tripe", "They gave their meat to sailors and ate only tripe", "They invented tripe dishes", "It's an insult"], a: "They gave their meat to sailors and ate only tripe" },
+            { q: "What is the traditional Christmas dessert 'Bolo Rei'?", options: ["Chocolate cake", "Fruit-filled crown cake with a hidden fava bean", "Cheesecake", "Custard tart"], a: "Fruit-filled crown cake with a hidden fava bean" },
+            { q: "Vinho Verde is:", options: ["Green-colored wine", "Wine from green grapes only", "Young, slightly sparkling wine", "Wine with herbs"], a: "Young, slightly sparkling wine" },
+            { q: "'Arroz de pato' is rice with:", options: ["Chicken", "Duck", "Fish", "Shrimp"], a: "Duck" },
+            
+            // Fado & Music
+            { q: "In which Lisbon neighborhood did fado originate?", options: ["Belém", "Alfama", "Bairro Alto", "Chiado"], a: "Alfama" },
+            { q: "What is the traditional Portuguese guitar used in fado?", options: ["Classical guitar", "Portuguese guitarra (12-string pear-shaped)", "Acoustic guitar", "Mandolin"], a: "Portuguese guitarra (12-string pear-shaped)" },
+            { q: "What year was fado inscribed as UNESCO Intangible Cultural Heritage?", options: ["2005", "2008", "2011", "2015"], a: "2011" },
+            { q: "Which award did Amália Rodrigues receive posthumously?", options: ["Nobel Prize", "Burial in the National Pantheon", "Grammy Lifetime Achievement", "Eurovision winner"], a: "Burial in the National Pantheon" },
+            { q: "What is 'fado vadio'?", options: ["Professional fado", "Amateur/spontaneous fado in restaurants", "Religious fado", "Modern fado"], a: "Amateur/spontaneous fado in restaurants" },
+            { q: "Coimbra fado differs from Lisbon fado in that it's traditionally sung by:", options: ["Women only", "Male university students", "Professional singers only", "Children"], a: "Male university students" },
+            { q: "What was Amália Rodrigues' hit that reached #2 on US charts in 1952?", options: ["Grândola Vila Morena", "April in Portugal (Coimbra)", "Fado Português", "Lisboa Antiga"], a: "April in Portugal (Coimbra)" },
+            
+            // Traditions & Festivals
+            { q: "What happens on the night of June 12th in Lisbon?", options: ["Christmas Eve", "Santo António festivities", "Carnival", "Easter celebrations"], a: "Santo António festivities" },
+            { q: "Which saint is the patron of Lisbon?", options: ["São João", "Santo António", "São Pedro", "São Jorge"], a: "Santo António" },
+            { q: "What city celebrates São João with hammer-wielding revelers?", options: ["Lisbon", "Porto", "Coimbra", "Faro"], a: "Porto" },
+            { q: "What do Portuguese traditionally eat on Christmas Eve?", options: ["Turkey", "Bacalhau (codfish)", "Roast pork", "Lamb"], a: "Bacalhau (codfish)" },
+            { q: "The 'Queima das Fitas' is a festival for:", options: ["Burning old documents", "University students burning their faculty ribbons", "A fire festival", "Burning winter clothes"], a: "University students burning their faculty ribbons" },
+            { q: "What is the Portuguese Carnival most famous for?", options: ["Masks in Venice style", "Samba in Ovar and Torres Vedras satire", "Bull running", "Religious processions"], a: "Samba in Ovar and Torres Vedras satire" },
+            { q: "What is a 'marcha popular'?", options: ["A military parade", "Neighborhood parade with costumes and music", "A protest march", "A running race"], a: "Neighborhood parade with costumes and music" },
+            { q: "What plant is traditionally associated with São João in Porto?", options: ["Roses", "Manjerico (basil) with love poems", "Carnations", "Lavender"], a: "Manjerico (basil) with love poems" },
+            
+            // Art, Architecture & Design
+            { q: "What is 'Manueline' style?", options: ["A type of music", "Portuguese late Gothic architectural style", "A painting technique", "A writing style"], a: "Portuguese late Gothic architectural style" },
+            { q: "What is the symbol most associated with Manueline architecture?", options: ["Lions", "Maritime motifs like ropes and armillary spheres", "Angels", "Flowers"], a: "Maritime motifs like ropes and armillary spheres" },
+            { q: "What is an 'azulejo'?", options: ["A type of fish", "A painted ceramic tile", "A dance", "A musical instrument"], a: "A painted ceramic tile" },
+            { q: "The Jerónimos Monastery in Belém was funded by:", options: ["Royal treasury", "Church donations", "Spice trade profits", "War spoils"], a: "Spice trade profits" },
+            { q: "What UNESCO site in Sintra was a summer residence for Portuguese royalty?", options: ["Jerónimos Monastery", "Pena Palace", "Tower of Belém", "Alcobaça Monastery"], a: "Pena Palace" },
+            { q: "The 'calçada portuguesa' is:", options: ["A type of bread", "Traditional limestone mosaic pavement", "A folk dance", "A ceramic style"], a: "Traditional limestone mosaic pavement" },
+            { q: "What is Portugal's national symbol seen on the flag?", options: ["Eagle", "Lion", "Armillary sphere and shield", "Cross"], a: "Armillary sphere and shield" },
+            
+            // Sports & Other Culture
+            { q: "What is Portugal's most popular sport?", options: ["Tennis", "Football (soccer)", "Rugby", "Basketball"], a: "Football (soccer)" },
+            { q: "The 'Galo de Barcelos' (Barcelos Rooster) is a symbol of:", options: ["Portuguese cuisine", "Faith and justice (from a medieval legend)", "Royalty", "Maritime history"], a: "Faith and justice (from a medieval legend)" },
+            { q: "What is 'azul' in the Portuguese flag meant to represent?", options: ["The sea", "There is no blue in the Portuguese flag", "The sky", "Royalty"], a: "There is no blue in the Portuguese flag" },
+            { q: "What colors are on the Portuguese flag?", options: ["Red, white, blue", "Green, red, and yellow (from the shield)", "Blue and white", "Red and gold"], a: "Green, red, and yellow (from the shield)" },
+            { q: "What is 'Fátima' famous for?", options: ["A football stadium", "Catholic pilgrimage site of Marian apparitions", "A wine region", "A historical battle"], a: "Catholic pilgrimage site of Marian apparitions" },
+            { q: "What year did the apparitions at Fátima occur?", options: ["1890", "1910", "1917", "1936"], a: "1917" },
+            { q: "What is 'sete colinas' in reference to Lisbon?", options: ["Seven beaches", "Seven hills the city is built on", "Seven neighborhoods", "Seven monuments"], a: "Seven hills the city is built on" },
+            { q: "What is the world's oldest bookshop, located in Lisbon?", options: ["Livraria Lello", "Livraria Bertrand", "Livraria Ferin", "Alfarrabista do Chiado"], a: "Livraria Bertrand" },
+            { q: "Livraria Lello in Porto inspired which fictional location?", options: ["Narnia", "Hogwarts library", "Middle Earth", "Wonderland"], a: "Hogwarts library" },
+            { q: "What export is Portugal famous for today (hint: not Ronaldo or port wine)?", options: ["Olive oil", "Cork (over 50% of world supply)", "Textiles", "Ceramics"], a: "Cork (over 50% of world supply)" },
+            
+            // ============================================
+            // CATEGORY 4: CELEBRITIES & HISTORICAL FIGURES (50)
+            // ============================================
+            
+            // Writers & Poets
+            { q: "Who is considered Portugal's greatest poet, author of 'Os Lusíadas'?", options: ["Fernando Pessoa", "Luís de Camões", "José Saramago", "Eça de Queirós"], a: "Luís de Camões" },
+            { q: "How many heteronyms did Fernando Pessoa have approximately?", options: ["3", "12", "Over 70", "Just 1"], a: "Over 70" },
+            { q: "Which of these is NOT one of Pessoa's three main heteronyms?", options: ["Alberto Caeiro", "Ricardo Reis", "Álvaro de Campos", "António Mora"], a: "António Mora" },
+            { q: "José Saramago won the Nobel Prize in Literature in:", options: ["1988", "1995", "1998", "2002"], a: "1998" },
+            { q: "Saramago was the first writer in which language to win the Nobel?", options: ["Spanish", "Portuguese", "Galician", "Catalan"], a: "Portuguese" },
+            { q: "Why did Saramago move to the Canary Islands?", options: ["Tax reasons", "His book was blocked by the Portuguese government", "Health reasons", "Personal preference"], a: "His book was blocked by the Portuguese government" },
+            { q: "Which Saramago novel features an epidemic of blindness?", options: ["The Gospel According to Jesus Christ", "Blindness", "The Stone Raft", "Baltasar and Blimunda"], a: "Blindness" },
+            { q: "What is 'O Livro do Desassossego' (Book of Disquiet)?", options: ["A cookbook", "Pessoa's fragmentary prose masterpiece", "A travel guide", "A political manifesto"], a: "Pessoa's fragmentary prose masterpiece" },
+            { q: "Pessoa's heteronym Alberto Caeiro was described as:", options: ["An engineer from Glasgow", "A simple shepherd with no formal education", "A doctor who loved classical poetry", "A naval officer"], a: "A simple shepherd with no formal education" },
+            { q: "Álvaro de Campos was influenced by which American poet?", options: ["Emily Dickinson", "Walt Whitman", "Robert Frost", "Edgar Allan Poe"], a: "Walt Whitman" },
+            { q: "In which Lisbon café did Fernando Pessoa often write?", options: ["Café A Brasileira", "Pastéis de Belém", "Martinho da Arcada", "Both A Brasileira and Martinho da Arcada"], a: "Both A Brasileira and Martinho da Arcada" },
+            { q: "What was the name of the modernist magazine Pessoa helped found in 1915?", options: ["Presença", "Orpheu", "Contemporânea", "Seara Nova"], a: "Orpheu" },
+            
+            // Musicians & Artists
+            { q: "Who is known as the 'Queen of Fado'?", options: ["Dulce Pontes", "Mariza", "Amália Rodrigues", "Ana Moura"], a: "Amália Rodrigues" },
+            { q: "What rumor surrounded Amália Rodrigues after the Carnation Revolution?", options: ["She fled Portugal", "She was accused of collaborating with the dictatorship", "She retired immediately", "She joined politics"], a: "She was accused of collaborating with the dictatorship" },
+            { q: "What did Amália secretly do during the Salazar regime?", options: ["Spied for PIDE", "Funded the Portuguese Communist Party", "Wrote political songs", "Left the country"], a: "Funded the Portuguese Communist Party" },
+            { q: "What was Carlos Paredes famous for playing?", options: ["Fado singing", "Portuguese guitar instrumentals", "Piano", "Violin"], a: "Portuguese guitar instrumentals" },
+            { q: "Which contemporary fadista has won a Latin Grammy?", options: ["Cristina Branco", "Mariza", "Dulce Pontes", "Carminho"], a: "Mariza" },
+            { q: "Paula Rego is a famous Portuguese:", options: ["Singer", "Visual artist and painter", "Writer", "Architect"], a: "Visual artist and painter" },
+            { q: "Which Portuguese painter is known for 'Painéis de São Vicente'?", options: ["Amadeo de Souza-Cardoso", "Nuno Gonçalves", "Almada Negreiros", "Vieira da Silva"], a: "Nuno Gonçalves" },
+            
+            // Sports Figures
+            { q: "How many international goals has Cristiano Ronaldo scored (as of 2024)?", options: ["Over 100", "Over 120", "Over 140", "Over 160"], a: "Over 140" },
+            { q: "How many Ballon d'Or awards has Ronaldo won?", options: ["3", "4", "5", "7"], a: "5" },
+            { q: "Cristiano Ronaldo was born on which Portuguese island?", options: ["Azores", "Madeira", "Porto Santo", "Mainland Portugal"], a: "Madeira" },
+            { q: "In which year did Portugal win their first European Championship?", options: ["2004", "2012", "2016", "2020"], a: "2016" },
+            { q: "Who scored the winning goal in the Euro 2016 final?", options: ["Cristiano Ronaldo", "Nani", "Éder", "Pepe"], a: "Éder" },
+            { q: "Eusébio, the 'Black Panther', was born in:", options: ["Portugal", "Mozambique", "Angola", "Brazil"], a: "Mozambique" },
+            { q: "What record does Ronaldo hold for international caps?", options: ["Most goals", "Most assists", "Most appearances (over 200)", "Most World Cup goals"], a: "Most appearances (over 200)" },
+            { q: "Luís Figo controversially transferred from Barcelona to:", options: ["Manchester United", "Real Madrid", "Inter Milan", "Juventus"], a: "Real Madrid" },
+            { q: "Which Portuguese footballer is nicknamed 'CR7'?", options: ["Luís Figo", "Eusébio", "Cristiano Ronaldo", "Ricardo Carvalho"], a: "Cristiano Ronaldo" },
+            
+            // Political Figures
+            { q: "Who was Portugal's first democratically elected Prime Minister after 1974?", options: ["Ramalho Eanes", "Mário Soares", "Aníbal Cavaco Silva", "Francisco Sá Carneiro"], a: "Mário Soares" },
+            { q: "Who became the first civilian President after the Carnation Revolution?", options: ["António de Spínola", "Ramalho Eanes", "Mário Soares", "Américo Tomás"], a: "Ramalho Eanes" },
+            { q: "António Guterres, before becoming UN Secretary-General, was:", options: ["Portugal's President", "Portugal's Prime Minister", "EU Commissioner", "NATO Secretary"], a: "Portugal's Prime Minister" },
+            { q: "Who wrote 'Portugal and the Future', the book that helped spark the revolution?", options: ["Salgueiro Maia", "António de Spínola", "Otelo Saraiva de Carvalho", "Mário Soares"], a: "António de Spínola" },
+            { q: "Aristides de Sousa Mendes was a Portuguese diplomat who:", options: ["Founded the UN", "Saved thousands of Jews by issuing visas against orders", "Discovered Brazil", "Led the Carnation Revolution"], a: "Saved thousands of Jews by issuing visas against orders" },
+            { q: "How many visas did Sousa Mendes issue to refugees in 1940?", options: ["Hundreds", "About 10,000", "About 30,000", "About 100,000"], a: "About 30,000" },
+            { q: "What happened to Sousa Mendes after he saved refugees?", options: ["He was promoted", "He was dismissed and died in poverty", "He became President", "He fled to America"], a: "He was dismissed and died in poverty" },
+            { q: "Who was the Bishop of Porto exiled for criticizing Salazar?", options: ["D. António Ferreira Gomes", "D. Manuel Gonçalves Cerejeira", "D. José da Cruz Policarpo", "D. António Ribeiro"], a: "D. António Ferreira Gomes" },
+            
+            // Other Notable Figures
+            { q: "Who is considered the founder of modern Portuguese prose?", options: ["Camões", "Eça de Queirós", "Fernando Pessoa", "Gil Vicente"], a: "Eça de Queirós" },
+            { q: "Sophia de Mello Breyner Andresen was a famous Portuguese:", options: ["Painter", "Poet and writer", "Singer", "Actress"], a: "Poet and writer" },
+            { q: "What did Maria de Medeiros, famous actress, direct about the Carnation Revolution?", options: ["April Captains (Capitães de Abril)", "Blindness", "Amália", "The Letter"], a: "April Captains (Capitães de Abril)" },
+            { q: "Who was the first woman buried in Portugal's National Pantheon?", options: ["Amália Rodrigues", "Sophia de Mello Breyner", "Maria II", "Florbela Espanca"], a: "Amália Rodrigues" },
+            { q: "Manoel de Oliveira holds the record for:", options: ["Oldest active film director (directing until age 106)", "Most Oscar nominations", "Most Portuguese films", "Longest film ever made"], a: "Oldest active film director (directing until age 106)" },
+            { q: "Which Portuguese navigator has a bridge named after him in Lisbon?", options: ["Bartolomeu Dias", "Pedro Álvares Cabral", "Vasco da Gama", "Ferdinand Magellan"], a: "Vasco da Gama" },
+            
+            // Additional questions
+            { q: "What is the longest river entirely within Portugal?", options: ["Tagus", "Douro", "Mondego", "Guadiana"], a: "Mondego" },
+            { q: "What Portuguese word means 'small polished stone' and names decorative tiles?", options: ["Mosaico", "Cerâmica", "Azulejo", "Pedra"], a: "Azulejo" },
+            { q: "The Portuguese word 'obrigado' literally means:", options: ["Thank you", "Obligated/indebted", "Hello", "Please"], a: "Obligated/indebted" },
+            { q: "What is the Algarve famous for?", options: ["Mountains", "Beaches and tourism", "Heavy industry", "Wine production"], a: "Beaches and tourism" },
+            { q: "What did Portugal export that funded the Jerónimos Monastery?", options: ["Gold", "Pepper and spices", "Wine", "Cork"], a: "Pepper and spices" },
+            { q: "The 'Torre de Belém' was built to defend which city?", options: ["Porto", "Lisbon", "Coimbra", "Faro"], a: "Lisbon" },
+            { q: "What is 'pastéis de Belém' versus 'pastel de nata'?", options: ["Same thing", "Pastéis de Belém is the original from one bakery", "Different recipes", "Different sizes"], a: "Pastéis de Belém is the original from one bakery" },
+            { q: "Which Portuguese queen is known as 'The Holy Queen'?", options: ["Queen Maria I", "Queen Isabel", "Queen Leonor", "Queen Catarina"], a: "Queen Isabel" },
+            { q: "What is the 'personal infinitive' unique to Portuguese?", options: ["A verb form with personal endings on infinitives", "A type of pronoun", "A conjugation mistake", "An archaic form"], a: "A verb form with personal endings on infinitives" },
+            { q: "What is the Douro Valley famous for producing?", options: ["Cork", "Port wine and wine grapes", "Olives", "Citrus fruits"], a: "Port wine and wine grapes" },
+            { q: "The term 'Age of Discovery' in Portuguese is:", options: ["Idade do Ouro", "Época das Descobertas", "Tempo Imperial", "Era Colonial"], a: "Época das Descobertas" },
+            { q: "What is 'bacalhau à Brás'?", options: ["Grilled cod", "Shredded cod with eggs and fried potatoes", "Cod soup", "Raw cod"], a: "Shredded cod with eggs and fried potatoes" },
+            { q: "The newspaper 'Diário de Notícias' was founded in:", options: ["1764", "1864", "1910", "1974"], a: "1864" },
+            { q: "What is the 'Estádio da Luz' in Lisbon?", options: ["A concert hall", "Benfica's football stadium", "A museum", "A shopping center"], a: "Benfica's football stadium" },
+            { q: "Which Portuguese city is nicknamed 'The Invincible City'?", options: ["Lisbon", "Porto", "Coimbra", "Guimarães"], a: "Porto" },
+            { q: "What event does Portugal celebrate on December 1st?", options: ["Independence Day (from Spain)", "Republic Day", "Christmas Eve", "Discovery Day"], a: "Independence Day (from Spain)" },
+            { q: "The 'Carnation Revolution' is also known as:", options: ["The Red Revolution", "The 25th of April", "The Peaceful Coup", "The Student Revolution"], a: "The 25th of April" },
+            { q: "What Portuguese word describes the feeling of cozy comfort?", options: ["Saudade", "Aconchego", "Desenrascanço", "Cafuné"], a: "Aconchego" },
+            { q: "Which treaty in 1386 created the world's oldest alliance (Portugal-England)?", options: ["Treaty of Tordesillas", "Treaty of Windsor", "Treaty of Lisbon", "Treaty of Methuen"], a: "Treaty of Windsor" },
+            { q: "What is 'bacalhau à Gomes de Sá'?", options: ["Fried cod", "Cod casserole with potatoes, onions, and olives", "Cod soup", "Grilled cod"], a: "Cod casserole with potatoes, onions, and olives" },
+            { q: "The 'Marquês de Pombal' was famous for:", options: ["Discovering Brazil", "Rebuilding Lisbon after the 1755 earthquake", "Writing Os Lusíadas", "Leading the Carnation Revolution"], a: "Rebuilding Lisbon after the 1755 earthquake" },
+            { q: "What is 'A Portuguesa'?", options: ["A newspaper", "The Portuguese national anthem", "A folk dance", "A type of bread"], a: "The Portuguese national anthem" },
+            { q: "Portugal's Day (June 10th) also commemorates the death of:", options: ["Salazar", "Luís de Camões", "Fernando Pessoa", "Vasco da Gama"], a: "Luís de Camões" },
+            { q: "What is 'Feijoada à transmontana'?", options: ["Fish stew", "Bean and meat stew from Trás-os-Montes", "Seafood soup", "Vegetable dish"], a: "Bean and meat stew from Trás-os-Montes" },
+            { q: "What is the 'Prova Oral' famous Portuguese TV show about?", options: ["Cooking", "Interviewing celebrities about their lives", "Sports", "Music"], a: "Interviewing celebrities about their lives" },
+            { q: "What is 'Benfica vs Sporting' rivalry called?", options: ["O Clássico", "O Dérbi", "O Dérbi de Lisboa", "A Rivalidade"], a: "O Dérbi de Lisboa" },
+            { q: "What is Portugal's westernmost point, the 'end of the world'?", options: ["Sagres", "Cabo da Roca", "Sintra", "Cascais"], a: "Cabo da Roca" },
+            { q: "What does 'bica' mean in Lisbon?", options: ["A sandwich", "An espresso coffee", "A tram", "A bridge"], a: "An espresso coffee" },
+            { q: "In Porto, the same espresso is called:", options: ["Bica", "Cimbalino", "Café", "Expresso"], a: "Cimbalino" }
         ];
 
         // Difficulty settings per level - 3 rounds per level, 10 targets each
         // Each round increases speed by 20%
         const LEVEL_CONFIG = {
-            1: { baseSpeed: 12000, spawnRate: 3000, targetsPerRound: 10, rounds: 3, tempo: 280 },
-            2: { baseSpeed: 9000, spawnRate: 2500, targetsPerRound: 10, rounds: 3, tempo: 220 },
-            3: { baseSpeed: 7000, spawnRate: 2000, targetsPerRound: 10, rounds: 3, tempo: 180 },
-            4: { baseSpeed: 5000, spawnRate: 1500, targetsPerRound: 10, rounds: 3, tempo: 140 },
+            1: { baseSpeed: 8400, spawnRate: 2100, targetsPerRound: 10, rounds: 3, tempo: 280 },
+            2: { baseSpeed: 6300, spawnRate: 1750, targetsPerRound: 10, rounds: 3, tempo: 220 },
+            3: { baseSpeed: 4900, spawnRate: 1400, targetsPerRound: 10, rounds: 3, tempo: 180 },
+            4: { baseSpeed: 3500, spawnRate: 1050, targetsPerRound: 10, rounds: 3, tempo: 140 },
             5: { targetsPerRound: 10, rounds: 3, mode: 'dictation' }
         };
 
@@ -3709,7 +3988,15 @@
 
                 setNewTarget();
                 startSpawning();
-                startMusic();
+                if (gameState.musicEnabled) {
+                    if (gameState.currentTrack === '8bit') {
+                        startMusic();
+                    } else if (gameState.externalAudio) {
+                        gameState.externalAudio.play().catch(e => {});
+                    } else {
+                        playExternalTrack(gameState.currentTrack);
+                    }
+                }
                 startTimer();
                 requestAnimationFrame(gameLoop);
             }
@@ -3748,7 +4035,15 @@
 
                 setNewTarget();
                 startSpawning();
-                startMusic();
+                if (gameState.musicEnabled) {
+                    if (gameState.currentTrack === '8bit') {
+                        startMusic();
+                    } else if (gameState.externalAudio) {
+                        gameState.externalAudio.play().catch(e => {});
+                    } else {
+                        playExternalTrack(gameState.currentTrack);
+                    }
+                }
                 startTimer();
                 requestAnimationFrame(gameLoop);
             }
